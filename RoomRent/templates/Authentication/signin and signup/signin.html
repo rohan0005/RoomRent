@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyRent | Login</title>
+</head>
+<body>
+    <div>
+        <div>
+            <h1> <span><a href="">RoomRent</a></span> / <span>Login</span></h1>
+            <form action="" method="post">
+                {% csrf_token %}
+                <input required name="username" type="text" placeholder="Username">
+                <input required name="password" type="password" placeholder="Password">
+                <div>
+                    {% for messages in messages %}
+                        <p id="messages">{{messages}}</p>
+                    {% endfor %}
+                </div>
+                <button>Login</button>
+            </form>
+            <p><a href="">Forgot password?</a></p>
+            <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+        </div>
+    </div>
+</body>
+</html>
