@@ -1,28 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasyRent | Login</title>
+    <title>Room Rent - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
+<style>
+    button {
+        box-shadow: 0px 4px 61px 0px rgba(77, 71, 195, 0.40);
+    }
+</style>
+
 <body>
-    <div>
-        <div>
-            <h1> <span><a href="">RoomRent</a></span> / <span>Login</span></h1>
-            <form action="" method="post">
-                {% csrf_token %}
-                <input required name="username" type="text" placeholder="Username">
-                <input required name="password" type="password" placeholder="Password">
-                <div>
-                    {% for messages in messages %}
-                        <p id="messages">{{messages}}</p>
-                    {% endfor %}
+    <div class="login-wrapper-parent">
+        <div class="login-wrapper-child">
+            <div class="logo-room-rent p-[40px]">
+                <img src="images/static images/logo/roomrentlogo.svg" alt="">
+            </div>
+
+            <!--  -->
+
+            <div class="flex justify-evenly">
+                <!--  -->
+                <div class="mt-12">
+                    <h1 class="text-5xl font-semibold pb-3">Welcome back</h1>
+                    <p class="text-3xl">Sign in to RoomRent</p>
+                    <div>
+
+                        <div class="flex mt-5">
+                            <div class="mt-[60px]">
+                                <p>If you don't have an account register</p>
+                                You can <a href="{% url 'signup' %}" class="text-blue-400 font-semibold">Register here</a>
+                            </div>
+                            <div>
+                                <img src="images/static images/signin and signup/sallyimage.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button>Login</button>
-            </form>
-            <p><a href="">Forgot password?</a></p>
-            <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+                <!--  -->
+                <div>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <h1 class="text-3xl font-semibold">Sign in</h1>
+                        <br>
+
+                        <div>
+
+                            <div>
+
+                                <input required name="username" type="text" class="border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
+                                placeholder="Enter email or username">
+
+                            </div>
+                            <br>
+                            <div>
+
+                                <input required name="password" type="password" class="border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
+                                placeholder="Enter password">
+
+                            </div>
+                        </div>
+                        <br>
+
+                        <div>
+                            {% for messages in messages %}
+                                <p class="text-green-600" id="messages">{{messages}}</p>
+                            {% endfor %}
+                        </div>
+
+                        <br>
+                        <div>
+                            <button class="bg-[#4D47C3] rounded-lg w-full py-3 text-white">Sign in</button>
+                        </div>
+                        <div class="text-center pt-2">
+                            <a href="#" class="text-sm text-gray-500">Forgot Password?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 </body>
+
 </html>

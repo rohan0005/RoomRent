@@ -137,3 +137,24 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+# Configure the urls and file paths for serving media and static files
+MEDIA_URL ='/images/'
+STATICFILES_DIRS =[
+    BASE_DIR / "static"
+]
+# Path to the directory that will contain media files
+MEDIA_ROOT = BASE_DIR / 'static/images'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+
+# Gmail setup
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'room.rent.webapp@gmail.com' 
+EMAIL_HOST_PASSWORD = 'myje qmqh duuu fbsv' 
+EMAIL_USE_TLS = True
+
+
+

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <div class="bg-gray-200 w-full">
+        <div class="bg-gray-800">
+            <div class="p-6">
+                <h1 class="text-white text-3xl font-semibold">Admin Panel - Users</h1>
+            </div>
+        </div>
+    </div>
+
+    <section class="mx-auto w-full max-w-7xl px-4 py-4">
+        <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+          <div>
+            <h2 class="text-lg font-semibold">User Requests and Verified Users</h2>
+            <p class="mt-1 text-sm text-gray-700">
+              This section displays pending requests and total verified users.
+            </p>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-col md:flex-row">
+          <div class="w-full md:w-1/2 pr-4">
+            <h2 class="text-2xl font-semibold mb-4">Pending Requests ({{ totalUsersWhoRequestForOwner }})</h2>
+            
+            <a href="{% url 'pendingRequests' %}" class="bg-pink-500 text-white px-4 py-2 rounded-md">View</a>
+            
+          </div>
+          <div class="w-full md:w-1/2 pl-4 border-l border-gray-300">
+            <h2 class="text-2xl font-semibold mb-4">Total Verified Users</h2>
+            <div class="mb-4">
+              <p class="text-gray-600">{{ totalVerifiedUsers }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+
+        <!-- ALL USERS WHO ARE OWNER OR TENANT -->
+
+        <section class="mx-auto w-full max-w-7xl px-4 py-4">
+            <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+              <div>
+                <h2 class="text-lg font-semibold">User List</h2>
+                <p class="mt-1 text-sm text-gray-700">
+                  This is a list of all users. You can manage their details here.
+                </p>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-col">
+              <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                  <div class="overflow-hidden border border-gray-200 md:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                        <tr class="divide-x divide-gray-200">
+                          <th
+                            scope="col"
+                            class="px-4 py-3.5 text-left text-sm font-normal text-gray-500"
+                          >
+                            <span>Username</span>
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-12 py-3.5 text-left text-sm font-normal text-gray-500"
+                          >
+                            First Name
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-4 py-3.5 text-left text-sm font-normal text-gray-500"
+                          >
+                            Last Name
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-4 py-3.5 text-left text-sm font-normal text-gray-500"
+                          >
+                            User Group
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 bg-white">
+                        {% for user in allVerifiedUsers %}
+                        <tr class="divide-x divide-gray-200">
+                          <td class="whitespace-nowrap px-4 py-4">{{ user.username }}</td>
+                          <td class="whitespace-nowrap px-12 py-4">{{ user.first_name }}</td>
+                          <td class="whitespace-nowrap px-4 py-4">{{ user.last_name }}</td>
+                          <td class="whitespace-nowrap px-4 py-4">{{ user.groups.first.name }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 w-full border-gray-300">
+              <div class="mt-2 flex items-center justify-end">
+                <div class="space-x-2">
+                  <button
+                    type="button"
+                    class="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  >
+                    ← Previous
+                  </button>
+                  <button
+                    type="button"
+                    class="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  >
+                    Next →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+
+</body>
+</html>

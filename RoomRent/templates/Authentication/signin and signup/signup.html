@@ -1,11 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Room Rent - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
+<style>
+    button {
+        box-shadow: 0px 4px 61px 0px rgba(77, 71, 195, 0.40);
+    }
+</style>
+
 <body>
+    <div class="login-wrapper-parent">
+        <div class="login-wrapper-child">
+            <div class="logo-room-rent p-[40px]">
+                <img src="images/static images/logo/roomrentlogo.svg" alt="">
+            </div>
+
+            <!--  -->
+
+            <div class="flex justify-evenly">
+                <!--  -->
+                <div class="mt-12">
+                    <h1 class="text-5xl font-semibold pb-3">Sign up to</h1>
+                    <p class="text-3xl">Room Rent Web app</p>
+                    <div>
+
+                        <div class="flex mt-5">
+                            <div class="mt-[60px]">
+                                <p>If you already have an account</p>
+                                You can <a href="{% url 'signin' %}" class="text-blue-400 font-semibold">Login here</a>
+                            </div>
+                            <div>
+                                <img src="images/static images/signin and signup/sallyimage.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <div>
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h1 class="text-3xl font-semibold">Sign Up</h1>
+                        <br>
+                        <div>
+
+                            <div>
+                                <input name="email" type="text" class="border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
+                                    placeholder="Email" required>
+
+                            </div>
+                            <br>
+                            <div>
+                                <input name="contact" type="tel" class="border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
+                                    placeholder="Contact Number" required>
+
+                            </div>
+                            <br>
+                            <div>
+                                <input name="username" type="username" class="border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
+                                    placeholder="Username" required>
+
+                            </div>
+                            <br>
+                            <div>
+                                <input name="password1" type="password" class="border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
+                                    placeholder="Password" required>
+
+                            </div>
+                            <br>
+                            <div>
+
+                                <input name="password2" type="password" class="border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
+                                    placeholder="Confirm Password" required>
+
+                            </div>
+                            <br>
+                            <div>
+
+                                <div class="w-full">
+                                    
+                                    <select id="registrationType" class="rounded-lg bg-[#F0EFFF] py-3 px-2 w-full text-gray-600" name="registrationType">
+                                        <option value="tenant">Register as Tenant</option>
+                                        <option value="owner">Register as Owner</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="documentImageField" style="display: none;">
+                                <p class="py-2 text-[#736F6F]">Upload your citizenship picture here.</p>
+                                <input class="block w-full text-sm text-slate-500
+                                    file:mr-4 file:py-2 file:px-4 file:rounded-md
+                                    file:border-0 file:text-sm file:font-semibold
+                                    file:bg-gray-100 file:text-gray-500
+                                    hover:file:bg-gray-200" type="file" name="document_image" id="id_document_image" accept="image/png, image/jpeg" multiple>
+                            </div>
+            
+                        </div>
+                        <br>
+                        <div>
+                            <button class="bg-[#4D47C3] rounded-lg w-full py-3 text-white">Register</button>
+                        </div>
+
+                        <div>
+                            {% if form.errors %}
+                                {% for field, error in form.errors.items %}
+                                    {{ error }}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
     
+    <script>
+        // Get the user type field and document image field
+        const userTypeField = document.getElementById("registrationType");
+        const documentImageField = document.getElementById("documentImageField");
+        const documentImageInput = document.getElementById("id_document_image");
+
+        // Add an event listener to the user type field
+        userTypeField.addEventListener("change", toggleDocumentImageVisibility);
+
+        function toggleDocumentImageVisibility() {
+            console.log('hi')
+            // Check the value of the user type field
+            const userType = userTypeField.value;
+
+            // Toggle visibility of the document image field based on the user type
+            if (userType === "owner") {
+                documentImageField.style.display = "block";
+                documentImageInput.required = true;
+            } else {
+                documentImageField.style.display = "none";
+                documentImageInput.required = false;
+            }
+        }
+    </script>
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

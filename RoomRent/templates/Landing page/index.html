@@ -10,9 +10,8 @@
     <br><br><br>
     
     {% if request.user.is_authenticated and not request.user.is_superuser %}
-        <a href="{% url  'userDashboard' %}">My Dashboard</a>
-        <br>
-        <a href="{% url 'editProfile' user_id=user.id %}">Manage Profile</a>
+        <a href="">My Dashboard</a>
+ 
     {% else %}
         <br>
     {% endif %}
@@ -33,7 +32,8 @@
     
     {% if request.user.is_superuser %}
 
-    <a href="">Admin Dashboard</a>
+    <a href="{% url 'adminDashboard' %}">Admin Dashboard</a>
+
     {% endif %}
 
 
