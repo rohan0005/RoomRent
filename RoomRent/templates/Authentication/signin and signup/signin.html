@@ -2,10 +2,18 @@
 <html lang="en">
 
 <head>
+    <!-- ROBOTO font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room Rent - Login</title>
+    <title>Room Rent - Sign in</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="static/js/styles.js"></script> <!-- Load Javascript file-->
+
 </head>
 
 <style>
@@ -14,10 +22,10 @@
     }
 </style>
 
-<body>
+<body style="font-family: 'Roboto'">
     <div class="login-wrapper-parent">
         <div class="login-wrapper-child">
-            <div class="logo-room-rent p-[40px]">
+            <div class="logo-room-rent p-[24px]">
                 <img src="images/static images/logo/roomrentlogo.svg" alt="">
             </div>
 
@@ -25,15 +33,15 @@
 
             <div class="flex justify-evenly">
                 <!--  -->
-                <div class="mt-12">
+                <div class="mt-5">
                     <h1 class="text-5xl font-semibold pb-3">Welcome back</h1>
                     <p class="text-3xl">Sign in to RoomRent</p>
                     <div>
 
-                        <div class="flex mt-5">
+                        <div class="flex ">
                             <div class="mt-[60px]">
                                 <p>If you don't have an account register</p>
-                                You can <a href="{% url 'signup' %}" class="text-blue-400 font-semibold">Register here</a>
+                                You can <a href="{% url 'signup' %}" class="text-blue-400 font-semibold">Sign up here</a>
                             </div>
                             <div>
                                 <img src="images/static images/signin and signup/sallyimage.svg" alt="">
@@ -52,29 +60,38 @@
 
                             <div>
 
-                                <input required name="username" type="text" class="border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
-                                placeholder="Enter email or username">
-
+                                <input required name="username" type="text" class=" focus:outline-none py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
+                                placeholder="Enter username">
                             </div>
                             <br>
-                            <div>
-
-                                <input required name="password" type="password" class="border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
-                                placeholder="Enter password">
-
+                            <div class="relative">
+                                <input name="password" type="password" class="focus:outline-none border py-3 pl-2 rounded-lg w-[350px] bg-[#F0EFFF]"
+                                    placeholder="Enter Password" id="password" required>
+                                <span class="absolute inset-y-0 right-0 pr-2 flex items-center cursor-pointer"
+                                    onclick="togglePasswordVisibility('password')">
+                                    <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9.75 12C9.75 10.7574 10.7574 9.75 12 9.75C13.2426 9.75 14.25 10.7574 14.25 12C14.25 13.2426 13.2426 14.25 12 14.25C10.7574 14.25 9.75 13.2426 9.75 12Z" fill="#1C274C"></path>
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 13.6394 2.42496 14.1915 3.27489 15.2957C4.97196 17.5004 7.81811 20 12 20C16.1819 20 19.028 17.5004 20.7251 15.2957C21.575 14.1915 
+                                        22 13.6394 22 12C22 10.3606 21.575 9.80853 20.7251 8.70433C19.028 6.49956 16.1819 4 12 4C7.81811 4 4.97196 6.49956 3.27489 8.70433C2.42496 9.80853 2 10.3606 2 12ZM12 8.25C9.92893 8.25 8.25 
+                                        9.92893 8.25 12C8.25 14.0711 9.92893 15.75 12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25Z" fill="#1C274C"></path>
+                                    </svg>
+                                </span>
                             </div>
                         </div>
                         <br>
 
                         <div>
-                            {% for messages in messages %}
-                                <p class="text-green-600" id="messages">{{messages}}</p>
+                            {% for message in messages %}
+                                    
+                                <p class="{% if message.tags == 'alert-danger' %} text-red-500  {% else %} text-green-500 {% endif %} " id="messages">{{message}}</p>
+
                             {% endfor %}
                         </div>
 
                         <br>
                         <div>
-                            <button class="bg-[#4D47C3] rounded-lg w-full py-3 text-white">Sign in</button>
+                            <button class="bg-[#1F2937] rounded-lg w-full py-3 text-white">Sign in</button>
                         </div>
                         <div class="text-center pt-2">
                             <a href="#" class="text-sm text-gray-500">Forgot Password?</a>

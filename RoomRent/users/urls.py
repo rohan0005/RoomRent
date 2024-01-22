@@ -10,7 +10,7 @@ urlpatterns = [
     path('adminDashboard', views.adminDashboard, name='adminDashboard'),
     path('pendingRequests', views.pendingRequests, name='pendingRequests'),
     
-    path('pendingRequests-user/<int:userID>/', views.detailPendingRequestsUser, name='pendingRequests-user'),
+    
     
     
     

@@ -1,103 +1,155 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pending Requests</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+{% extends 'Admin/NavigationBarBase/base.html' %}
+{% load static %}
+{% block title %}RoomRent | Pending Users{% endblock %}
+{% block content %}
 
-</head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
-    <div class="bg-gray-200 w-full">
-        <div class="bg-gray-800">
-            <div class="p-6">
-                <h1 class="text-white text-3xl font-semibold">Admin Panel - Pending Requests</h1>
-            </div>
+<!--START: Table -->
+<!-- component -->
+<div class="text-gray-900 bg-[#F3F3F3]">
+    <div class="p-4 flex gap-[530px]">
+        <h1 class="text-3xl ">
+            Users - Requests
+        </h1>
+
+        <div id="toast-success">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="w-[400px] ml-6">
+                        <div
+                            class="p-3 mb-3 text-sm rounded-lg {% if message.tags == 'alert-danger' %}bg-red-500 text-white{% else %}bg-[#59CE8F] text-white{% endif %}"
+                            role="alert">
+                            <span class="font-medium">{{ message }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
+    <div class="px-3 py-4 flex justify-center">
+        
+        {% if allUsersWhoRequestForOwner %}
 
-    <div class="w-full md:w-1/2 pr-4">
-        <br><br>
-        <section class="mx-auto w-full max-w-7xl px-4 py-4">
-            
-            <div class="mt-6 flex flex-col">
-              <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                  <div class="overflow-hidden border border-gray-200 md:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gray-50">
-                        <tr>
-                          <th
-                            scope="col"
-                            class="px-4 py-3.5 text-left text-sm font-normal text-gray-700"
-                          >
-                            <span>Email</span>
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-12 py-3.5 text-left text-sm font-normal text-gray-700"
-                          >
-                            Requested date
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-4 py-3.5 text-left text-sm font-normal text-gray-700"
-                          >
-                            Username
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-4 py-3.5 text-left text-sm font-normal text-gray-700"
-                          >
-                            Contact
-                          </th>
-                          <th scope="col" class="relative px-4 py-3.5">
-                            <span class="sr-only">Edit</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-gray-200 bg-white">
-                        
-                        
-                        {% for user in usersWhoRequestForOwner %}
-                            
-                                                   
+        <table class="w-full text-md bg-white shadow-md rounded mb-4">
+            <tbody>
+                <tr class="border-b">
+                    <th class="text-left p-3 px-5">S.N</th>
+                    <th class="text-left p-3 px-5">Username</th>
+                    <th class="text-left p-3 px-5">Requested on</th>
+                    <th class="text-left p-3 px-5">Contact</th>
+                    <th class="text-left p-3 px-5"></th>
+                </tr>
 
-                        <tr>
-                          <td class="whitespace-nowrap px-4 py-4">
-                            <div class="text-sm text-gray-700">{{ user.email }}</div>
-                             
-                          </td>
-                          <td class="whitespace-nowrap px-12 py-4">
-                            <div class="text-sm text-gray-900 ">2023-01-01</div>
-                          </td>
-                          <td class="whitespace-nowrap px-4 py-4">
-                            <div class="text-sm text-gray-900 ">{{ user.username }}</div>
-                          </td>
-                          <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-700">
-                            {{ user.useradditionaldetail.contact_number}}
-                          </td>
-                          <td class="whitespace-nowrap px-4 py-4 text-right text-sm font-medium">
-                            <a href="{% url 'pendingRequests-user' userID=user.id %}" class="text-gray-700">
-                              View
-                            </a>
-                          </td>
-                        </tr>
 
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
+                {% for requestedUser in allUsersWhoRequestForOwner %}
+                <tr class="border-b hover:bg-gray-100">
+                    <td class="p-3 px-5">
+                        <p>{{ forloop.counter }}</p>
+                    <td class="p-3 px-5">
+                        <p>{{requestedUser.username}}</p>
+                    </td>
+                    <td class="p-3 px-5">
+                        <p>{{requestedUser.date_joined|timesince }} ago</p>
+                    </td>
+                    <td class="p-3 px-5">
+                        <p>{{requestedUser.useradditionaldetail.contact_number}}</p>
+                    </td>
+                    <td class="p-3 px-5 pl-3"><button type="button"
+                            class="mr-3 text-sm bg-gray-700 hover:bg-gray-600 text-white py-2 px-3 rounded focus:outline-none focus:shadow-outline"
+                            data-modal-target="medium-modal-{{ requestedUser.id }}" data-modal-toggle="medium-modal-{{ requestedUser.id }}"
+                            >View</button> 
+                    </td>
+                </tr>
+
+                <!-- view Modal -->
+                <div id="medium-modal-{{ requestedUser.id }}" tabindex="-1"
+                    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div class="relative w-full max-w-2xl max-h-full">
+                        <!-- Modal content -->
+                        <div class="relative bg-white rounded-lg shadow ">
+                            <!-- Modal header -->
+                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                                <h3 class="text-xl font-medium text-gray-900 ">
+                                    User Citizenship
+                                </h3>
+                                <button type="button"
+                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                    data-modal-hide="medium-modal-{{ requestedUser.id }}">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <!-- Modal body -->
+                            <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                {% for img in requestedUser.usercitizenship_set.all %}
+                                <div>
+                                    <a href="{{img.image.url}}" target="_blank">
+                                        <img class="h-auto max-w-full rounded-lg" src="{{ img.image.url }}" alt="img">
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!-- Modal footer -->
+                            <form action="" method="post" class="ml-auto">
+                            {% csrf_token %}
+                            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                                <input type="hidden" name="user" value="{{ requestedUser.username }}">
+                                <button data-modal-hide="medium-modal-{{ requestedUser.id }}" type="submit" name="approve"
+                                    class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Approve</button>
+                                <button data-modal-hide="medium-modal-{{ requestedUser.id }}" type="submit" name="reject"
+                                    class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">Reject</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </section>
-          
+                {% endfor %}
+            </tbody>
+        </table>               
+    </div>
+</div>
 
+<div class="flex flex-col xs:flex-row items-center xs:justify-between">
+    <div class="inline-flex mt-2 xs:mt-0 gap-4 ">
+        <!-- Pagination Next and Previous -->
+        {% if allUsersWhoRequestForOwner.has_previous %}
+            <a href="?page={{ allUsersWhoRequestForOwner.previous_page_number }}"
+            class="text-sm bg-gray-300 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded">
+                Prev
+            </a>
+        {% else %}
+            <button class="text-sm bg-gray-300 text-gray-500 font-semibold py-2 px-4 rounded" disabled>
+                Prev
+            </button>
+        {% endif %}
 
+        {% if allUsersWhoRequestForOwner.has_next %}
+            <a href="?page={{ allUsersWhoRequestForOwner.next_page_number }}"
+            class="text-sm bg-gray-300 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded">
+                Next
+            </a>
+        {% else %}
+            <button class="text-sm bg-gray-300 text-gray-500 font-semibold py-2 px-4 rounded" disabled>
+                Next
+            </button>
+        {% endif %}
+    </div>
+</div>
 
+{% else %}
 
+<p class="text-2xl font-regular">
+    You have 0 pending requests
+</p>
 
-</body>
-</html>
+{% endif %}
+
+</div>
+</div>
+<!-- END: TABLE -->
+
+{% endblock %}
