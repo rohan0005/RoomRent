@@ -13,7 +13,7 @@ class UserAdditionalDetail(models.Model):
 class UserProfilePicture(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # By default uploading default user image from User default profile folder then uploading it inside User profile folder
-    image = models.ImageField(default='Profile pictures/User default profile/DefaultUser.png',blank=False,upload_to='User profile')
+    image = models.ImageField(default='Profile pictures/User default profile/DefaultUser.png',blank=False,upload_to='Profile pictures/User profile')
 
     def __str__(self):
         return f'{self.user.username} Profile Picture'

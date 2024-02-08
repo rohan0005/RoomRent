@@ -1,0 +1,10 @@
+{% include 'Users Profile/NavigationBarBase/header.html' %} <!-- Including the header.html file for the user profile navigation bar -->
+
+{% load static%} <!-- Loading the static files for the current template -->
+
+<title>{% block title %}{% endblock %}</title> <!-- Setting the title of the HTML page (it can be overridden in child templates) -->
+
+{% block content %} <!-- Definiing a block named 'content' where child templates can inject their content -->
+{% endblock %}
+
+{% include 'Users Profile/NavigationBarBase/footer.html' %} <!-- Including the footer.html file for the admin navigation bar -->

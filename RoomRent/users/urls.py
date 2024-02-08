@@ -10,8 +10,10 @@ urlpatterns = [
     path('adminDashboard', views.adminDashboard, name='adminDashboard'),
     path('pendingRequests', views.pendingRequests, name='pendingRequests'),
     
-    
-    
+     # Owner and Tenant routes
+    path('owner/dashboard', views.ownerDashboard, name='ownerDashboard'),
+    path('tenant/dashboard', views.tenantDashboard, name='tenantDashboard'),   
+    path('tenant/dashboard/editProfile', views.editProfile, name='editProfile'),   
     
     
 ]

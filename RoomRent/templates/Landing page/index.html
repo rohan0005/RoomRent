@@ -16,11 +16,11 @@
     
         {% if request.user|has_group:"owner" %}
 
-            <a href="">My Dashboard- owner</a>
+            <a href="{% url 'ownerDashboard' %}">My Dashboard- owner</a>
 
         {% elif request.user|has_group:"tenant" %}
 
-            <a href="">My Dashboard - tenant</a>
+            <a href="{% url 'tenantDashboard' %}">My Dashboard - tenant</a>
 
         {% endif %} 
 

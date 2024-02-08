@@ -1,0 +1,168 @@
+{% extends 'Users Profile/NavigationBarBase/base.html' %}
+{% load static %}
+{% block title %}RoomRent | Edit Profile{% endblock %}
+{% block content %}
+  
+   <!-- Main -->
+    <div class="flex-1 bg-[#F3F3F3]">
+        <div class="container px-4 py-1 mx-auto">
+            <!-- Main container -->
+            <div class="bg-white h-full  lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
+
+                <!-- Heading -->
+                <div class="flex justify-between pr-3">
+                    <div>
+                        <h1 class="font-semibold text-[18px] md:text-3xl pl-16 p-6">Edit Profile</h1>
+                    </div>
+                    {% if messages %}
+                    <!-- Success or error message start -->
+                    <div id="toast-success" class="flex h-12 md:w-[250px]  mt-4">
+                        <!-- ICON -->
+                        <div class="rounded-l-lg  w-1/5 bg-[#2FDD92] flex justify-center p-2">
+                            <span>
+                                <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5001 2.91602C9.47925 2.91602 2.91675 9.47852 2.91675 17.4993C2.91675 25.5202 9.47925 32.0827 17.5001 32.0827C25.5209 32.0827 32.0834 25.5202 32.0834 17.4993C32.0834 9.47852 25.5209 2.91602 17.5001 2.91602ZM17.5001 29.166C11.0688 29.166 5.83341 23.9306 5.83341 17.4993C5.83341 11.0681 11.0688 5.83268 17.5001 5.83268C23.9313 5.83268 29.1667 11.0681 29.1667 17.4993C29.1667 23.9306 23.9313 29.166 17.5001 29.166ZM24.1938 11.0535L14.5834 20.6639L10.8063 16.9014L8.75008 18.9577L14.5834 24.791L26.2501 13.1243L24.1938 11.0535Z" fill="white"/>
+                                </svg>
+                            </span>
+                        </div>
+
+                        <!-- MEssage -->
+                        <div class="border-[#CECECE] border-l-0 w-4/5 p-3 border outline-none">
+                            <p class="left-0 text-[#0AD674] font-medium lg:text-[15px] text-[15px]">
+                            
+                                
+                                {% for msg in messages %}
+                                    {{msg}}
+                                {% endfor %}
+                                    
+                            
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- Success or error message End -->
+                </div>
+
+                <!-- FORM Start -->
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="    md:w-[1000px]">
+                        <div class="p-2 pl-16 grid gap-6 md:grid-cols-2 ">
+                            <div>
+                                <label for="first_name" class="block mb-2 text-[15px] font-semibold text-gray-900 ">First name</label>
+                                <input name="first_name" value="{{request.user.first_name}}" type="firstName" class="focus:outline-none  text-gray-600 border border-2 border-[#85858] py-3 pl-2 rounded-[4px] w-full"
+                                    placeholder="Your First Name" >
+                            </div>
+                            <div>
+                                <label for="last_name" class="block mb-2 text-[15px] font-semibold text-gray-900 ">Last name</label>
+                                <input name="last_name" value="{{request.user.last_name}}" type="lastName" class="focus:outline-none text-gray-600 border border-2 border-[#85858] py-3 pl-2 rounded-[4px] w-full"
+                                    placeholder="Your last Name" >
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 pl-16">
+                            <label for="email" class="block mb-2 text-[15px] font-semibold text-gray-900 ">Email</label>
+                            <input name="email" type="email" value="{{request.user.email}}" class="focus:outline-none text-gray-600 border border-2 border-[#85858] py-3 pl-2 rounded-[4px] w-full"
+                                placeholder="Your Email" required>
+                        </div>
+
+                        <div class="p-4 pl-16">
+                            <label for="address" class="block mb-2 text-[15px] font-semibold text-gray-900 ">Username</label>
+                            <input name="address" disabled type="address" value="{{request.user}}" class="focus:outline-none text-gray-600 border border-2 border-[#85858] py-3 pl-2 rounded-[4px] w-full"
+                                placeholder="Your Username" required>
+                        </div>
+
+                        <div class="p-4 pl-16">
+                            <label for="contact" class="block mb-2 text-[15px] font-semibold text-gray-900 ">Contact Number</label>
+                            <input name="contact" type="tel" value="{{request.user.useradditionaldetail.contact_number}}" class="focus:outline-none text-gray-600 border border-2 border-[#85858] py-3 pl-2 rounded-[4px] w-full"
+                                placeholder="Contact Number" required>
+                        </div>
+                            <input type="hidden" name="user" value="{{request.user}}">
+                        <div class="p-4 mb-2 pl-16 w-56">
+                            <button type=submit name="update"  class="bg-[#1F2937] rounded-[3px] w-full py-2 text-white">Update</button>
+                        </div>                       
+                    </div>  
+                </form> <!-- FORM End -->
+
+                <!-- Change Profile Option Start -->
+                <div class="container  pl-16 p-6">
+                    <div>
+                        <h1 class="font-semibold text-[18px] md:text-3xl">Change Profile</h1>
+                    </div>
+                    <div class="mt-10">
+                        <div class="h-[320px] w-[380px] bg-gray-200 ">
+                            <div class="pt-5">
+                                <img id="image-preview" class="bg-white w-40 h-40  rounded-full mx-auto" src="{{user.userprofilepicture.image.url}}" alt="">
+                            </div>
+                            <!-- Form for uploading image Start -->
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="flex justify-center mt-9 ">
+                                    <label for="image-input"
+                                        class="bg-[#1F2937] cursor-pointer text-white rounded-md relative inline-flex items-center px-7 py-2 border border-transparent text-base leading-6 font-medium rounded-md transition duration-150 ease-in-out">
+                                        <span>Change profile</span>
+                                        <input id="image-input" name="img" type="file" accept="image/png, image/jpeg" multiple
+                                            class="absolute block opacity-0 w-full h-full cursor-pointer" />
+                                    </label>
+                                </div>
+                            </div>
+                                <!-- Save button -->
+                                <input type="hidden" name="user" value="{{request.user}}">
+                                <div class="w-[380px] flex gap gap-10">
+                                    <div class="pt-4">
+                                        <button name="saveImage" class="bg-[#1F2937] rounded-[3px] p-2 pl-5 pr-5 text-white">Save</button>
+                                    </div>
+
+                                        <!-- Remove button -->
+                                        <div class="pt-4">
+                                            <button name="deleteImage" class="text-[#1F2937] rounded-[3px] focus:outline-none border border-gray-400 p-2 pl-5 pr-5 ">Remove</button>
+                                        </div>
+                                </div>
+                            </form>
+                    </div><!-- Form for uploading image END -->
+                </div>
+                <!-- Change Profile Option END -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JS for viewing image befor saving -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInput = document.getElementById('image-input');
+            const imagePreview = document.getElementById('image-preview');
+        
+            imageInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+        
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                    };
+        
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    // Clear the preview when no file is selected
+                    imagePreview.src = '';
+                }
+            });
+        });
+        
+    </script>
+
+    <script>
+        // JavaScript to close the messages after 3 seconds (3000 milliseconds)
+    setTimeout(function() {
+        var toastElement = document.getElementById('toast-success');
+        if (toastElement) {
+            toastElement.style.display = 'none';
+        }
+        }, 3000);
+        
+    </script>
+    
+
+    
+
+
+    {% endblock %}

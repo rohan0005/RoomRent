@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ROBOTO font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static/css/styles.css"> <!--Load css file-->
+  <script src="static/js/styles.js"></script> <!-- Load Javascript file-->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+</head>
+<body style="font-family: 'Roboto'">
+  <!-- Navigation section -->
+  <nav class="bg-white  fixed w-full z-20 top-0 start-0 border-b border-gray-200">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-6">
+        <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+            type="button"
+            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg">
+                <path clip-rule="evenodd" fill-rule="evenodd"
+                    d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                </path>
+            </svg>
+        </button>
+
+        <a href="{% url 'index' %}" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <img src="/images/static images/logo/roomrentlogo.svg" class="h-8" alt="" />
+        </a>
+        <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+            <button type="button"
+                class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 "
+                id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+                data-dropdown-placement="bottom">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full" src="{{user.userprofilepicture.image.url}}" alt="user photo">
+            </button>
+            <!-- Dropdown menu -->
+            <div class="w-[200px] z-50  hidden my-2 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-2xl  "
+                id="user-dropdown">
+                <div class="px-2 py-4 flex gap gap-6 border-b-2 border-[#E0E0E0]">
+                    <span class="pt-1 pl-2">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#6C707C"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g><svg width=" 64px" =""="" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></path></g></svg>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt;</path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt;</path> </g>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt; <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g><svg width=" 64px" =""="" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></path></g></svg>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt;</path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt;</path> " stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt; </svg>
+                    </span>
+                    <span class="block text-sm pt-2 text-gray-500 truncate">{{request.user}}</span>
+                </div>
+                <ul class="" aria-labelledby="user-menu-button">
+                    <li class="flex gap gap-6 pb-2 border-b-2 border-[#E0E0E0]">
+                        <span class="pt-1 pl-2">
+                            <svg width="28px" height="28px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7 14C10.623 14 9.74999 13.1046 9.74999 12C9.74999 10.8954 10.623 10 11.7 10C12.7769 10 13.65 10.8954 13.65 12C13.65 12.5304 13.4445 13.0391 13.0789 13.4142C12.7132 13.7893 12.2172 14 11.7 14Z" stroke="#969696" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M16.8841 16.063V14.721C16.8841 14.3887 17.0128 14.07 17.2419 13.835L18.1672 12.886C18.6443 12.3967 18.6443 11.6033 18.1672 11.114L17.2419 10.165C17.0128 9.93001 16.8841 9.61131 16.8841 9.27899V7.93599C16.8841 7.24398 16.3371 6.68299 15.6624 6.68299H14.353C14.029 6.68299 13.7182 6.55097 13.4891 6.31599L12.5638 5.36699C12.0867 4.87767 11.3132 4.87767 10.8361 5.36699L9.91087 6.31599C9.68176 6.55097 9.37102 6.68299 9.04702 6.68299H7.73759C7.41341 6.68299 7.10253 6.81514 6.87339 7.05034C6.64425 7.28554 6.51566 7.6045 6.51592 7.93699V9.27899C6.51591 9.61131 6.3872 9.93001 6.15809 10.165L5.23282 11.114C4.75573 11.6033 4.75573 12.3967 5.23282 12.886L6.15809 13.835C6.3872 14.07 6.51591 14.3887 6.51592 14.721V16.063C6.51592 16.755 7.06288 17.316 7.73759 17.316H9.04702C9.37102 17.316 9.68176 17.448 9.91087 17.683L10.8361 18.632C11.3132 19.1213 12.0867 19.1213 12.5638 18.632L13.4891 17.683C13.7182 17.448 14.029 17.316 14.353 17.316H15.6614C15.9856 17.3163 16.2966 17.1844 16.5259 16.9493C16.7552 16.7143 16.8841 16.3955 16.8841 16.063Z" stroke="#969696" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        </span>
+                        <a href="{% url 'tenantDashboard' %}" class="block py-2 text-sm text-gray-700 ">Manage profile</a>
+                    </li>
+
+                    <li class="pb-2 flex gap gap-6 pb-2 ">
+                        <span class="pt-2 pl-2">
+                            <svg width="24px" height="24px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="#6C707C" stroke="#6C707C" stroke-width="0.0002"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect x="0" fill="none" width="20" height="20"></rect> <g> <path d="M13 3v2h2v10h-2v2h4V3h-4zm0 8V9H5.4l4.3-4.3-1.4-1.4L1.6 10l6.7 6.7 1.4-1.4L5.4 11H13z"></path> </g> </g></svg>
+                        </span>
+                        <a href="{% url 'signout' %}" class="block  py-2 text-sm text-gray-700 ">Sign out</a>
+                    </li>
+                </ul>
+            </div>
+            <button data-collapse-toggle="navbar-user" type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
+                aria-controls="navbar-user" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1h15M1 7h15M1 13h15" />
+                </svg>
+            </button>
+        </div>
+
+
+        <div class="items-center gap-y-4 justify-between hidden w-full md:flex md:w-auto md:order-1"
+            id="navbar-user">
+            <ul
+                class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white ">
+                <li>
+                    <a href="#"
+                        class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 "
+                        aria-current="page">Home</a>
+                </li>
+                <li class="lg:pl-20">
+                    <a href="#"
+                        class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 ">Rooms</a>
+                </li>
+                <li class="lg:pl-20">
+                    <a href="#"
+                        class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Dashboard</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- SIde nav -->
+<aside id="logo-sidebar"
+class="fixed mt-24 left-0 z-40 w-56 h-screen pt-2 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0"
+aria-label="Sidebar">
+<h1 class="text-2xl text-center font-semibold pt-4 pb-4">Dashboard</h1>
+<div class="h-full px-3 pb-4 overflow-y-auto bg-white">
+    <form action="" method="post">
+    {% csrf_token %}
+    <ul class="space-y-2 font-medium">
+
+        <li>
+            <a href="{% url 'tenantDashboard' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <svg class="size-[25px]" width="64px" height="64px" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0">
+                    </g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path d="M22 22L2 22" stroke="#77787e" stroke-width="1.5" stroke-linecap="round"></path>
+                        <path d="M2 11L10.1259 4.49931C11.2216 3.62279 12.7784 3.62279 13.8741 4.49931L22 11"
+                            stroke="#77787e" stroke-width="1.5" stroke-linecap="round">
+                        </path>
+                        <path d="M15.5 5.5V3.5C15.5 3.22386 15.7239 3 16 3H18.5C18.7761 3 19 3.22386 19 3.5V8.5"
+                            stroke="#77787e" stroke-width="1.5" stroke-linecap="round"></path>
+                        <path d="M4 22V9.5" stroke="#77787e" stroke-width="1.5" stroke-linecap="round"></path>
+                        <path d="M20 22V9.5" stroke="#77787e" stroke-width="1.5" stroke-linecap="round"></path>
+                        <path
+                            d="M15 22V17C15 15.5858 15 14.8787 14.5607 
+                    14.4393C14.1213 14 13.4142 14 12 14C10.5858 14 9.87868 14 9.43934 14.4393C9 14.8787 9 15.5858 9 17V22"
+                            stroke="#77787e" stroke-width="1.5"></path>
+                        <path d="M14 9.5C14 10.6046 13.1046 11.5 12 11.5C10.8954 11.5 10 10.6046 10 
+                    9.5C10 8.39543 10.8954 7.5 12 7.5C13.1046 7.5 14 8.39543 14 9.5Z" stroke="#77787e"
+                            stroke-width="1.5"></path>
+                    </g>
+                </svg>
+                <span class="ms-3">My Room</span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'editProfile' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <svg class="size-[25px]" width="64px" height="64px" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <title></title>
+                        <g id="Complete">
+                            <g id="edit">
+                                <g>
+                                    <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8"
+                                        fill="none" stroke="#77787e" stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-width="2"></path>
+                                    <polygon fill="none"
+                                        points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8"
+                                        stroke="#77787e" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"></polygon>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Edit Profile</span>
+            </a>
+        </li>
+        <li>
+            <a  href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <svg class="size-[25px]" fill="#77787e" height="64px" width="64px" version="1.1" id="Icon"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path
+                            d="M24,19v-2h-2.14c-0.09-0.36-0.24-0.7-0.42-1.02l1.52-1.52l-1.41-1.41l-1.52,1.52c-0.32-0.19-0.66-0.33-1.02-0.42V12h-2v2.14 c-0.36,0.09-0.7,0.24-1.02,0.42l-1.52-1.52l-1.41,1.41l1.52,1.52c-0.19,0.32-0.33,0.66-0.42,
+                    1.02H12v2h2.14 c0.09,0.36,0.24,0.7,0.42,1.02l-1.52,1.52l1.41,1.41l1.52-1.52c0.32,0.19,0.66,0.33,1.02,0.42V24h2v-2.14 c0.36-0.09,0.7-0.24,1.02-0.42l1.52,1.52l1.41-1.41l-1.52-1.52c0.19-0.32,0.33-0.66,0.42-1.02H24z M18,20c-1.1,
+                    0-2-0.9-2-2 s0.9-2,2-2s2,0.9,2,2S19.1,20,18,20z M11,7.41l3.29,3.29l1.41-1.41L12.41,6L13,5.41l2.29,2.29l1.41-1.41L14.41,4L15,3.41l3.29,3.29 l1.41-1.41L16.41,2l0.29-0.29l-1.41-1.41L6.89,8.7C6.19,8.26,5.38,8,4.5,8C2.02,8,0,10.02,0,
+                    12.5S2.02,17,4.5,17S9,14.98,9,12.5 c0-0.88-0.26-1.69-0.7-2.39L11,7.41z M4.5,15C3.12,15,2,13.88,2,12.5S3.12,10,4.5,10S7,11.12,7,12.5S5.88,15,4.5,15z">
+                        </path>
+                    </g>
+                </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Change Password</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <svg class="size-[25px]" width="64px" height="64px" viewBox="0 0 48.00 48.00"
+                    xmlns="http://www.w3.org/2000/svg" fill="#77787e" stroke="#77787e"
+                    stroke-width="0.00048000000000000007">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"
+                        stroke="#CCCCCC" stroke-width="0.192"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <g id="Layer_2" data-name="Layer 2">
+                            <g id="invisible_box" data-name="invisible box">
+                                <rect width="48" height="48" fill="none"></rect>
+                            </g>
+                            <g id="Layer_7" data-name="Layer 7">
+                                <g>
+                                    <path d="M34.3,20.1h0a6.7,6.7,0,0,1-4.1-1.3,2,2,0,0,0-2.8.6,1.8,1.8,0,0,0,.3,2.6A10.9,10.9,0,0,0,32,23.8V26a2,
+                            2,0,0,0,4,0V23.8a6.3,6.3,0,0,0,3-1.3,4.9,4.9,0,0,0,2-4h0c0-3.7-3.4-4.9-6.3-5.5s-3.5-1.3-3.5-1.8.2-.6.5-.9a3.4,3.4,0,0,1,1.8-.4,6.3,6.3,0,0,1,3.3.9,1.8,1.8,0,0,0,2.7-.5,1.9,1.9,0,0,0-.4-2.8A9.1,9.1,0,0,0,36,6.3V4a2,2,0,0,0-4,
+                            0V6.2c-3,.5-5,2.5-5,5.2s3.3,4.9,6.5,5.5,3.3,1.3,3.3,1.8S35.7,20.1,34.3,20.1Z">
+                                    </path>
+                                    <path
+                                        d="M42.2,31.7a5.2,5.2,0,0,0-4-1.1l-9.9,1.8a4.5,4.5,0,0,0-1.4-3.3L19.8,22H5a2,2,0,0,0-2,2v9a2,2,0,0,0,2,2H8.3l11.2,9.1,20.4-3.7a5,5,0,0,0,
+                            2.3-8.7Zm-3,4.8L20.5,39.9,10,31.2V26h8.2l5.9,5.9a.8.8,0,0,1-1.2,1.2l-3.5-3.5a2,2,0,0,0-2.8,2.8l3.5,3.5a4.5,4.5,0,0,0,3.4,1.4,5.7,5.7,0,0,0,1.8-.3h0l13.6-2.4a1.1,1.1,0,0,1,.8.2.9.9,0,0,1,.3.7A1,1,0,0,1,39.2,36.5Z">
+                                    </path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Payment</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <svg class="size-[25px]" height="64px" width="64px" version="1.1" id="Capa_1"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 179.006 179.006" xml:space="preserve" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <g>
+                            <g>
+                                <g>
+                                    <g>
+                                        <path style="fill:#77787e;"
+                                            d="M52.571,121.981v13.056c0,3.568,2.655,6.468,5.895,6.468s5.883-2.9,5.883-6.468v-13.056H52.571z">
+                                        </path>
+                                        <path style="fill:#77787e;"
+                                            d="M100.777,121.981v39.31c0,
+                        3.556,2.655,6.468,5.895,6.468c3.24,0,5.895-2.912,5.895-6.468v-39.31 C112.568,121.981,100.777,121.981,100.777,121.981z">
+                                        </path>
+                                        <path style="fill:#77787e;"
+                                            d="M84.715,121.981v50.563c0,3.562,2.649,6.462,5.889,6.462c3.234,0,5.883-2.9,5.883-6.462v-50.563 H84.715z">
+                                        </path>
+                                        <path style="fill:#77787e;"
+                                            d="M68.64,121.981v36.631c0,3.556,2.655,6.468,5.895,6.468c3.228,0,5.877-2.912,5.877-6.468v-36.631 H68.64z">
+                                        </path>
+                                    </g>
+                                    <g>
+                                        <polygon style="fill:#77787e;"
+                                            points="41.908,57.903 41.908,60.892 128.756,60.892 128.756,112.487 131.751,112.487 131.751,57.903 ">
+                                        </polygon>
+                                        <polygon style="fill:#77787e;"
+                                            points="47.899,51.906 47.899,54.901 134.747,54.901 134.747,106.509 137.742,106.509 137.742,51.906 ">
+                                        </polygon>
+                                        <g>
+                                            <path style="fill:#77787e;" d="M35.918,63.887v54.585h89.843V63.887H35.918z M80.842,111.36 c-11.152,0-20.186-9.04-20.186-20.174c0-11.152,9.034-20.18,20.186-20.18c11.14,0,20.174,9.028,20.174,
+                                20.18 C101.022,102.32,91.988,111.36,80.842,111.36z"></path>
+                                            <path style="fill:#77787e;"
+                                                d="M87.221,90.846c-0.967-0.662-2.81-1.378-5.537-2.136v-8.551 c1.617,0.048,2.798,0.668,3.532,1.862c0.4,0.644,0.632,1.414,0.722,2.303h3.067c-0.06-1.987-0.698-3.592-1.945-4.791 c-1.247-1.211-3.043-1.891-5.364-2.065v-2.297h-1.665v2.339c-2.363,
+                                0.018-4.171,0.746-5.478,2.172 c-1.307,1.432-1.969,3.031-1.969,4.815c0,1.987,0.621,3.55,1.832,4.66c1.211,1.122,3.097,1.921,5.615,2.399v9.571 c-1.969-0.161-3.335-0.901-4.057-2.232c-0.418-0.734-0.674-1.903-0.77-3.52h-3.109c0,2.029,0.328,3.616,1.002,4.809 c1.211,2.184,3.52,3.383,6.922,3.604v3.401h1.665v-3.401c2.112-0.233,3.741-0.71,
+                                4.851-1.432 c2.029-1.319,3.055-3.532,3.055-6.635C89.596,93.572,88.802,91.938,87.221,90.846z M80.019,88.375 c-1.307-0.269-2.351-0.722-3.121-1.366c-0.77-0.656-1.146-1.569-1.146-2.721c0-0.961,0.328-1.874,0.979-2.757 c0.656-0.877,1.76-1.349,3.3-1.402L80.019,88.375L80.019,88.375z M85.83,99.026c-0.77,1.366-2.136,2.106-4.141,2.19v-9.231 c1.462,
+                                0.394,2.506,0.817,3.127,1.259c1.074,0.764,1.617,1.874,1.617,3.335C86.427,97.505,86.23,98.328,85.83,99.026z">
+                                            </path>
+                                        </g>
+                                    </g>
+                                </g>
+                                <path style="fill:#77787e;"
+                                    d="M136.62,36.72H106.1h-7.154V0H52.571v48.397h84.133c3.52-0.036,6.385-2.643,6.385-5.836 C143.089,39.357,140.177,36.72,136.62,36.72z">
+                                </path>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Utility Bill</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <svg class="size-[25px]" fill="#77787e" version="1.1" id="earth"
+                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64px"
+                    height="64px" viewBox="0 0 256 216" enable-background="new 0 0 256 216" xml:space="preserve"
+                    stroke="#77787e">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path
+                            d="M175.238,2.307H68.807c-5.896,0-10.648,4.4-10.648,9.812v72.069C58.159,89.6,62.911,94,68.807,94h106.388 c5.896,0,10.648-4.4,10.648-9.812V12.119C185.886,6.707,181.134,2.307,175.238,2.307z M176.25,82.956c0,0.66-0.616,1.232-1.32,1.232 H69.115c-0.748,0-1.32-0.572-1.32-1.232V48.154H176.25V82.956z M176.25,21.931H67.795v-8.58c0-0.66,0.616-1.232,1.32-1.232h105.772 c0.748,0,1.32,0.572,1.32,1.232v8.58H176.25z M76.99,67.293h22.263v8.712H76.99V67.293z M107.921,67.293h32.207v8.712h-32.207 V67.293z M229.943,83.553L186.57,124.68c1.092,2.644,1.59,5.874,1.257,8.89c-0.286,6.278-2.86,12.262-7.262,16.742 c-4.505,4.306-10.593,6.727-16.974,6.267l-59.452-2.005c-2.81,0.015-4.599-2.217-4.512-4.854c0.088-2.636,2.217-4.599,4.679-4.409 l59.626,1.902c7.806,0.088,14.369-5.903,14.735-13.638c0.365-7.734-5.903-14.369-13.638-14.735l-74.161-2.245 c-12.175-0.327-25.024,1.389-31.897,12.028L2,213.693h56.623l18.808-24.781c4.331-4.203,10.522-6.45,16.974-6.267l51.615,1.465 c12.627,0.295,24.771-4.999,32.982-13.373l70.507-66.788c5.622-5.2,6.169-14.217,0.486-20.258 C244.549,78.449,235.738,78.25,229.943,83.553z">
+                        </path>
+                    </g>
+                </svg>
+                <span class="flex-1 ms-3 whitespace-nowrap">Rent Bill</span>
+            </a>
+        </li>
+
+    </ul>
+    </form>
+</div>
+</aside>

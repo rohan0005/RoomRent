@@ -211,3 +211,71 @@ def pendingRequests(request):
     }
     
     return render(request, 'Admin/pendingRequests.html', context)
+
+
+# Owner and Tenant Management view
+
+# Check if user is owner or not
+def is_owner(user):
+    return user.groups.filter(name='owner').exists()
+
+# Check if user is tenant or not
+def is_tenant(user):
+    return user.groups.filter(name='tenant').exists()
+
+
+# Owner dashboard management
+@login_required(login_url='signin')
+@user_passes_test(is_owner)
+def ownerDashboard(request):
+    return render(request, 'Users profile/ownerDashboard.html')
+
+         
+# Tenant dashboard management
+@login_required(login_url='signin')
+@user_passes_test(is_tenant)
+def tenantDashboard(request):    
+    return render(request, 'Users profile/tenantDashboard.html')
+
+
+# Tenant dashboard management
+@login_required(login_url='signin')
+@user_passes_test(is_tenant)
+def editProfile(request):
+    # IF form is submitted
+    if request.method == 'POST':
+        if "user" in request.POST:
+                username = request.POST.get('user')
+                user = User.objects.get(username=username)
+                
+        if "update" in request.POST:
+            # UPDATING USER MODEL
+            user.first_name = request.POST.get('first_name')
+            user.last_name = request.POST.get('last_name')
+            user.email = request.POST.get('email')
+            user.save()
+            
+            # UPDATING UserAdditionalDetail MODEL
+            additionalDetail = user.useradditionaldetail
+            additionalDetail.contact_number = request.POST.get('contact')
+            additionalDetail.save()
+            messages.success(request, 'Profile Updated')           
+        
+        if "saveImage" in request.POST:
+            # Saving user New profile
+            user_profile = UserProfilePicture.objects.get(user=user)
+            user_profile.image = request.FILES['img']
+            user_profile.save()
+            messages.success(request, 'Profile Picture Updated')
+        
+        if "deleteImage" in request.POST:
+            user_profile = UserProfilePicture.objects.get(user=user)
+            user_profile.delete()
+            # Saving user default profile
+            user_default_profile_picture = UserProfilePicture(user=user)
+            user_default_profile_picture.save()
+            messages.success(request, 'Profile Picture updated.')
+            
+        return redirect('editProfile')                
+                
+    return render(request, 'Users profile/editProfile.html')
