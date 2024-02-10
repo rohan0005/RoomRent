@@ -13,7 +13,8 @@ urlpatterns = [
      # Owner and Tenant routes
     path('owner/dashboard', views.ownerDashboard, name='ownerDashboard'),
     path('tenant/dashboard', views.tenantDashboard, name='tenantDashboard'),   
-    path('tenant/dashboard/editProfile', views.editProfile, name='editProfile'),   
+    path('tenant/dashboard/editProfile', views.editProfile, name='editProfile'), 
+    path('tenant/dashboard/changePassword', views.changePassword, name='changePassword'),   
     
     
 ]

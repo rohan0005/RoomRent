@@ -279,3 +279,41 @@ def editProfile(request):
         return redirect('editProfile')                
                 
     return render(request, 'Users profile/editProfile.html')
+
+# Change password logic
+@login_required(login_url='signin')
+@user_passes_test(is_tenant)
+def changePassword(request):
+    # IF form is submitted
+    if request.method == 'POST':
+        if "user" in request.POST:
+                username = request.POST.get('user')
+                user = User.objects.get(username=username)
+        
+        # After user submit the form getting the passwords 
+        if "changePassword" in request.POST:
+            current_password = request.POST.get('currentPassword')
+            new_password = request.POST.get('password1')
+            confirm_new_password = request.POST.get('password2')
+            
+            # If current password is incorrect display error message
+            if not request.user.check_password(current_password):
+                messages.error(request, 'Current password is incorrect.')
+            
+            # If current password is correct:
+            else:
+                # Check if new password and cormform password is correct
+                # If not correct display error message
+                if new_password != confirm_new_password:
+                    messages.error(request, 'New password and confirm password do not match.')
+                    
+                # If correct change the password with new password 
+                else:
+                    # Change the user's password
+                    request.user.set_password(new_password)
+                    request.user.save()
+                    messages.success(request, 'Password Changed')
+                    # Updating the user's session to prevent logout
+                    update_session_auth_hash(request, request.user)
+                    
+    return render(request, 'Users profile/changePassword.html')
