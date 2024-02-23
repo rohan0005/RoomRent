@@ -223,24 +223,21 @@ def is_owner(user):
 def is_tenant(user):
     return user.groups.filter(name='tenant').exists()
 
-
-# Owner dashboard management
-@login_required(login_url='signin')
-@user_passes_test(is_owner)
-def ownerDashboard(request):
-    return render(request, 'Users profile/ownerDashboard.html')
+# Check if user is tenant or owner
+def is_tenant_or_owner(user):
+    return user.is_authenticated and user.groups.filter(name='tenant').exists() or user.groups.filter(name='owner').exists()
 
          
 # Tenant dashboard management
 @login_required(login_url='signin')
-@user_passes_test(is_tenant)
-def tenantDashboard(request):    
-    return render(request, 'Users profile/tenantDashboard.html')
+@user_passes_test(is_tenant_or_owner)
+def dashboard(request):    
+    return render(request, 'Users profile/dashboard.html')
 
 
 # Tenant dashboard management
 @login_required(login_url='signin')
-@user_passes_test(is_tenant)
+@user_passes_test(is_tenant_or_owner)
 def editProfile(request):
     # IF form is submitted
     if request.method == 'POST':
@@ -282,7 +279,7 @@ def editProfile(request):
 
 # Change password logic
 @login_required(login_url='signin')
-@user_passes_test(is_tenant)
+@user_passes_test(is_tenant_or_owner)
 def changePassword(request):
     # IF form is submitted
     if request.method == 'POST':

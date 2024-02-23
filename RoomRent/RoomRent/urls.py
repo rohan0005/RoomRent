@@ -11,6 +11,7 @@ urlpatterns = [
     #include the URL patterns from another apps 
     path('', include("users.urls")),  
     path('', include("core.urls")),
+    path('', include("room.urls")),
 ]
 
 # For viewing image through url

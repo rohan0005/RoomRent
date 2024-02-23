@@ -11,10 +11,11 @@ urlpatterns = [
     path('pendingRequests', views.pendingRequests, name='pendingRequests'),
     
      # Owner and Tenant routes
-    path('owner/dashboard', views.ownerDashboard, name='ownerDashboard'),
-    path('tenant/dashboard', views.tenantDashboard, name='tenantDashboard'),   
-    path('tenant/dashboard/editProfile', views.editProfile, name='editProfile'), 
-    path('tenant/dashboard/changePassword', views.changePassword, name='changePassword'),   
+    # path('owner/dashboard', views.ownerDashboard, name='ownerDashboard'),
+    path('dashboard', views.dashboard, name='dashboard'),   
+    path('dashboard/editProfile', views.editProfile, name='editProfile'), 
+    path('dashboard/changePassword', views.changePassword, name='changePassword'),   
     
+    # path('owner/dashboard/editProfile', views.changePassword, name='changePassword'),   
     
 ]
