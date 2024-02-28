@@ -19,7 +19,8 @@ class Room(models.Model):
     water = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
     trash = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
     rent = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
-    
+    isAvailable = models.BooleanField(default=True)
+    isBooked = models.BooleanField(default=False)
     listed_date = models.DateTimeField(default=timezone.now, blank=True)
     approved = models.BooleanField(blank=False, default=False) 
     
@@ -36,3 +37,13 @@ class RoomImage(models.Model):
 class RoomDocument(models.Model):
     room = models.ForeignKey(Room, related_name='documents', on_delete=models.CASCADE)
     document = models.FileField(upload_to='Room Document')
+    
+    
+class BookRoom(models.Model):
+    room = models.OneToOneField(Room, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bookingDate = models.DateTimeField(default=timezone.now)
+    moveInDate = models.DateTimeField(default=timezone.now) 
+    joined = models.BooleanField(default=False)
+    def __str__(self):
+        return f"{self.user}'s booking"

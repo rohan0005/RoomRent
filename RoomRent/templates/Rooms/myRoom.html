@@ -1,0 +1,218 @@
+{% extends 'Users Profile/NavigationBarBase/base.html' %}
+{% load static %}
+{% block title %}RoomRent | Rooms{% endblock %}
+{% block content %}
+
+
+
+    <!-- Main -->
+    <div class="flex-1 bg-[#F3F3F3]">
+        <!-- Main container Start -->
+        <div class="container px-4 py-1 mx-auto">
+
+            <!-- CONTENTS -->
+            <div class="bg-white h-full  pb-[100px]  lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
+
+                <!-- HEADING -->
+                <div class="flex justify-between pr-3">
+                    <div>
+                        <h1 class="font-semibold text-[17px] md:text-3xl p-6"> 
+                            {% if request.user.is_authenticated and not request.user.is_superuser and notJoinedAndPending %} 
+                             <span class="text-[#0766AD]">Pending approval</span>
+
+                             {% elif not joinedRoomDetails%}
+
+                            My Joined Room
+
+                             {% else %}
+                             My Rooms
+                            {% endif %}
+                            </h1>
+                    </div>
+                </div>
+
+                 <!-- ROOM START -->
+                <div class="pl-9 md:flex flex-wrap gap-8">
+
+                    <!-- IF USER IS TENANT -->
+                    {% if request.user.is_authenticated and not request.user.is_superuser and notJoinedAndPending %} 
+                            
+                    {% if joinedRoomDetails %}
+                        
+                    
+                        
+                    {% for joinedRoom in joinedRoomDetails %}
+                        
+                   
+
+                    <!--START: BOOKED ROOMS details -->
+                    <div class="p-3 shadow-xl md:w-[350px]">
+                        <div id="gallery" class="relative w-full" data-carousel="slide">
+                            <!-- Carousel wrapper -->
+                            
+                            <div class="relative h-56 overflow-hidden rounded-lg">
+                                <!-- Item 1 -->
+                                {% for img in joinedRoom.room.images.all %}
+                                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                    <img src="{{ img.image.url }}" class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                                </div>
+                                {% endfor %}
+
+                               
+                            </div>
+                            
+                            <!-- Slider controls -->
+                            <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                    </svg>
+                                    <span class="sr-only">Previous</span>
+                                </span>
+                            </button>
+                            <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                    <span class="sr-only">Next</span>
+                                </span>
+                            </button>
+                        </div>
+
+                        <!-- INFO -->
+                        <div class="p-2 font-semibold">
+                            <h1>{{joinedRoom.room.roomTitle}}</h1>
+
+                        </div>
+
+                        <div class="p-2 ">
+                            <h1><span>{{joinedRoom.room.rent}}</span><span> / Month</span></h1>
+
+                        </div>
+
+                        <div class="p-2 ">
+                            <h1>{{joinedRoom.room.roomAddress}}</h1>
+
+                        </div>
+
+                        <div class="">
+                            {% comment %} <a href="{% url 'roomMoreDetails' room.id %}" class=" w-full flex justify-center border border-solid border-[black]  font-medium rounded-md py-3 ">More Details</a> {% endcomment %}
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                    <button type="submit" class="w-full py-3 border border-solid border-[black]  font-medium rounded-md py-3">More Details</button>
+                                <input type="hidden" name="page" value="{{joinedRoom.room.id}}">
+                            </form>
+                        </div>
+                    </div> <!--END: LISTING ROOMS-->
+                    {% endfor %}
+                    {% endif %}
+                    
+                    {% elif not joinedRoomDetails %}
+
+                    <h1 class="text-xl">Currently you have not joined the room</h1>
+                    
+                    <!-- IF USER IS OWNER -->
+                    {% else %}
+                    {% if allApprovedRooms %}
+
+                        
+                    {% for room in allApprovedRooms %}
+                    <!--START: LISTING ROOMS-->
+                    <div class="p-3 shadow-xl md:w-[350px]">
+                        <div id="gallery" class="relative w-full" data-carousel="slide">
+                            <!-- Carousel wrapper -->
+                            
+                            <div class="relative h-56 overflow-hidden rounded-lg">
+                                <!-- Item 1 -->
+                                {% for img in room.images.all %}
+                                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                    <img src="{{ img.image.url }}" class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                                </div>
+                                {% endfor %}
+
+                               
+                            </div>
+                            
+                            <!-- Slider controls -->
+                            <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                    </svg>
+                                    <span class="sr-only">Previous</span>
+                                </span>
+                            </button>
+                            <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                    <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                    </svg>
+                                    <span class="sr-only">Next</span>
+                                </span>
+                            </button>
+                        </div>
+
+                        <!-- INFO -->
+                        <div class="p-2 font-semibold">
+                            <h1>{{room.roomTitle}}</h1>
+
+                        </div>
+
+                        <div class="p-2 ">
+                            <h1><span>{{room.rent}}</span><span> / Month</span></h1>
+
+                        </div>
+
+                        <div class="p-2 ">
+                            <h1>{{room.roomAddress}}</h1>
+
+                        </div>
+
+                        <div class="">
+                            {% comment %} <a href="{% url 'roomMoreDetails' room.id %}" class=" w-full flex justify-center border border-solid border-[black]  font-medium rounded-md py-3 ">More Details</a> {% endcomment %}
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                    <button type="submit" class="w-full py-3 border border-solid border-[black]  font-medium rounded-md py-3">More Details</button>
+                                <input type="hidden" name="page" value="{{room.id}}">
+                            </form>
+                        </div>
+                    </div> <!--END: LISTING ROOMS-->
+
+                        {% endfor %}
+                    {% endif %}
+                        
+
+
+
+
+                    <!-- ADD NEW ROOM START -->
+                    <div class="p-3 shadow-xl md:w-[350px] h-[350px]">
+                       <div class="flex justify-center pt-14">
+                        <a href="{% url 'listing' %}"><svg width="110px" height="110px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> 
+                            <path d="M12.75 9C12.75 8.58579 12.4142 8.25 12 8.25C11.5858 8.25 11.25 8.58579 11.25 9L11.25 11.25H9C8.58579 11.25 8.25 11.5858 8.25 12C8.25 12.4142 8.58579 12.75 9 12.75H11.25V15C11.25 15.4142 11.5858 15.75 12 15.75C12.4142 15.75 12.75 15.4142 12.75 15L12.75 
+                            12.75H15C15.4142 12.75 15.75 12.4142 15.75 12C15.75 11.5858 15.4142 11.25 15 11.25H12.75V9Z" fill="#000000"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.25C6.06294 1.25 1.25 6.06294 1.25 12C1.25 17.9371 6.06294 22.75 12 22.75C17.9371 22.75 22.75 
+                            17.9371 22.75 12C22.75 6.06294 17.9371 1.25 12 1.25ZM2.75 12C2.75 6.89137 6.89137 2.75 12 2.75C17.1086 2.75 21.25 6.89137 21.25 12C21.25 17.1086 17.1086 21.25 12 21.25C6.89137 21.25 2.75 17.1086 2.75 12Z" fill="#000000"></path> </g></svg>
+                        </a>
+                       </div>
+
+                       <div class="text-3xl font-semibold flex justify-center pt-14">
+                        <a href="{% url 'listing' %}"><h1>List Room</h1></a>
+                       </div>
+
+                    </div>
+                    <!-- ADD NEW ROOM END -->
+                    {% endif %}
+                    
+                    
+                </div>  <!-- ROOM END -->
+
+                
+            </div>
+
+
+            </div>  <!-- END CONTENTS -->
+        </div>
+    </div>
+    
+{% endblock %}

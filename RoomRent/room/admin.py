@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(RoomImage)
 admin.site.register(Room)
 admin.site.register(RoomDocument)
+admin.site.register(BookRoom)

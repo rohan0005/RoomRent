@@ -1,0 +1,184 @@
+{% extends 'Users Profile/NavigationBarBase/base.html' %}
+{% load static %}
+{% block title %}RoomRent | Room{% endblock %}
+{% block content %}
+
+
+    <!-- MAIN DIV -->
+    <div class="mt-24">
+
+   
+        <!-- Search header  -->
+        <div class="flex justify-center pt-2">
+            <h1 class="mb-4 text-4xl font-semibold text-[#141B2D]">
+                Search for Rooms
+              </h1>
+        </div>
+        <!-- <div class="flex justify-center mb-10">
+            <h1 class="text-xl  text-[#141B2D]">Explore Available Rooms</h1>
+        </div> -->
+    
+        <!-- SEARCH and FILTER  -->
+        <div class="search-container bg-[#EDEDF1] mb-5">
+            <div class="p-5 flex justify-center gap-4">
+                <div class="search-box flex justify-center">
+                    <input
+                    class="flex border h-10 w-[250px] rounded bg-white px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                    type="text"
+                    placeholder="Enter a keyword"
+                />
+                </div>
+    
+                <div>
+                    <button
+                    type="button"
+                    class="inline-flex items-center rounded-md bg-[#1F2937] px-4 py-3 text-sm font-semibold text-white hover:bg-black/80"
+                    >
+                    <svg fill="#ffffff" height="18px" width="18px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 488.4 488.4" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M0,203.25c0,112.1,91.2,203.2,203.2,203.2c51.6,0,98.8-19.4,134.7-51.2l129.5,129.5c2.4,2.4,5.5,3.6,8.7,3.6 s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-129.6-129.5c31.8-35.9,51.2-83,51.2-134.7c0-112.1-91.2-203.2-203.2-203.2 S0,91.15,0,203.25z M381.9,203.25c0,98.5-80.2,178.7-178.7,178.7s-178.7-80.2-178.7-178.7s80.2-178.7,178.7-178.7 S381.9,104.65,381.9,203.25z"></path> </g> </g> </g></svg>
+                    <span class="pl-3 pr-3">Search</span>
+                    </button>
+                </div>
+            </div>
+    
+            <!-- FILTER -->
+            <div class="filter-heading">
+                <div class="flex justify-center text-gray-400 mb-5">
+                    <h1>Filter settings</h1>
+                </div>
+    
+                <div class="flex justify-center gap-5 pb-5">
+    
+                    <div>
+                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                            <option selected>Filter 1</option>
+                            <option value="US">Option 1</option>
+                            <option value="CA">Option 2</option>
+                            <option value="FR">Option 3</option>
+                            <option value="DE">Option 4</option>
+                        </select>
+        
+                    </div>
+    
+                    <div>
+                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                            <option selected>Filter 1</option>
+                            <option value="US">Option 1</option>
+                            <option value="CA">Option 2</option>
+                            <option value="FR">Option 3</option>
+                            <option value="DE">Option 4</option>
+                        </select>
+        
+                    </div>
+    
+    
+                    <div>
+                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                            <option selected>Filter 1</option>
+                            <option value="US">Option 1</option>
+                            <option value="CA">Option 2</option>
+                            <option value="FR">Option 3</option>
+                            <option value="DE">Option 4</option>
+                        </select>
+        
+                    </div>
+    
+    
+                    <div>
+                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                            <option selected>Filter 1</option>
+                            <option value="US">Option 1</option>
+                            <option value="CA">Option 2</option>
+                            <option value="FR">Option 3</option>
+                            <option value="DE">Option 4</option>
+                        </select>
+        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    
+    
+        <!-- ROOMS lists -->
+    
+        {% if allApprovedRooms %}
+        <div>
+            <div class="md:px-28 px-14 md:grid grid-cols-3 gap-8">
+                                        
+                {% for room in allApprovedRooms %}
+                <!--START: LISTING ROOMS-->
+                <div class="p-3 shadow md:w-[350px]">
+                    <div id="gallery" class="relative w-full" {% if not room.images.all|length == 1 %} data-carousel="slide" {% endif %}>
+                        <!-- Carousel wrapper -->
+                        
+                        <div class="relative h-56 overflow-hidden rounded-lg">
+                            <!-- Item 1 -->
+                            {% if room.images.all|length >= 2 %}
+                            {% for img in room.images.all %}
+                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                <img src="{{ img.image.url }}" class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                            </div>
+                            {% endfor %}
+
+                            {% elif room.images.all|length == 1 %}
+
+                            {% for img in room.images.all %}
+                                <div class=" duration-700 ease-in-out" data-carousel-item>
+                                    <img src="{{ img.image.url }}" class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                                </div>
+                            {% endfor %}
+
+                            {% endif %}
+                           
+                        </div>
+                        
+                       
+                    </div>
+    
+                    <!-- INFO -->
+                    <div class="p-2 font-semibold">
+                        <h1>{{room.roomTitle}}</h1>
+    
+                    </div>
+    
+                    <div class="p-2 ">
+                        <h1 class="text-[#1C3988]"><span>Rs. </span><span>{{room.rent}}</span><span> / Month</span></h1>
+    
+                    </div>
+    
+                    <div class="p-2 ">
+                        <h1>{{room.roomAddress}}</h1>
+    
+                    </div>
+    
+                    <div class="">
+                        <!-- <button class="w-full py-3 bg-[#1F2937]  font-medium text-white  rounded-md ">More Details</button> -->
+                        <a href="{% url 'roomMoreDetails' room.id %}" class=" w-full flex justify-center border border-solid border-[black]  font-medium rounded-md py-3 ">More Details</a>
+    
+                    </div>
+                </div> <!--END: LISTING ROOMS-->
+    
+                {% endfor %}
+            </div>  <!-- ROOM END -->
+            
+        </div>
+
+        {% else %}
+
+        <div class="no-room-container flex justify-center mt-20 text-3xl ">
+            <h1>No Rooms are listed currently</h1>
+        </div>
+
+
+        {% endif %}
+        
+    
+    
+    
+    
+    
+    
+    
+    </div>
+
+{% endblock %}
