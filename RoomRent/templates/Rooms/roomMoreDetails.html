@@ -10,126 +10,146 @@
     <div class="container px-4 py-1 mx-auto ">
 
         <!-- CONTENTS -->
-        <div class="bg-white h-full md:px-20  pb-[100px]  lg:mr-3 mt-[92px] {% if '/room/details/' in request.path  %} {% else %}md:ml-30 lg:ml-60 {% endif %} bg-white pr-3">
+        <div
+            class="bg-white h-full md:px-20  pb-[100px]  lg:mr-3 mt-[92px] {% if '/room/details/' in request.path  %} {% else %}md:ml-30 lg:ml-60 {% endif %} bg-white pr-3">
 
             <div class="text-[#1C3988] text-[20px] pl-5 pt-3 flex justify-between">
 
                 <div class="pt-2 underline">
                     <div class="pt-1 pl-1 ">
                         <!--<a href=""><svg width="24px" height="24px" viewBox="0 0 1024 1024" fill="#1C3988" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M669.6 849.6c8.8 8 22.4 7.2 30.4-1.6s7.2-22.4-1.6-30.4l-309.6-280c-8-7.2-8-17.6 0-24.8l309.6-270.4c8.8-8 9.6-21.6 2.4-30.4-8-8.8-21.6-9.6-30.4-2.4L360.8 480.8c-27.2 24-28 64-0.8 88.8l309.6 280z" fill=""></path></g></svg></a> -->
-                        <a class="font-bold" href="{% url 'room' %}"><h1>Back</h1></a>
+                        <a class="font-bold" href="{% url 'room' %}">
+                            <h1>Back</h1>
+                        </a>
                     </div>
                 </div>
-                
+
                 {% if messages %}
                 {% for message in messages %}
-                    <!-- Success or error message start -->
-                    <div id="toast-success" class="flex h-12 md:w-[250px]  mt-4">
-                        <!-- ICON -->
-                        <div class="rounded-l-lg  w-1/5 flex justify-center p-2 {% if message.tags == 'alert-danger' %}bg-red-500 text-white{% else %}bg-[#59CE8F] text-white{% endif %}">
-                            {% if message.tags == 'alert-danger' %}
-                            <span class="pt-1">
-                                <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M11.5001 4.59961C11.8051 4.59961 12.0976 4.72077 12.3133 4.93644C12.5289 5.1521 12.6501 5.44461 12.6501 5.74961V12.6496C12.6501 12.9546 12.5289 13.2471 12.3133 13.4628C12.0976 13.6784 11.8051 13.7996 11.5001 13.7996C11.1951 13.7996 10.9026 13.6784 10.6869 13.4628C10.4713 13.2471 10.3501 12.9546 10.3501 12.6496V5.74961C10.3501 5.44461 10.4713 5.1521 10.6869 4.93644C10.9026 4.72077 11.1951 4.59961 11.5001 4.59961ZM11.5001 16.0996C11.1951 16.0996 10.9026 16.2208 10.6869 16.4364C10.4713 16.6521 10.3501 16.9446 10.3501 17.2496C10.3501 17.5546 10.4713 17.8471 10.6869 18.0628C10.9026 18.2785 11.1951 18.3996 11.5001 18.3996C11.8051 18.3996 12.0976 18.2785 12.3133 18.0628C12.5289 17.8471 12.6501 17.5546 12.6501 17.2496C12.6501 16.9446 12.5289 16.6521 12.3133 16.4364C12.0976 16.2208 11.8051 16.0996 11.5001 16.0996Z" fill="white"/>
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 0C5.14855 0 0 5.14855 0 11.5C0 17.8514 5.14855 23 11.5 23C17.8514 23 23 17.8514 23 11.5C23 5.14855 17.8514 0 11.5 0ZM2.3 11.5C2.3 13.94 3.26928 16.28 4.99462 18.0054C6.71995 19.7307 9.06001 20.7 11.5 20.7C13.94 20.7 16.28 19.7307 18.0054 18.0054C19.7307 16.28 20.7 13.94 20.7 11.5C20.7 9.06001 19.7307 6.71995 18.0054 4.99462C16.28 3.26928 13.94 2.3 11.5 2.3C9.06001 2.3 6.71995 3.26928 4.99462 4.99462C3.26928 6.71995 2.3 9.06001 2.3 11.5Z" fill="white"/>
-                                    </svg>                                    
-                            </span>
-                            {% else %}
+                <!-- Success or error message start -->
+                <div id="toast-success" class="flex h-12 md:w-[250px]  mt-4">
+                    <!-- ICON -->
+                    <div
+                        class="rounded-l-lg  w-1/5 flex justify-center p-2 {% if message.tags == 'alert-danger' %}bg-red-500 text-white{% else %}bg-[#59CE8F] text-white{% endif %}">
+                        {% if message.tags == 'alert-danger' %}
+                        <span class="pt-1">
+                            <svg width="23" height="23" viewBox="0 0 23 23" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M11.5001 4.59961C11.8051 4.59961 12.0976 4.72077 12.3133 4.93644C12.5289 5.1521 12.6501 5.44461 12.6501 5.74961V12.6496C12.6501 12.9546 12.5289 13.2471 12.3133 13.4628C12.0976 13.6784 11.8051 13.7996 11.5001 13.7996C11.1951 13.7996 10.9026 13.6784 10.6869 13.4628C10.4713 13.2471 10.3501 12.9546 10.3501 12.6496V5.74961C10.3501 5.44461 10.4713 5.1521 10.6869 4.93644C10.9026 4.72077 11.1951 4.59961 11.5001 4.59961ZM11.5001 16.0996C11.1951 16.0996 10.9026 16.2208 10.6869 16.4364C10.4713 16.6521 10.3501 16.9446 10.3501 17.2496C10.3501 17.5546 10.4713 17.8471 10.6869 18.0628C10.9026 18.2785 11.1951 18.3996 11.5001 18.3996C11.8051 18.3996 12.0976 18.2785 12.3133 18.0628C12.5289 17.8471 12.6501 17.5546 12.6501 17.2496C12.6501 16.9446 12.5289 16.6521 12.3133 16.4364C12.0976 16.2208 11.8051 16.0996 11.5001 16.0996Z"
+                                    fill="white" />
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M11.5 0C5.14855 0 0 5.14855 0 11.5C0 17.8514 5.14855 23 11.5 23C17.8514 23 23 17.8514 23 11.5C23 5.14855 17.8514 0 11.5 0ZM2.3 11.5C2.3 13.94 3.26928 16.28 4.99462 18.0054C6.71995 19.7307 9.06001 20.7 11.5 20.7C13.94 20.7 16.28 19.7307 18.0054 18.0054C19.7307 16.28 20.7 13.94 20.7 11.5C20.7 9.06001 19.7307 6.71995 18.0054 4.99462C16.28 3.26928 13.94 2.3 11.5 2.3C9.06001 2.3 6.71995 3.26928 4.99462 4.99462C3.26928 6.71995 2.3 9.06001 2.3 11.5Z"
+                                    fill="white" />
+                            </svg>
+                        </span>
+                        {% else %}
 
-                            <span>
-                                <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17.5001 2.91602C9.47925 2.91602 2.91675 9.47852 2.91675 17.4993C2.91675 25.5202 9.47925 32.0827 17.5001 32.0827C25.5209 32.0827 32.0834 25.5202 32.0834 17.4993C32.0834 9.47852 25.5209 2.91602 17.5001 2.91602ZM17.5001 29.166C11.0688 29.166 5.83341 23.9306 5.83341 17.4993C5.83341 11.0681 11.0688 5.83268 17.5001 5.83268C23.9313 5.83268 29.1667 11.0681 29.1667 17.4993C29.1667 23.9306 23.9313 29.166 17.5001 29.166ZM24.1938 11.0535L14.5834 20.6639L10.8063 16.9014L8.75008 18.9577L14.5834 24.791L26.2501 13.1243L24.1938 11.0535Z" fill="white"/>
-                                </svg>
-                            </span>
-                            {% endif %}
-                        </div>
-
-                        <!-- MEssage -->
-                        <div class="border-[#CECECE]  border-l-0 w-4/5 p-3 border outline-none">
-                            <p class="left-0 {% if message.tags == 'alert-success' %}  text-[#0AD674] {% else %} text-[#FF3131]{% endif %} font-medium lg:text-[15px] text-[15px]">
-                                    {{message}}
-                            </p>
-                        </div>
+                        <span>
+                            <svg width="35" height="35" viewBox="0 0 35 35" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M17.5001 2.91602C9.47925 2.91602 2.91675 9.47852 2.91675 17.4993C2.91675 25.5202 9.47925 32.0827 17.5001 32.0827C25.5209 32.0827 32.0834 25.5202 32.0834 17.4993C32.0834 9.47852 25.5209 2.91602 17.5001 2.91602ZM17.5001 29.166C11.0688 29.166 5.83341 23.9306 5.83341 17.4993C5.83341 11.0681 11.0688 5.83268 17.5001 5.83268C23.9313 5.83268 29.1667 11.0681 29.1667 17.4993C29.1667 23.9306 23.9313 29.166 17.5001 29.166ZM24.1938 11.0535L14.5834 20.6639L10.8063 16.9014L8.75008 18.9577L14.5834 24.791L26.2501 13.1243L24.1938 11.0535Z"
+                                    fill="white" />
+                            </svg>
+                        </span>
+                        {% endif %}
                     </div>
-                   
 
-                    {% endfor %}
-                    {% endif %}
+                    <!-- MEssage -->
+                    <div class="border-[#CECECE]  border-l-0 w-4/5 p-3 border outline-none">
+                        <p
+                            class="left-0 {% if message.tags == 'alert-success' %}  text-[#0AD674] {% else %} text-[#FF3131]{% endif %} font-medium lg:text-[15px] text-[15px]">
+                            {{message}}
+                        </p>
+                    </div>
+                </div>
+
+
+                {% endfor %}
+                {% endif %}
             </div>
 
 
 
-        {% if roomDetail %}
+            {% if roomDetail %}
 
             <!-- Heading -->
             <div class="md:text-4xl text-[19px] py-5 pl-5">
-                <div><h1>{{roomDetail.roomTitle}}</h1> </div>
+                <div>
+                    <h1>{{roomDetail.roomTitle}}</h1>
+                </div>
             </div>
 
             <div class="justify-center flex gap-4 pb-4 md:px-10">
                 {% if roomDetail.images.first %}
-                <img src="{{ roomDetail.images.first.image.url }}"
-                     alt="Room Image"
-                     class="rounded rounded-xl pl-2 pt-3 w-[930px] h-full object-cover rounded-xl" />
+                <img src="{{ roomDetail.images.first.image.url }}" alt="Room Image"
+                    class="rounded rounded-xl pl-2 pt-3 w-[930px] h-full object-cover rounded-xl" />
 
                 {% endif %}
 
                 {% if roomDetail.images.all|length >= 2 %}
                 <div class="space-y-4">
-                    
-                        <img src="{{ roomDetail.images.all.1.image.url }}"
-                            alt="Room Image"
-                            class="pt-3 w-96 rounded" />
-                    
+
+                    <img src="{{ roomDetail.images.all.1.image.url }}" alt="Room Image" class="pt-3 w-96 rounded" />
+
 
                     {% if roomDetail.images.all|length >= 3 %}
-                        <div class="relative">
-                            <img src="{{ roomDetail.images.all.2.image.url }}"
-                            alt="Room Image"
+                    <div class="relative">
+                        <img src="{{ roomDetail.images.all.2.image.url }}" alt="Room Image"
                             class="pt-3 w-96 rounded relative bg-orange-500 " />
 
-                            {% if roomDetail.images.all|length >= 3 %}
-                            <button type="button" data-modal-target="default-modal" data-modal-toggle="default-modal" class="absolute right-[15px] text-sm bottom-[15px] md:p-2 p-1 md:px-3 text-gray-600 bg-white uppercase rounded hover:bg-gray-100"> show more</button>
-                            
-                            <!-- Main modal for showing all room image-->
-                            <div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                <div class="relative p-4 w-full max-w-2xl max-h-full">
-                                    <!-- Modal content -->
-                                    <div class="relative bg-white rounded-lg shadow ">
-                                        <!-- Modal header -->
-                                        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
-                                            <h3 class="text-xl font-semibold text-gray-900">
-                                                All images of this room
-                                            </h3>
-                                            <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-hide="default-modal">
-                                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                                </svg>
-                                                <span class="sr-only">Close modal</span>
-                                            </button>
+                        {% if roomDetail.images.all|length >= 3 %}
+                        <button type="button" data-modal-target="default-modal" data-modal-toggle="default-modal"
+                            class="absolute right-[15px] text-sm bottom-[15px] md:p-2 p-1 md:px-3 text-gray-600 bg-white uppercase rounded hover:bg-gray-100">
+                            show more</button>
+
+                        <!-- Main modal for showing all room image-->
+                        <div id="default-modal" tabindex="-1" aria-hidden="true"
+                            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <div class="relative p-4 w-full max-w-2xl max-h-full">
+                                <!-- Modal content -->
+                                <div class="relative bg-white rounded-lg shadow ">
+                                    <!-- Modal header -->
+                                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                                        <h3 class="text-xl font-semibold text-gray-900">
+                                            All images of this room
+                                        </h3>
+                                        <button type="button"
+                                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
+                                            data-modal-hide="default-modal">
+                                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 14 14">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2"
+                                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                            </svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                    <!-- Modal body containing iamge-->
+                                    <div class="px-5 md:p-5 space-y-10 justify-center">
+                                        {% for img in roomDetail.images.all %}
+                                        <div class="space-y-4">
+
+                                            <a href="{{ img.image.url }}" target="_blank"><img class="w-full"
+                                                    src="{{ img.image.url }}" alt="Room Image"
+                                                    class="pt-3 w-96 rounded" /></a>
                                         </div>
-                                        <!-- Modal body containing iamge-->
-                                        <div class="px-5 md:p-5 space-y-10 justify-center">
-                                            {% for img in roomDetail.images.all %}
-                                            <div class="space-y-4">
-                                                
-                                                    <a href="{{ img.image.url }}" target="_blank"><img class="w-full" src="{{ img.image.url }}"
-                                                        alt="Room Image"
-                                                        class="pt-3 w-96 rounded" /></a>
-                                            </div>
-                                            {% endfor %}
-                                        </div>
-                                        <!-- Modal footer -->
-                                        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
-                                            <button data-modal-hide="default-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 outline outline-1 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100">Close</button>
-                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Modal footer -->
+                                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                                        <button data-modal-hide="default-modal" type="button"
+                                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 outline outline-1 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100">Close</button>
                                     </div>
                                 </div>
                             </div>
-
-                            {% endif %}
                         </div>
-                     {% endif %}
+
+                        {% endif %}
+                    </div>
+                    {% endif %}
                 </div>
                 {% endif %}
             </div>
@@ -137,7 +157,7 @@
 
 
             <!-- Room Title -->
-            
+
             <!-- End: Room Title -->
 
 
@@ -156,20 +176,21 @@
                     <div class="pt-5  border border-3 shadow  pb-5 mb-4">
                         <h1 class="md:text-3xl text-[19px] pb-1 pl-6 pb-3 font-bold">Rules</h1>
                         <p class="text-justify pl-5 leading-loose">
-                            
+
                             {% for rule in roomRules %}
-                               {{ rule }} <br>
+                            {{ rule }} <br>
                             {% endfor %}
-                            
-                            
+
+
                         </p>
                     </div>
                 </div>
-                
+
 
                 <div class="md:w-2/5 border border-3 shadow  rounded-md">
                     <div>
-                        <h1 class="md:text-3xl text-[19px] text-center pt-5 font-bold" >Rs <span>{{roomDetail.rent}}</span> / Month</h1>
+                        <h1 class="md:text-3xl text-[19px] text-center pt-5 font-bold">Rs
+                            <span>{{roomDetail.rent}}</span> / Month</h1>
                     </div>
 
                     <!-- <div>
@@ -180,7 +201,8 @@
                         <p><span><img src="/images/static images/Icons/eva_calendar-fill.svg" alt=""><h1>31/31/2023</h1></span></p>
                     </div> -->
 
-                    <div data-popover id="popover-default" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+                    <div data-popover id="popover-default" role="tooltip"
+                        class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
                         <div class="px-3 py-2 bg-gray-700 border-b border-gray-200 rounded-t-lg">
                             <h3 class="font-semibold text-white ">WARNING</h3>
                         </div>
@@ -189,141 +211,197 @@
                         </div>
                         <div data-popper-arrow></div>
                     </div>
-                    <form action="" method="post" >
+                    <form action="" method="post">
                         {% csrf_token %}
-<div class="relative max-w-sm ml-8 mt-3">
-    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-       <svg class="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-        </svg>
-    </div>
-    <input required name="moveInDate" value="" data-popover-target="popover-default" datepicker datepicker-autohide type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  " placeholder="Select date">
-  </div>
-  
-
-                    <!-- Utility head -->
-                    <div class="ml-9 mt-5 mb-2">
-                        <h1 class="font-bold" >Utility info:</h1>
-                    </div>
-
-                    <!-- Utility List -->
-                    <div class="">
-                        <!-- Electricity -->
-                       <div class=" flex ml-9 gap-4 mt-5">
-
-                            <div class=" mb-2">
-                                <img src="/images/static images/Icons/Group.svg" alt="">
+                        <div class="relative max-w-sm ml-8 mt-3">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
                             </div>
-                            
-                            <div class=" justify-between pr-12 flex w-[400px]">
-                                <div>
-                                    <h1>Electricity</h1>
+                            <input required name="moveInOrMoveoutDate" value="" data-popover-target="popover-default" datepicker
+                                datepicker-autohide type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  "
+                                placeholder="Select date">
+                        </div>
+
+
+                        <!-- Utility head -->
+                        <div class="ml-9 mt-5 mb-2">
+                            <h1 class="font-bold">Utility info:</h1>
+                        </div>
+
+                        <!-- Utility List -->
+                        <div class="">
+                            <!-- Electricity -->
+                            <div class=" flex ml-9 gap-4 mt-5">
+
+                                <div class=" mb-2">
+                                    <img src="/images/static images/Icons/Group.svg" alt="">
                                 </div>
 
-                                <div class=" ">
+                                <div class=" justify-between pr-12 flex w-[400px]">
                                     <div>
-                                        <h2><span>Rs. </span><span>{{roomDetail.electricity}}</span> / unit</h2> 
+                                        <h1>Electricity</h1>
                                     </div>
+
+                                    <div class=" ">
+                                        <div>
+                                            <h2><span>Rs. </span><span>{{roomDetail.electricity}}</span> / unit</h2>
+                                        </div>
+                                    </div>
+
                                 </div>
 
+
                             </div>
-                           
 
-                       </div> 
+                            <!-- Water  -->
+                            <div class=" flex ml-9 gap-4 mt-5">
 
-                       <!-- Water  -->
-                       <div class=" flex ml-9 gap-4 mt-5">
-
-                            <div class="pt-1 mb-2">
-                                <img src="/images/static images/Icons/Vector.svg" alt="">
-                            </div>
-                            
-                            <div class=" justify-between pr-12 flex w-[400px]">
-                                <div>
-                                    <h1>Water</h1>
+                                <div class="pt-1 mb-2">
+                                    <img src="/images/static images/Icons/Vector.svg" alt="">
                                 </div>
 
-                                <div class=" ">
+                                <div class=" justify-between pr-12 flex w-[400px]">
                                     <div>
-                                        <h2>Rs. <span>{{roomDetail.water}}</span> / Month</h2> 
+                                        <h1>Water</h1>
                                     </div>
+
+                                    <div class=" ">
+                                        <div>
+                                            <h2>Rs. <span>{{roomDetail.water}}</span> / Month</h2>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Trash  -->
+                            <div class=" flex ml-9 gap-4 mt-5">
+
+                                <div class=" mb-2">
+                                    <img src="/images/static images/Icons/Vector (1).svg" alt="">
                                 </div>
 
-                            </div>
-                        </div> 
-
-                        <!-- Trash  -->
-                        <div class=" flex ml-9 gap-4 mt-5">
-
-                            <div class=" mb-2">
-                                <img src="/images/static images/Icons/Vector (1).svg" alt="">
-                            </div>
-                            
-                            <div class=" justify-between pr-12 flex w-[400px]">
-                                <div>
-                                    <h1>Trash</h1>
-                                </div>
-
-                                <div class=" ">
+                                <div class=" justify-between pr-12 flex w-[400px]">
                                     <div>
-                                        <h2>Rs. <span>{{roomDetail.trash}}</span> / Month</h2> 
+                                        <h1>Trash</h1>
                                     </div>
+
+                                    <div class=" ">
+                                        <div>
+                                            <h2>Rs. <span>{{roomDetail.trash}}</span> / Month</h2>
+                                        </div>
+                                    </div>
+
                                 </div>
-
                             </div>
-                        </div> 
 
-                    </div>
-                    
-                    
+                        </div>
+
+
                         <input type="hidden" name="room_id" value="{{roomDetail.id}}">
-                        
-                            <!-- Modal HTML -->
-    <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <!-- Modal content -->
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <div class="relative bg-white rounded-lg shadow">
-                <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-                <div class="p-4 md:p-5 text-center">
-                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                    </svg>
-                    <h3 class="mb-5 text-lg font-normal text-gray-700">Are you sure you want to book this room?</h3>
-                    
-                    <button data-modal-hide="popup-modal" type="submit" class="text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 outline outline-1 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-6 py-3 mr-4 text-center">
-                        Confirm
-                    </button>
-              
-                    <button data-modal-hide="popup-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 outline outline-1 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100">No, cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
+                        <!-- Modal HTML -->
+                        <div id="popup-modal" tabindex="-1"
+                            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                            <!-- Modal content -->
+                            <div class="relative p-4 w-full max-w-md max-h-full">
+                                <div class="relative bg-white rounded-lg shadow">
+                                    <button type="button"
+                                        class="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                        data-modal-hide="popup-modal">
+                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                        </svg>
+                                        <span class="sr-only">Close modal</span>
+                                    </button>
+                                    <div class="p-4 md:p-5 text-center">
+                                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 " aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
+                                        {% if hasJoinedRoom and request.user|has_group:"tenant" %}
+                                        <h3 class="mb-5 text-lg font-normal text-gray-700">Are you sure you want to inform
+                                            moveout?</h3>
+                                        {% else %}
+                                        <h3 class="mb-5 text-lg font-normal text-gray-700">Are you sure you want to book
+                                            this room?</h3>
+                                        {% endif %}
+                                        
+                                        {% if hasJoinedRoom and request.user|has_group:"tenant" %}
+                                                <button data-modal-hide="popup-modal" type="submit" name="moveout"
+                                                class="text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 outline outline-1 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-6 py-3 mr-4 text-center">
+                                                Confirm
+                                            </button>
+                                        {% else %}
+                                                <button data-modal-hide="popup-modal" type="submit"
+                                                class="text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 outline outline-1 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-6 py-3 mr-4 text-center">
+                                                Confirm
+                                            </button>
+                                        {% endif %}
+
+                                        <button data-modal-hide="popup-modal" type="button"
+                                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 outline outline-1 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100">No,
+                                            cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
 
 
-                    <!-- Book Now -->
-                    <div class="p-6 pl-9">
+                        <!-- Book Now -->
+                        <div class="p-6 pl-9">
                             <input type="hidden" name="user" value="{{request.user}}">
-                            <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" type="button" class="text-white bg-[#1F2937] focus:ring-4 focus:outline-none focus:ring-[#050708]/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 mb-2"     {% if request.user.is_superuser or request.user|has_group:"owner" or hasBookedRoom %} disabled {% endif %}>
-                                <span><img src="/images/static images/Icons/iconamoon_exit-fill.svg" alt=""></span>
+                            
+                            <!--IF USER IS TENANT AND HAS NOT JOINED ROOM-->
+                            {% if not hasJoinedRoom and request.user|has_group:"tenant" %} 
                                 
-                                {% if hasBookedRoom %}
-                                    Already booked a room
-                                {% else %}
-                                Book Now
+                                {% if not hasBookedThisRoom %} <!--IF TENANT HAS NOT BOOKED THE ROOM -->
+                                        
+                                    <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" type="button"
+                                    class="text-white bg-[#1F2937] focus:ring-4 focus:outline-none focus:ring-[#050708]/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 mb-2">
+                                    <span><img src="/images/static images/Icons/iconamoon_exit-fill.svg" alt="">Book now</span>
+                                
+                                {% else %} <!---IF TENANT IS LOGGED IN : IF TENANT HAS BOOKED BUT NOT JOINED THIS ROOM THEN SHOW THIS MESSAGE-->
+                                    <h1 class="text-[#0766AD] font-bold">You have booked this room.</h1>
                                 {% endif %}
-                                     
-                            </button>
-                    </div>
-                
-                    </form>
+                            
+
+                            <!--IF OWNER IS LOGGED IN : IF TENANT HAS BOOKED THE ROOM BUT NOT JOINED SHOW THIS MESSAGE-->
+                            {% elif request.user|has_group:"owner" %}
+
+                                {% if not hasJoinedRoom and hasBookedThisRoom  %}
+                                    
+                                    <h1 class="text-[#FF3131] font-bold">Tenant has booked this room</h1>
+                                
+                                    {% elif request.user|has_group:"owner" and hasJoinedMyRoom %}
+                                    <h1 class="text-[#0766AD] font-bold">Tenant has joined this room</h1>
+
+                                {% endif %}
+
+                            {% elif hasJoinedRoom and hasBookedThisRoom and request.user|has_group:"tenant" %}
+                            <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" type="button" name="moveout"
+                            class="text-white bg-[#1F2937] focus:ring-4 focus:outline-none focus:ring-[#050708]/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 mb-2">
+                            <span><img src="/images/static images/Icons/iconamoon_exit-fill.svg" alt="">Inform Moveout</span>
+
+                            {% elif hasJoinedRoom and not hasBookedThisRoom and request.user|has_group:"tenant" %}
+                                <h1 class="text-[#FF3131] font-bold">You have already joined a room</h1>
+                                
+                            
+
+                            {% endif %}
+                         
+                        </div>
 
                 </div>
 
@@ -337,35 +415,28 @@
                 <div class="md:w-4/5">
                     <div class="pt-5  border border-3 shadow  pb-5 mb-4">
                         <h1 class="md:text-3xl text-[19px] pb-1 pl-3 flex  justify-center font-bold">Amenities</h1>
-                        
-                        <div class="text-gray-700 md:grid md:grid-cols-3 justify-center pt-5 pl-5 md:px-10 md:text-[19px] md:gap-20 text-[14px] pb-10">
+
+                        <div
+                            class="text-gray-700 md:grid md:grid-cols-3 justify-center pt-5 pl-5 md:px-10 md:text-[19px] md:gap-20 text-[14px] pb-10">
 
                             {% for a in amenities %}
                             <div>
                                 {{a}}
                             </div>
                             {% endfor %}
-                            
-                            
-                            {% comment %} <h1>Water</h1>
-                            <h1>Medical</h1>
-                            <h1>24 hours electricity</h1><h1>Water</h1>
-                            <h1>Medical</h1>
-                            <h1>24 hours electricity</h1> {% endcomment %}
-
                         </div>
 
-                        
+
 
                     </div>
                 </div>
-                
+
                 <!--Room Info START-->
                 <div class="md:w-2/5 border border-3 shadow  rounded-md h-[330px]">
-                   
+
                     <div class="">
                         <h1 class="md:text-3xl text-[19px] flex justify-center pt-4 pl-3 font-bold">Room Info</h1>
-                        
+
                         <div class="main-container-info pt-3">
 
                             <div class="grid grid-cols-2 px-3 py-2 ">
@@ -374,7 +445,8 @@
                                 <div class="grid grid-cols-2">
                                     <!--ICON-->
                                     <div class="">
-                                        <img class="ml-8 mt-1 h-8 w-8" src="/images/static images/Icons/house.svg" alt="">
+                                        <img class="ml-8 mt-1 h-8 w-8" src="/images/static images/Icons/house.svg"
+                                            alt="">
                                     </div>
 
 
@@ -391,11 +463,24 @@
                                 </div>
 
 
-                            <!--ICON AND TYPE FOR floor START -->
+                                <!--ICON AND TYPE FOR floor START -->
                                 <div class="grid grid-cols-2">
                                     <!--ICON-->
                                     <div class="ml-9 mt-2">
-                                        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M11 6C9.34315 6 8 7.34315 8 9V17C8 17.5523 8.44772 18 9 18C9.55229 18 10 17.5523 10 17V14L12.0045 14C12.2149 13.9987 12.426 13.974 12.6332 13.9395C12.9799 13.8817 13.4575 13.7642 13.9472 13.5194C14.4409 13.2725 14.9649 12.8866 15.3633 12.289C15.7659 11.6851 16 10.9249 16 9.99996C16 9.07499 15.7659 8.31478 15.3633 7.71092C14.9649 7.11332 14.4408 6.7274 13.9472 6.48058C13.4575 6.23573 12.9799 6.11828 12.6332 6.06049C12.4248 6.02575 12.2117 6.0001 12 6H11ZM10 12V9C10 8.44772 10.4477 8 11 8L12.0004 8.00018C12.3603 8.01218 12.7318 8.10893 13.0528 8.26944C13.3092 8.39762 13.5351 8.5742 13.6992 8.82033C13.8591 9.06021 14 9.42497 14 9.99996C14 10.575 13.8591 10.9397 13.6992 11.1796C13.5351 11.4258 13.3091 11.6023 13.0528 11.7305C12.7318 11.891 12.3603 11.9878 12.0003 11.9998L10 12Z" fill="#0F0F0F"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z" fill="#0F0F0F"></path> </g></svg>
+                                        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M11 6C9.34315 6 8 7.34315 8 9V17C8 17.5523 8.44772 18 9 18C9.55229 18 10 17.5523 10 17V14L12.0045 14C12.2149 13.9987 12.426 13.974 12.6332 13.9395C12.9799 13.8817 13.4575 13.7642 13.9472 13.5194C14.4409 13.2725 14.9649 12.8866 15.3633 12.289C15.7659 11.6851 16 10.9249 16 9.99996C16 9.07499 15.7659 8.31478 15.3633 7.71092C14.9649 7.11332 14.4408 6.7274 13.9472 6.48058C13.4575 6.23573 12.9799 6.11828 12.6332 6.06049C12.4248 6.02575 12.2117 6.0001 12 6H11ZM10 12V9C10 8.44772 10.4477 8 11 8L12.0004 8.00018C12.3603 8.01218 12.7318 8.10893 13.0528 8.26944C13.3092 8.39762 13.5351 8.5742 13.6992 8.82033C13.8591 9.06021 14 9.42497 14 9.99996C14 10.575 13.8591 10.9397 13.6992 11.1796C13.5351 11.4258 13.3091 11.6023 13.0528 11.7305C12.7318 11.891 12.3603 11.9878 12.0003 11.9998L10 12Z"
+                                                    fill="#0F0F0F"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                                    fill="#0F0F0F"></path>
+                                            </g>
+                                        </svg>
                                     </div>
 
 
@@ -411,68 +496,85 @@
                                     <h1>{{roomDetail.parking}}</h1>
                                 </div>
 
-                            <!--ICON AND TYPE FOR floor END -->
+                                <!--ICON AND TYPE FOR floor END -->
 
 
 
 
-                            <!--ICON AND TYPE FOR floor START -->
-                            <div class="grid grid-cols-2">
-                                <!--ICON-->
-                                <div class="ml-9 mt-2">
-                                    <svg fill="#000000" width="24px" height="24px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g data-name="Layer 39" id="Layer_39"> <path d="M59,3V6H45v6H31v8H17v8H5V59H3v2H61V3Zm0,55H7V30H19V22H33V14H47V8H59Z"></path> <polygon points="12 6 12 20 14 20 14 6 19.87 10.4 21.07 8.8 13 2.75 4.93 8.8 6.13 10.4 12 6"></polygon> </g> </g></svg>
+                                <!--ICON AND TYPE FOR floor START -->
+                                <div class="grid grid-cols-2">
+                                    <!--ICON-->
+                                    <div class="ml-9 mt-2">
+                                        <svg fill="#000000" width="24px" height="24px" viewBox="0 0 64 64"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <title></title>
+                                                <g data-name="Layer 39" id="Layer_39">
+                                                    <path
+                                                        d="M59,3V6H45v6H31v8H17v8H5V59H3v2H61V3Zm0,55H7V30H19V22H33V14H47V8H59Z">
+                                                    </path>
+                                                    <polygon
+                                                        points="12 6 12 20 14 20 14 6 19.87 10.4 21.07 8.8 13 2.75 4.93 8.8 6.13 10.4 12 6">
+                                                    </polygon>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </div>
+
+
+                                    <!--TYPE-->
+                                    <div class="p-2  text-[16px] md:text-xl font-bold">
+                                        <h1>Floor</h1>
+                                    </div>
                                 </div>
 
 
-                                <!--TYPE-->
-                                <div class="p-2  text-[16px] md:text-xl font-bold">
-                                    <h1>Floor</h1>
+                                <!--INFO-->
+                                <div class="p-2  text-[16px] md:text-xl">
+                                    <h1>{{roomDetail.floor}}</h1>
                                 </div>
+
+                                <!--ICON AND TYPE FOR floor END -->
+
+
+
+                                <!--ICON AND TYPE FOR Bathroom START -->
+                                <div class="grid grid-cols-2 ">
+                                    <!--ICON-->
+                                    <div class="ml-9 mt-2">
+                                        <svg width="28px" height="28px" viewBox="0 0 512 512"
+                                            xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path fill="var(--ci-primary-color, #000000)"
+                                                    d="M464,280H80V100A51.258,51.258,0,0,1,95.113,63.515l.4-.4a51.691,51.691,0,0,1,58.6-10.162,79.1,79.1,0,0,0,11.778,96.627l10.951,10.951-20.157,20.158,22.626,22.626,20.157-20.157h0L311.157,71.471h0l20.157-20.157L308.687,28.687,288.529,48.844,277.578,37.893a79.086,79.086,0,0,0-100.929-8.976A83.61,83.61,0,0,0,72.887,40.485l-.4.4A83.054,83.054,0,0,0,48,100V280H16v32H48v30.7a23.95,23.95,0,0,0,1.232,7.589L79,439.589A23.969,23.969,0,0,0,101.766,456h12.9L103,496h33.333L148,456H356.1l12,40H401.5l-12-40h20.73A23.969,23.969,0,0,0,433,439.589l29.766-89.3A23.982,23.982,0,0,0,464,342.7V312h32V280ZM188.52,60.52a47.025,47.025,0,0,1,66.431,0L265.9,71.471,199.471,137.9,188.52,126.951A47.027,47.027,0,0,1,188.52,60.52ZM432,341.4,404.468,424H107.532L80,341.4V312H432Z"
+                                                    class="ci-primary"></path>
+                                            </g>
+                                        </svg>
+                                    </div>
+
+
+                                    <!--TYPE-->
+                                    <div class="p-2  text-[16px] md:text-xl font-bold">
+                                        <h1>Bathrooms</h1>
+                                    </div>
+                                </div>
+
+
+                                <!--INFO-->
+                                <div class="p-2 pl-9 text-[16px] md:text-xl">
+                                    <h1>{{roomDetail.numberOfBathroom}}</h1>
+                                </div>
+
+                                <!--ICON AND TYPE FORBathroom  END -->
+
+
                             </div>
-
-
-                            <!--INFO-->
-                            <div class="p-2  text-[16px] md:text-xl">
-                                <h1>{{roomDetail.floor}}</h1>
-                            </div>
-
-                        <!--ICON AND TYPE FOR floor END -->
-
-
-
-                        <!--ICON AND TYPE FOR Bathroom START -->
-                        <div class="grid grid-cols-2 ">
-                            <!--ICON-->
-                            <div class="ml-9 mt-2">
-                                <svg width="28px" height="28px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="var(--ci-primary-color, #000000)" d="M464,280H80V100A51.258,51.258,0,0,1,95.113,63.515l.4-.4a51.691,51.691,0,0,1,58.6-10.162,79.1,79.1,0,0,0,11.778,96.627l10.951,10.951-20.157,20.158,22.626,22.626,20.157-20.157h0L311.157,71.471h0l20.157-20.157L308.687,28.687,288.529,48.844,277.578,37.893a79.086,79.086,0,0,0-100.929-8.976A83.61,83.61,0,0,0,72.887,40.485l-.4.4A83.054,83.054,0,0,0,48,100V280H16v32H48v30.7a23.95,23.95,0,0,0,1.232,7.589L79,439.589A23.969,23.969,0,0,0,101.766,456h12.9L103,496h33.333L148,456H356.1l12,40H401.5l-12-40h20.73A23.969,23.969,0,0,0,433,439.589l29.766-89.3A23.982,23.982,0,0,0,464,342.7V312h32V280ZM188.52,60.52a47.025,47.025,0,0,1,66.431,0L265.9,71.471,199.471,137.9,188.52,126.951A47.027,47.027,0,0,1,188.52,60.52ZM432,341.4,404.468,424H107.532L80,341.4V312H432Z" class="ci-primary"></path> </g></svg>
-                            </div>
-
-
-                            <!--TYPE-->
-                            <div class="p-2  text-[16px] md:text-xl font-bold">
-                                <h1>Bathrooms</h1>
-                            </div>
-                        </div>
-
-
-                        <!--INFO-->
-                        <div class="p-2 pl-9 text-[16px] md:text-xl">
-                            <h1>{{roomDetail.numberOfBathroom}}</h1>
-                        </div>
-
-                    <!--ICON AND TYPE FORBathroom  END -->
-
-
-
-
-
-
-
-
-
-
-
-                            </div> 
 
                         </div>
 
@@ -500,14 +602,6 @@
 
             </div>
 
-
-
-
-
-
-
-
-
             <!-- Owner Info Start -->
             <div class="p-2  border border-3 shadow  mt-16 ml-4 pb-7">
                 <!-- Heading -->
@@ -517,53 +611,73 @@
 
                 <div class="pt-14 md:flex pl-4">
                     <div class="">
-                        <img class="w-28 h-28 rounded-full" src="{{roomDetail.user.userprofilepicture.image.url}}" alt="">
+                        <img class="w-28 h-28 rounded-full" src="{{roomDetail.user.userprofilepicture.image.url}}"
+                            alt="">
                     </div>
-                    
+
                     <div class="md:ml-14 space-y-9 pt-3 pb-4">
                         <p class="md:text-xl text-[16px]">Owner: <span>{{roomDetail.user}}</span></p>
                         <p class="md:text-xl text-[16px]">Listed on: {{roomDetail.listed_date}}</p>
                     </div>
 
                     <div class="md:ml-14 space-y-9 pt-3">
-                        <p class="md:text-xl text-[16px]">Contact Number: <span>{{roomDetail.user.useradditionaldetail.contact_number}}</span></p>
+                        <p class="md:text-xl text-[16px]">Contact Number:
+                            <span>{{roomDetail.user.useradditionaldetail.contact_number}}</span></p>
                         <p class="md:text-xl text-[16px]">Email: <span>{{roomDetail.user.email}}</span></p>
                     </div>
                 </div>
 
             </div> <!-- Owner Info END -->
-                
-        {% endif %}
-        
 
+            {% endif %}
+
+            
+            {% if isJoinedThisRoom %}
+            
+            {% for tenantDetails in isJoinedThisRoom %}
+                                
+            <!-- Owner Info Start -->
+            <div class="p-2  border border-3 shadow  mt-16 ml-4 pb-7">
+                <!-- Heading -->
+                <div class="ml-4 p-3">
+                    <h1 class="md:text-2xl text-[16px] font-semibold ">Tenant Details</h1>
+                </div>
+
+                <div class="pt-14 md:flex pl-4">
+                    <div class="">
+                        <img class="w-28 h-28 rounded-full" src="{{tenantDetails.user.userprofilepicture.image.url}}"
+                            alt="">
+                    </div>
+
+                    <div class="md:ml-14 space-y-9 pt-3 pb-4">
+                        {% if tenantDetails.user.first_name and tenantDetails.user.last_name %}
+                        
+                        <h1 class="md:text-xl text-[16px]"><span>Name: </span> <span>{{tenantDetails.user.first_name}}</span> <span>{{tenantDetails.user.last_name}}</span></h1>
+
+                        {% else %}
+
+                        <p class="md:text-xl text-[16px]">Tenant username: <span>{{tenantDetails.user}}</span></p>
+
+                        {% endif %}
+                        
+                        <p class="md:text-xl text-[16px]">Room joined on: {{ tenantDetails.moveInDate|date:"F j, Y"}}</p>
+                    </div>
+
+                    <div class="md:ml-14 space-y-9 pt-3">
+                        <p class="md:text-xl text-[16px]">Contact Number:
+                            <span>{{tenantDetails.user.useradditionaldetail.contact_number}}</span></p>
+                        <p class="md:text-xl text-[16px]">Email: <span>{{tenantDetails.user.email}}</span></p>
+                    </div>
+                </div>
+
+            </div> <!-- Owner Info END -->
+            {% endfor %}
+
+
+            {% endif %}
 
         </div> <!-- CONTENTS END-->
     </div> <!-- Main container Start -->
 </div> <!-- Main END -->
-{% comment %} 
-<script>
-    document.getElementById("myForm").addEventListener("submit", function(event) {
-        // Prevent default form submission behavior
-        event.preventDefault();
-    
-        // Show modal dialog
-        showModal();
-    
-        // You can also choose to submit the form programmatically later, for example:
-        // submitForm();
-    });
-    
-    function showModal() {
-        // Code to display modal
-    }
-    
-    function submitForm() {
-        // Programmatically submit the form
-        document.getElementById("myForm").submit();
-    }
-</script> {% endcomment %}
-
-
-
 
 {% endblock %}

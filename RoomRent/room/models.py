@@ -40,10 +40,14 @@ class RoomDocument(models.Model):
     
     
 class BookRoom(models.Model):
-    room = models.OneToOneField(Room, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     bookingDate = models.DateTimeField(default=timezone.now)
     moveInDate = models.DateTimeField(default=timezone.now) 
     joined = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.user}'s booking"
+    
+    
+    
+    # MOVE IN DATE VALIDATE GARNA BAKIII XA
