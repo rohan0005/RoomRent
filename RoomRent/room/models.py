@@ -28,6 +28,13 @@ class Room(models.Model):
     def __str__(self):
         return f"{self.roomTitle} by {self.user.username}"
 
+class RoomFeedbacks(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    feedback = models.TextField(blank=True)
+    
+
+
 # Model to store Room Images
 class RoomImage(models.Model):
     room = models.ForeignKey(Room, related_name='images', on_delete=models.CASCADE)
@@ -45,6 +52,7 @@ class BookRoom(models.Model):
     bookingDate = models.DateTimeField(default=timezone.now)
     moveInDate = models.DateTimeField(default=timezone.now) 
     joined = models.BooleanField(default=False)
+    moveOutDate = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return f"{self.user}'s booking"
     

@@ -190,6 +190,7 @@ def pendingRooms(request):
     return render(request, 'Admin/pendingRooms.html', context)
 
 # owner can views their rooms here 
+@login_required(login_url='signin')
 def myRoom(request):
     
     currentUser = request.user
@@ -203,7 +204,7 @@ def myRoom(request):
     # Filter BookRoom instances based on the current user and the 'joined' field being False
     notJoinedAndPending = BookRoom.objects.filter(user=currentUser, joined=False)
     isjoined = BookRoom.objects.filter(joined=True).exists()
-    
+    hasMoveOutDate = BookRoom.objects.filter(joined=True, moveOutDate__isnull=False).values_list('room', flat=True) #it returns a list of values from the room field of the queryset in a flat format, allowing us to easily extract and manipulate these values
     
     if request.method == 'POST':
         # Retrieve the data from the request.POST dictionary
@@ -216,6 +217,7 @@ def myRoom(request):
         'notJoinedAndPending' : notJoinedAndPending,
         'bookedRoomDetails' : bookedRoomDetails,
         'isjoined' : isjoined,
+        'hasMoveOutDate' : hasMoveOutDate,
         
     }
 
@@ -239,7 +241,10 @@ def roomMoreDetails(request, room_id):
     hasJoinedRoom = BookRoom.objects.filter(user=currentUser, joined=True).exists() # Check if user has already joined room
     hasBookedThisRoom = BookRoom.objects.filter(user=currentUser, room=room_id).exists() # check if user has booked this room 
     hasJoinedMyRoom = BookRoom.objects.filter(room=room_id, joined=True).exists()
-    
+    # Check if there is a move out date or not
+    hasNotMoveOutDate = BookRoom.objects.filter(joined=True, room=room_id, moveOutDate__isnull=True).exists()
+    feedbacks = RoomFeedbacks.objects.filter(room=room_id)
+        
     roomDetail = Room.objects.get(id=room_id)
     isAvailable = Room.objects.filter(id=room_id, isAvailable=True)
     roomRule = roomDetail.rules  # Assuming 'details' is the field containing the string data
@@ -256,10 +261,31 @@ def roomMoreDetails(request, room_id):
     # booking logic
     if request.method == "POST":
         if 'moveout' in request.POST:
-            requestedMoveInDate = request.POST.get("moveInOrMoveoutDate") 
-            parsed_date = datetime.strptime(requestedMoveInDate, '%m/%d/%Y')
-            moveInDate = parsed_date.strftime('%Y-%m-%d')
-            print("MOVE OUT DATE", moveInDate)
+            with transaction.atomic():
+                moveOutDate = request.POST.get("moveInOrMoveoutDate")  #get the moveout date
+                parsed_date = datetime.strptime(moveOutDate, '%m/%d/%Y')
+                moveOutDate = timezone.make_aware(parsed_date, timezone.get_current_timezone())
+                BookedRoomDetails = BookRoom.objects.get(user=currentUser, room=room_id)
+                BookedRoomDetails.moveOutDate = moveOutDate
+                userFeedback = request.POST.get("feedback")
+                
+                feedback = request.POST.get("feedback")
+                roomDetail.roomfeedbacks_set.create(user=currentUser,feedback=feedback) # save feedback after tenant submit moveout
+                BookedRoomDetails.save()
+                messages.success(request, "Moveout informed")
+                return redirect("roomMoreDetails", room_id = room_id)
+            
+        elif 'removeTenant' in request.POST: # Remove the tenant from this room after moveout is completed
+            with transaction.atomic():
+                roomDetail.isAvailable = True
+                roomDetail.isBooked = False
+                roomDetail.save()
+                isJoinedThisRoom.delete()
+                messages.success(request, "Tenant Movedout")
+                return redirect("roomMoreDetails", room_id = room_id)
+                
+                print("REOVE HANNA PARYOO")    
+            
         else:
             with transaction.atomic():
                 #Get move in date and change the format 
@@ -301,6 +327,8 @@ def roomMoreDetails(request, room_id):
         'hasJoinedRoom' : hasJoinedRoom,
         'hasBookedThisRoom' : hasBookedThisRoom,
         'hasJoinedMyRoom' : hasJoinedMyRoom,
+        'hasNotMoveOutDate' : hasNotMoveOutDate,
+        'feedbacks' : feedbacks,
     }
     
     return render(request, 'Rooms/roomMoreDetails.html', context)

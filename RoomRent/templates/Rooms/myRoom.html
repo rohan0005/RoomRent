@@ -135,9 +135,13 @@
 
                         </div>
 
-                        <div class="p-2 ">
+                        <div class="p-2 flex justify-between">
                             <h1>{{room.roomAddress}}</h1>
-
+                            
+                            {% if room.id in hasMoveOutDate %}
+                            <h1 class="text-[#0766AD]">Moveout in process</h1>
+                            {% endif %}
+                       
                         </div>
 
                         <div class="">
