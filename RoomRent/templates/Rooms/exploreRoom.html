@@ -14,24 +14,23 @@
                 Search for Rooms
               </h1>
         </div>
-        <!-- <div class="flex justify-center mb-10">
-            <h1 class="text-xl  text-[#141B2D]">Explore Available Rooms</h1>
-        </div> -->
-    
+
         <!-- SEARCH and FILTER  -->
         <div class="search-container bg-[#EDEDF1] mb-5">
+            <form role="search" action="{% url 'room' %}">
             <div class="p-5 flex justify-center gap-4">
                 <div class="search-box flex justify-center">
                     <input
                     class="flex border h-10 w-[250px] rounded bg-white px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type="text"
                     placeholder="Enter a keyword"
+                    name="search_query"
                 />
                 </div>
     
                 <div>
                     <button
-                    type="button"
+                    type="submit"
                     class="inline-flex items-center rounded-md bg-[#1F2937] px-4 py-3 text-sm font-semibold text-white hover:bg-black/80"
                     >
                     <svg fill="#ffffff" height="18px" width="18px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 488.4 488.4" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M0,203.25c0,112.1,91.2,203.2,203.2,203.2c51.6,0,98.8-19.4,134.7-51.2l129.5,129.5c2.4,2.4,5.5,3.6,8.7,3.6 s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-129.6-129.5c31.8-35.9,51.2-83,51.2-134.7c0-112.1-91.2-203.2-203.2-203.2 S0,91.15,0,203.25z M381.9,203.25c0,98.5-80.2,178.7-178.7,178.7s-178.7-80.2-178.7-178.7s80.2-178.7,178.7-178.7 S381.9,104.65,381.9,203.25z"></path> </g> </g> </g></svg>
@@ -39,64 +38,103 @@
                     </button>
                 </div>
             </div>
+            </form>
     
             <!-- FILTER -->
             <div class="filter-heading">
                 <div class="flex justify-center text-gray-400 mb-5">
                     <h1>Filter settings</h1>
                 </div>
-    
-                <div class="flex justify-center gap-5 pb-5">
+                
+                <form role="search" action="{% url 'room' %}">
+                <div class="md:flex justify-center gap-5 pb-5 md:px-0 px-10">
     
                     <div>
-                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-                            <option selected>Filter 1</option>
-                            <option value="US">Option 1</option>
-                            <option value="CA">Option 2</option>
-                            <option value="FR">Option 3</option>
-                            <option value="DE">Option 4</option>
+                        <select name="Flat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                            <option selected value="">Flat type</option>
+                            <option value="BHK">BHK</option>
+                            <option value="BK">BK</option>
+                            <option value="RK">RK</option> 
                         </select>
         
                     </div>
     
                     <div>
-                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-                            <option selected>Filter 1</option>
-                            <option value="US">Option 1</option>
-                            <option value="CA">Option 2</option>
-                            <option value="FR">Option 3</option>
-                            <option value="DE">Option 4</option>
-                        </select>
-        
-                    </div>
-    
-    
-                    <div>
-                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-                            <option selected>Filter 1</option>
-                            <option value="US">Option 1</option>
-                            <option value="CA">Option 2</option>
-                            <option value="FR">Option 3</option>
-                            <option value="DE">Option 4</option>
+                        <select name="parking" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                            <option selected value="">Parking</option>
+                            <option value="Available">Available</option>
+                            <option value="Not Available">Not Available</option>
                         </select>
         
                     </div>
     
     
                     <div>
-                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-                            <option selected>Filter 1</option>
-                            <option value="US">Option 1</option>
-                            <option value="CA">Option 2</option>
-                            <option value="FR">Option 3</option>
-                            <option value="DE">Option 4</option>
+                        <select name="floor" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                            <option selected value="">Room Floor</option>
+                            <option value="1st Floor">1st Floor</option>
+                            <option value="2nd Floor">2nd Floor</option>
+                            <option value="3rd Floor">3rd Floor</option>
+                            <option value="4th Floor">4th Floor</option>
+                            <option value="5th Floor">5th Floor</option>
+                            <option value="6th Floor">6th Floor</option>
                         </select>
         
                     </div>
+    
+    
+                    <div>
+                        <select name="rent" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                            <option selected value="">Rent Range</option>
+                            <option value="10000">Rs. 10,000</option>
+                            <option value="20000">Rs. 20,000</option>
+                            <option value="30000">Rs. 30,000</option>
+                            <option value="40000">Rs. 40,000</option>
+                        </select>
+        
+                    </div>
+
+                    <button
+                    type="submit"
+                    class="inline-flex items-center rounded-md bg-[#1F2937] px-4 py-3 text-sm text-white hover:bg-black/80"
+                    >
+                    <svg fill="#ffffff" height="18px" width="18px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 488.4 488.4" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M0,203.25c0,112.1,91.2,203.2,203.2,203.2c51.6,0,98.8-19.4,134.7-51.2l129.5,129.5c2.4,2.4,5.5,3.6,8.7,3.6 s6.3-1.2,8.7-3.6c4.8-4.8,4.8-12.5,0-17.3l-129.6-129.5c31.8-35.9,51.2-83,51.2-134.7c0-112.1-91.2-203.2-203.2-203.2 S0,91.15,0,203.25z M381.9,203.25c0,98.5-80.2,178.7-178.7,178.7s-178.7-80.2-178.7-178.7s80.2-178.7,178.7-178.7 S381.9,104.65,381.9,203.25z"></path> </g> </g> </g></svg>
+                    <span class="pl-3 pr-3">Search by fiter</span>
+                    </button>
                     
                 </div>
+            </form>
+
             </div>
         </div>
+
+    {% if search or flat or parking or floor or rent %}
+    <div class="px-20 py-3 md:text-2xl font-bold">
+        
+        <h1>Search results for:
+            {% if search %}
+                <span>{{ search }}</span>
+            {% endif %}
+            {% if flat %}
+                {% if search %} and {% endif %}
+                Flat Type - <span>{{ flat }}</span>
+            {% endif %}
+            {% if parking %}
+                {% if search or flat %} and {% endif %}
+                Parking - <span>{{ parking }}</span>
+            {% endif %}
+            {% if floor %}
+                {% if search or flat or parking %} and {% endif %}
+                Floor - <span>{{ floor }}</span>
+            {% endif %}
+            {% if rent %}
+                {% if search or flat or parking or floor %} and {% endif %}
+                Rent range - <span>{{ rent }}</span>
+            {% endif %}
+        </h1>
+
+    </div>
+    {% endif %}
     
     
         <!-- ROOMS lists -->
@@ -164,21 +202,19 @@
         </div>
 
         {% else %}
-
-        <div class="no-room-container flex justify-center mt-20 text-3xl ">
-            <h1>No Rooms are listed currently</h1>
-        </div>
+            {% if search or flat or parking or floor or rent %}
+                <div class="no-room-container flex justify-center mt-20 md:text-3xl">
+                    <h1>No Rooms found matching your search criteria</h1>
+                </div>
+            {% else %}
+                <div class="no-room-container flex justify-center mt-20 md:text-3xl">
+                    <h1>No Rooms are listed currently</h1>
+                </div>
+        {% endif %}
 
 
         {% endif %}
         
-    
-    
-    
-    
-    
-    
-    
     </div>
 
 {% endblock %}

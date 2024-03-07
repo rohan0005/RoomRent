@@ -230,8 +230,40 @@ def room(request):
     # All the approved rooms:
     allApprovedRooms = Room.objects.filter(approved=True, isAvailable = True) # multiple user can book the same room
     
+    search = request.GET.get('search_query')
+    # Handle filter options
+    flat = request.GET.get('Flat')
+    parking = request.GET.get('parking')
+    floor = request.GET.get('floor')
+    rent = request.GET.get('rent')
+    
+    
+    if search:
+        allApprovedRooms = allApprovedRooms.filter(Q(roomTitle__icontains=search) | Q(roomAddress__icontains=search))
+    else:
+        allApprovedRooms = Room.objects.filter(approved=True, isAvailable = True) # multiple user can book the same room
+        
+    if flat is not None:
+        allApprovedRooms = allApprovedRooms.filter(Q(flat__icontains=flat))
+    
+    if parking is not None:
+        allApprovedRooms = allApprovedRooms.filter(Q(parking__icontains=parking))
+        
+    if floor is not None:
+        allApprovedRooms = allApprovedRooms.filter(Q(floor__icontains=floor))
+        
+    if rent and not rent == "":
+        allApprovedRooms = allApprovedRooms.filter(rent__lte=rent) # Filter rooms where rent is less than or equal to the specified value. lte - comparison filter that stands for -less than or equal to
+        print(rent)
+
+        
     context = {
-        'allApprovedRooms': allApprovedRooms
+        'allApprovedRooms': allApprovedRooms,
+        'search': search,
+        'flat' : flat,
+        'parking' : parking,
+        'floor' : floor,
+        'rent' : rent,
     }
     return render(request, 'Rooms/exploreRoom.html', context)
 
@@ -409,30 +441,6 @@ def viewBooking(request):
         
         return redirect("viewBooking")
         
-
-        # username = request.POST.get('user')
-        # userId = request.POST.get("user")
-        # user = get_object_or_404(Room, pk=user)
-        
-        # print("USERNAME IS :", user)
-        
-
-    # Iterating over the rooms and getting the bookings for each room
-    # for rooms in roomsUploadedByUser:
-    #     # roomBooking = BookRoom.objects.filter(room=rooms)
-    #     pendingBookings = BookRoom.objects.filter(room=rooms, joined = False)
-    #     print("pending roooms: ", pendingBookings)
-        
-        
-    #     context = {
-    #         # 'roomBooking' : roomBooking,
-    #         'pendingBookings' : pendingBookings,
-    #     }
-    
-    
-    # Get rooms uploaded by the current user
-    # roomsUploadedByUser = Room.objects.filter(user=currentUser)
-
     # Initialize an empty list to store pending bookings
     pendingBookings = []
 
