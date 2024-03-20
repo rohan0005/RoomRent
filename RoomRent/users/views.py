@@ -9,7 +9,7 @@ from django.contrib.auth.models import Group
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger #for pagination 
 from django.core.mail import send_mail # For sending email notifications
 
-
+import sweetify
 
 # Main logis are written in the views.py
 
@@ -44,18 +44,18 @@ def SignupUser(request):
                     for citizenship_image in images:
                         citizenship = UserCitizenship(user=user, image=citizenship_image)
                         citizenship.save()
-                    messages.success(request,"Account Created for " + username)                  
+                    sweetify.success(request,"Account Created for " + username)                  
                 
                 # If user choose to become tenant then adding them to tenant group
                 else:
                     group, created = Group.objects.get_or_create(name='tenant')
                     user.groups.add(group)
-                    messages.success(request,"Account Created for " + username)
+                    sweetify.success(request,"Account Created for " + username)
             return redirect('signin') # After creating the user redirect to the signin page
         # If form is not valid
         elif not form.is_valid():
             errorMessage = next(iter(form.errors.values()))[0]     # Retrieving the first error message from the form errors
-            messages.error(request, errorMessage)
+            sweetify.error(request, errorMessage)
             
     return render(request,'Authentication/signin and signup/signup.html')
 
@@ -73,7 +73,7 @@ def SigninUser(request):
             return redirect('/')
         # If user password or username is incorrect
         else:
-            messages.error(request, 'Username or Password is incorrect')
+            sweetify.error(request, 'Username or Password is incorrect')
 
     return render(request, 'Authentication/signin and signup/signin.html')
 

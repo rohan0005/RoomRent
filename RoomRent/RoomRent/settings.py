@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'room',
     'payment',
     'khalti',
+    'sweetify',
 ]
 
 MIDDLEWARE = [
