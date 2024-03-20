@@ -53,9 +53,13 @@ class BookRoom(models.Model):
     moveInDate = models.DateTimeField(default=timezone.now) 
     joined = models.BooleanField(default=False)
     moveOutDate = models.DateTimeField(null=True, blank=True)
+    rentBilledDate = models.DateTimeField(null=True, blank=True, default= None)
     def __str__(self):
         return f"{self.user}'s booking"
     
     
-    
-    # MOVE IN DATE VALIDATE GARNA BAKIII XA
+class ElectricityUnitDetail(models.Model):
+    bookedRoom = models.OneToOneField(BookRoom, on_delete= models.CASCADE)
+    electricityPreviousUnit = models.IntegerField(default=0, blank=False); 
+    electricityCurrentUnit = models.IntegerField(default=0, blank=False); 
+    status = models.CharField(max_length=50, blank=False, default='Pending update')  # Pending update or Updated

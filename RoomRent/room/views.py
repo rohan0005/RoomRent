@@ -7,6 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger #for pa
 from datetime import datetime
 from django.http import HttpResponse
 from django.db.models import Q
+from payment.models import *
 
 
 
@@ -312,6 +313,9 @@ def roomMoreDetails(request, room_id):
                 roomDetail.isAvailable = True
                 roomDetail.isBooked = False
                 roomDetail.save()
+                bookedThisRoom = BookRoom.objects.filter(joined=True, room=room_id).first()
+                balance = MyBalance.objects.filter(bookedRoom=bookedThisRoom)
+                balance.delete()
                 isJoinedThisRoom.delete()
                 messages.success(request, "Tenant Movedout")
                 return redirect("roomMoreDetails", room_id = room_id)
@@ -339,6 +343,10 @@ def roomMoreDetails(request, room_id):
                 # Save the booking
                 booking = BookRoom.objects.create(room=room, moveInDate=moveInDate , user=user)
                 booking.save()
+                
+                # CREATE MY BALANCE MODEL AFTER TENANT JOINS THE ROOm
+                balance = MyBalance.objects.create(bookedRoom=booking)
+                balance.save()
                 
                 context = {
                         'roomID': roomID, 
@@ -409,12 +417,12 @@ def viewBooking(request):
                 joined=False
             )
             
-            print("Remaining bookings for user to be deleted:", remainingBookingsForUser)
-            remainingBookingsForUser.delete()
+            remainingBookingsForUser.delete() #Remaining bookings for user to be deleted:
+            remainingBookingsForRoom.delete() #Remaining bookings for room to be deleted:
             
-            print("Remaining bookings for room to be deleted:", remainingBookingsForRoom)
-            remainingBookingsForRoom.delete()
-            
+            prevElcUnit = request.POST.get("previousElectricityUnit")
+            electricityDetails = ElectricityUnitDetail.objects.create(bookedRoom=booking,electricityPreviousUnit=prevElcUnit)
+            electricityDetails.save()
             
                 
             messages.success(request, "Booking approved")
@@ -431,7 +439,10 @@ def viewBooking(request):
         room_id = booking.room.id
         room = Room.objects.get(id=room_id)
         room.isBooked = False
+        balance = MyBalance.objects.filter(bookedRoom=booking)
+        
         room.save()
+        balance.delete()
         booking.delete() # Reject booking
 
         

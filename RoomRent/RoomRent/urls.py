@@ -12,6 +12,7 @@ urlpatterns = [
     path('', include("users.urls")),  
     path('', include("core.urls")),
     path('', include("room.urls")),
+    path('', include("payment.urls")),
 ]
 
 # For viewing image through url
