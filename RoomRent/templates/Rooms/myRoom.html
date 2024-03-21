@@ -12,7 +12,7 @@
         <div class="container px-4 py-1 mx-auto">
 
             <!-- CONTENTS -->
-            <div class="bg-white h-full  pb-[100px]  lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
+            <div class="bg-white h-screen  pb-[100px]  lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
 
                 <!-- HEADING -->
                 <div class="flex justify-between pr-3">
@@ -101,10 +101,10 @@
                     
                     <!-- IF USER IS OWNER -->
                     {% else %}
-                    {% if allApprovedRooms %}
+                    {% if allRooms %}
 
                         
-                    {% for room in allApprovedRooms %}
+                    {% for room in allRooms %}
                     <!--START: LISTING ROOMS-->
                     <div class="p-3 shadow-xl md:w-[350px]">
                         <div id="gallery" class="relative w-full" data-carousel="slide">
@@ -140,6 +140,15 @@
                             
                             {% if room.id in hasMoveOutDate %}
                             <h1 class="text-[#0766AD]">Moveout in process</h1>
+
+                            {% else %}
+                                
+                                {% if room.approved == False %}
+                                        <h1 class="font-bold text-[#ff0058c4]">Pending approval</h1>
+                                {% else %}
+                                    
+                                {% endif %}
+                                  
                             {% endif %}
                        
                         </div>
@@ -154,9 +163,11 @@
                         </div>
                     </div> <!--END: LISTING ROOMS-->
 
-                        {% endfor %}
+                    {% endfor %}
 
+                    {% else %}
 
+                    <h1>You do not have listed any room currently.</h1>
 
                     {% endif %}
 

@@ -176,10 +176,20 @@
                     <div class="pt-5  border border-3 shadow  pb-5 mb-4">
                         <h1 class="md:text-3xl text-[19px] pb-1 pl-6 pb-3 font-bold">Rules</h1>
                         <p class="text-justify pl-5 leading-loose">
-
-                            {% for rule in roomRules %}
-                            {{ rule }} <br>
-                            {% endfor %}
+                            
+                            
+                            {% if roomRules %}
+                            {% if roomRules.0 != '' %}
+                                {% for rule in roomRules %}
+                                    {{ rule }} <br>
+                                {% endfor %}
+                            {% else %}
+                                <h1 class="pl-4">No rules have been posted</h1>
+                            {% endif %}
+                        {% else %}
+                            <h1>No rules have been posted</h1>
+                        {% endif %}
+                        
 
 
                         </p>

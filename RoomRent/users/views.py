@@ -70,6 +70,7 @@ def SigninUser(request):
         # Checking if user exist or not
         if user is not None:
             login(request, user)
+            sweetify.success(request, 'Successfully Signed In')
             return redirect('/')
         # If user password or username is incorrect
         else:
@@ -80,6 +81,7 @@ def SigninUser(request):
 # SIGNOUT USER
 def signoutUser(request):
     logout(request)
+    sweetify.success(request, 'Successfully Signed Out')
     return redirect('signin')
 
 # return superuser
@@ -132,7 +134,7 @@ def adminDashboard(request):
         'totalUsersWhoRequestForOwner' : totalUsersWhoRequestForOwner,  
     }
     return render(request, 'Admin/adminDashboard.html', context)
-
+# PENDING USER REQUEST
 @login_required(login_url='signin')
 @user_passes_test(is_superuser)
 def pendingRequests(request):
@@ -185,7 +187,7 @@ def pendingRequests(request):
                 )
                 
                 # SUCCESS MESSAGE
-                messages.success(request, 'User approved successfully')
+                sweetify.success(request, 'User approved successfully')
                 
                 return redirect('pendingRequests')
 
@@ -204,7 +206,7 @@ def pendingRequests(request):
                     fail_silently=False,)
                 user.delete()
                 # REJECT MESSAGE
-                messages.error(request, 'User rejected')
+                sweetify.error(request, 'User rejected')
                 return redirect('pendingRequests')
     context = {
         'allUsersWhoRequestForOwner' : allUsersWhoRequestForOwner
