@@ -8,6 +8,7 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.db.models import Q
 from payment.models import *
+from django.core.mail import send_mail # For sending email notifications
 
 import sweetify
 
@@ -193,26 +194,49 @@ def pendingRooms(request):
 # owner can views their rooms here 
 @login_required(login_url='signin')
 def myRoom(request):
-    
+    step = None
     currentUser = request.user
     # Get the room which have approved = True in database
     allApprovedRooms = Room.objects.filter(user=currentUser, approved=True)
     allRooms = Room.objects.filter(user=currentUser)
     
-    # Get the room details which user has booked 
+    bookingLog = BookingLog.objects.filter(user=currentUser)
+    
     bookedRoomDetails = BookRoom.objects.filter(user=currentUser)
+
     
     # Filter BookRoom instances based on the current user and the 'joined' field being False
-    notJoinedAndPending = BookRoom.objects.filter(user=currentUser, joined=False)
-    isjoined = BookRoom.objects.filter(joined=True).exists()
+    bookingDetailsWithJoinedFalse = BookRoom.objects.filter(user=currentUser, joined=False)
+    if bookingDetailsWithJoinedFalse.exists() and bookingDetailsWithJoinedFalse.count() == bookingDetailsWithJoinedFalse.filter(joined=False).count():
+        notJoinedAndPending = True  #All objects have joined=False
+    else:
+        notJoinedAndPending = False #There are objects with joined=True or the queryset is empty
+    
+    isjoined = BookRoom.objects.filter(joined=True)
+    
     hasMoveOutDate = BookRoom.objects.filter(joined=True, moveOutDate__isnull=False).values_list('room', flat=True) #it returns a list of values from the room field of the queryset in a flat format, allowing us to easily extract and manipulate these values
     
     if request.method == 'POST':
         # Retrieve the data from the request.POST dictionary
-        pageName = request.POST.get('page')
-            
-        return redirect("roomMoreDetails", room_id = pageName)
+        if 'page' in request.POST:
+            pageName = request.POST.get('page')
+            return redirect("roomMoreDetails", room_id = pageName)
     
+    if request.method == 'POST':
+        if 'myroom' in request.POST:
+            step = 'myroom'
+        elif 'bookinglog' in request.POST:
+            step = 'bookinglog'
+            
+    if request.method == 'POST':
+        if 'dismissLog' in request.POST:
+            bookinglogID = request.POST.get('bookingLogID')
+            print("bookinglogID", bookinglogID)
+            step = 'bookinglog'
+            log = BookingLog.objects.filter(pk=bookinglogID)
+            log.delete()
+            
+
     context = {
         'allApprovedRooms': allApprovedRooms,
         'notJoinedAndPending' : notJoinedAndPending,
@@ -220,6 +244,8 @@ def myRoom(request):
         'isjoined' : isjoined,
         'hasMoveOutDate' : hasMoveOutDate,
         'allRooms' : allRooms,
+        'step' : step,
+        'bookingLog' : bookingLog,
         
     }
 
@@ -321,7 +347,6 @@ def roomMoreDetails(request, room_id):
                 messages.success(request, "Tenant Movedout")
                 return redirect("roomMoreDetails", room_id = room_id)
                 
-                print("REOVE HANNA PARYOO")    
             
         else:
             with transaction.atomic():
@@ -349,16 +374,10 @@ def roomMoreDetails(request, room_id):
                 balance = MyBalance.objects.create(bookedRoom=booking)
                 balance.save()
                 
-                context = {
-                        'roomID': roomID, 
-                }
+                sweetify.success(request, "Room Booked!")
                 
-                # Construct an HTTP response with the context data
-                response_content = f"Room has been booked. Please wait before the owner approves you. View your booking details at <a href='/room/details/{context['roomID']}'>Booking Details</a>"
-                response = HttpResponse(response_content)
-
-                return response
-        
+                return redirect("roomMoreDetails", room_id = room_id)
+                
     
     context = {
         'roomDetail': roomDetail,
@@ -378,27 +397,16 @@ def roomMoreDetails(request, room_id):
 @user_passes_test(is_owner)
 def viewBooking(request):
     currentUser = request.user # Get the current user
+    bookingLog = BookingLog.objects.filter(user=currentUser)
     step = None
     # Get rooms uploaded by the current user
     roomsUploadedByUser = Room.objects.filter(user=currentUser)
     
-    # Handel dismiss booking
-    if request.method == 'POST':
-        if 'dismissBooking' in request.POST:
-            with transaction.atomic():
-                roomID = request.POST.get('roomBookingID')
-                room = get_object_or_404(Room, id=roomID)
-                booking = BookRoom.objects.filter(joined=False, room=room)
-                
-                
-                room.isBooked = False
-                room.save()
-                step = 'canceledBookings'
-                sweetify.success(request, "Dismissed")
-                booking.delete()
-            
-            
+    canceledBookingDetails = []
     
+    for cancelRoom in roomsUploadedByUser:
+        canceledBooking = CanceledBooking.objects.filter(room=cancelRoom)
+        canceledBookingDetails.extend(canceledBooking)
     
     # Handle Pending or cancel page
     if request.method == 'POST':
@@ -424,29 +432,41 @@ def viewBooking(request):
                 # Update the 'joined' attribute to True
                 booking.joined = True
                 booking.save()  # Save the changes
+            print("USERNAME IS  : ", user)
+            allBookingMadeByUser = BookRoom.objects.filter(user=user, joined = False)
+            user = User.objects.get(pk=user)
+            if allBookingMadeByUser:
+                for allBooking in allBookingMadeByUser:
+                    room = allBooking.room
+                    date = allBooking.bookingDate
+                    bookinglog = BookingLog.objects.create(user=user, room=room, bookingDate= date)
+                    bookinglog.save() # Save the BookingLog 
+                    
+                    canceledBookingDetails = CanceledBooking.objects.create(user=user, room=room, bookingDate= date, canceledDate= timezone.now())
+                    canceledBookingDetails.save() # Save the canceled Bookings
             
-            # Remove remaining bookings for the same user and room
-            # remainingBookings = BookRoom.objects.filter(
-            #     ~Q(id=booking.id),  # Exclude the accepted booking
-            #     user=user
-            # )
+            #Remove remaining bookings for the same user and room
+            remainingBookings = BookRoom.objects.filter(
+                ~Q(id=booking.id),  # Exclude the accepted booking
+                user=user
+            )
             
-            # # Remove remaining bookings for the same user and not joined
-            # remainingBookingsForUser = BookRoom.objects.filter(
-            #     ~Q(id=booking.id),  # Exclude the accepted booking
-            #     user=user,
-            #     joined=False
-            # )
+            # Remove remaining bookings for the same user and not joined
+            remainingBookingsForUser = BookRoom.objects.filter(
+                ~Q(id=booking.id),  # Exclude the accepted booking
+                user=user,
+                joined=False
+            )
             
-            # # Remove remaining bookings for the same room and not joined
-            # remainingBookingsForRoom = BookRoom.objects.filter(
-            #     ~Q(id=booking.id),  # Exclude the accepted booking
-            #     room=room,
-            #     joined=False
-            # )
+            # Remove remaining bookings for the same room and not joined
+            remainingBookingsForRoom = BookRoom.objects.filter(
+                ~Q(id=booking.id),  # Exclude the accepted booking
+                room=room,
+                joined=False
+            )
             
-            # remainingBookingsForUser.delete() #Remaining bookings for user to be deleted:
-            # remainingBookingsForRoom.delete() #Remaining bookings for room to be deleted:
+            remainingBookingsForUser.delete() #Remaining bookings for user to be deleted:
+            remainingBookingsForRoom.delete() #Remaining bookings for room to be deleted:
             
             prevElcUnit = request.POST.get("previousElectricityUnit")
             electricityDetails = ElectricityUnitDetail.objects.create(bookedRoom=booking,electricityPreviousUnit=prevElcUnit)
@@ -460,38 +480,61 @@ def viewBooking(request):
         
         
     elif request.method == 'POST' and "reject" in request.POST:
-        user = request.POST.get("user")
-        roomId = request.POST.get('roomId')
-        
-        booking = BookRoom.objects.get(user=user, id=roomId)
-        room_id = booking.room.id
-        room = Room.objects.get(id=room_id)
-        room.isBooked = False
-        balance = MyBalance.objects.filter(bookedRoom=booking)
-        
-        room.save()
-        balance.delete()
-        booking.delete() # Reject booking
-        messages.error(request, "Booking rejected")
-        
-        return redirect("viewBooking")
-        
+        with transaction.atomic():
+            
+            user = request.POST.get("user")
+            roomId = request.POST.get('roomId')
+            
+            userForEmail = User.objects.get(pk=user)
+            
+            user_email = userForEmail.email
+            
+            
+            
+            booking = BookRoom.objects.get(user=user, id=roomId)
+            room_id = booking.room.id
+            room = Room.objects.get(id=room_id)
+            
+            # Sending mail after room booking is rejected
+            send_mail(
+            "Room joining request Rejected",
+            f"Your request for joining {room.roomTitle} is rejected",
+            "room.rent.webapp@gmail.com",
+            [user_email],
+            fail_silently=False,
+            )
+            
+            
+            room.isBooked = False
+            bookDate = booking.bookingDate
+            bookUser = booking.user
+            roomID = booking.room
+            balance = MyBalance.objects.filter(bookedRoom=booking)
+            canceledBookingDetails = CanceledBooking.objects.create(user=bookUser, room=roomID, bookingDate= bookDate, canceledDate= timezone.now())
+            bookinglog = BookingLog.objects.create(user=bookUser, room=roomID, bookingDate= bookDate, status='Rejected')
+            bookinglog.save()
+            canceledBookingDetails.save()
+            room.save()
+            balance.delete()
+            booking.delete() # Reject booking
+            sweetify.error(request, "Booking rejected")
+            step = "canceledBookings"
+            return redirect("viewBooking")
+
     # Initialize an empty list to store pending bookings
     pendingBookings = []
-    cancledRoomDetails = []
-
+    
     # Iterate over each room and find its pending bookings
     for room in roomsUploadedByUser:
         room_pending_bookings = BookRoom.objects.filter(room=room, joined=False)
         pendingBookings.extend(room_pending_bookings) #extend is used to add elements of an iterable (such as string, list, tuple, set, etc.)
+    
 
-        for booking in room_pending_bookings:
-            cancledRoom = BookRoom.objects.filter(user=booking.user, joined=True)
-            cancledRoomDetails.extend(cancledRoom)
     context = {
         'pendingBookings': pendingBookings,
         'step' : step,
-        'cancledRoomDetails' : cancledRoomDetails,
+        'canceledBookingDetails' : canceledBookingDetails,
+        'bookingLog' : bookingLog,
     }
     
         

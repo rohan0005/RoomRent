@@ -34,13 +34,71 @@
                     </div>
                 </div>
 
+                {% if  request.user|has_group:"tenant" %} 
+                <!-- CHANGE PAGE -->
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="sub-heading flex p-3 gap-3 gap">
+                    <div>
+                        <button type="submit" name="myroom" class="hover:bg-[#00ffc321] p-2 px-4 border text-[#39c9a7] 
+                        {% if step == None or step == 'myroom' %}
+                        bg-[#00ffc321]
+                        {% else %}
+                        bg-[#39c9a70d]
+                        {% endif %} 
+                        border-[#39c9a71a]">My Room</button>
+                    </div>
+
+                    <div>
+                        <button type="submit" name="bookinglog" class=" relative 
+                        {% if step == 'bookinglog' %}
+                        bg-[#f58c5c24]
+                        {% else %}
+                        bg-[#f58c5c0d] 
+                        {% endif %} 
+                    hover:bg-[#f58c5c24] p-2 px-4 text-[#f58c5c] border-[#f58c5c1a] border">Booking Logs 
+                    
+                  
+                    </button>
+
+                    </div>
+
+                    </div>
+                </form>
+                {% endif %}
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {% if step == None or step == 'myroom' %}
+                   
                  <!-- ROOM START -->
                 <div class="pl-9 md:flex flex-wrap gap-8">
 
                     <!-- IF USER IS TENANT -->
                     {% if  request.user|has_group:"tenant" %} 
                             
-                    {% if bookedRoomDetails %}
+                    {% if bookedRoomDetails  %}
                         
                     
                         
@@ -145,6 +203,17 @@
                                 
                                 {% if room.approved == False %}
                                         <h1 class="font-bold text-[#ff0058c4]">Pending approval</h1>
+
+                                
+                                {% elif room.isBooked %}
+                                         {% if room.isBooked and room.isAvailable == False %}
+                                        <h1 class="text-[#0766AD]">Joined</h1>
+                                        {% else %}
+
+                                        <h1 class="text-[#0766AD]">Room Booked</h1>
+                                        {% endif %}
+                                
+
                                 {% else %}
                                     
                                 {% endif %}
@@ -175,6 +244,84 @@
                     
                     
                 </div>  <!-- ROOM END -->
+                
+                <!--IF BOOKING LOG BUTTON IS CLICKED-->
+                {% else %}
+
+                
+                {% if not bookingLog %}
+                    <h1 class="pl-7">No Booking logs</h1>
+                {% endif %}
+
+
+                {% if bookingLog %}
+                <!--BOOKING LOGS DETAILS-->
+                <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
+                    <tbody>
+                      <tr class="border-b bg-gray-100">
+                        <th class="text-left p-3 px-5">Room Title</th>
+                        <th class="text-left p-3 px-5">Booked on</th>
+                        <th class="text-left p-3 px-5">Owner</th>
+                        <th class="text-left p-3 px-5">Status</th>
+                      </tr>
+          
+          
+                      {% for room in bookingLog %}
+          
+          
+                      <tr class="border-b hover:bg-gray-100">
+          
+                        <td class="p-3 px-5">
+                          <a class="text-[#0766AD]" href="{% url 'roomMoreDetails' room.room.id  %}">{{room.room.roomTitle }}</p></a>
+                        </td>
+                        <td class="p-3 px-5">
+                          <p>{{room.bookingDate }}</p>
+                        </td>
+                        <td class="p-3 px-5">
+                          <p>{{room.room.user}}</p>
+                        </td>
+                        <td class="p-3 px-5">
+                            <p>{{room.status}}</p>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    
+                
+            </div>
+                {% endif %}
+                    
+
+
+
 
                 
             </div>

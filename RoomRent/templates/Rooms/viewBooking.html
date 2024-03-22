@@ -270,18 +270,18 @@
 
       <!-- BOOKING LISTS -->
       <div class="md:px-10 mt-5">
-        {% if cancledRoomDetails %}
+        {% if canceledBookingDetails %}
         <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
           <tbody>
             <tr class="border-b bg-gray-100">
               <th class="text-left p-3 px-5">Room Title</th>
-              <th class="text-left p-3 px-5">Booked on</th>
+              <th class="text-left p-3 px-5">Booked On</th>
+              <th class="text-left p-3 px-5">Canceled On</th>
               <th class="text-left p-3 px-5">Booked By</th>
-              <th class="text-left p-3 px-5"></th>
             </tr>
 
 
-            {% for room in pendingBookings %}
+            {% for room in canceledBookingDetails %}
 
 
             <tr class="border-b hover:bg-gray-100">
@@ -292,15 +292,11 @@
               <td class="p-3 px-5">
                 <p>{{room.bookingDate }}</p>
               </td>
+              <td class="p-3 px-5 pl-3">
+                <p>{{room.canceledDate}}</p>
+              </td>
               <td class="p-3 px-5">
                 <p>{{room.user}}</p>
-              </td>
-              <td class="p-3 px-5 pl-3">
-                <form action="" method="post">
-                  {% csrf_token %}
-                  <button type="submit" name="dismissBooking" class=" relative hover:bg-[#f58c5c0d] p-2 px-4 font-bold text-[#f30000ad] rounded border-[#f30000ad] border-2">Dismiss</button>
-                  <input type="hidden" name="roomBookingID" value="{{room.room.id}}">
-                </form>
               </td>
             </tr>
             {% endfor %}

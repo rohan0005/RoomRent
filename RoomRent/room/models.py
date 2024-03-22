@@ -63,3 +63,17 @@ class ElectricityUnitDetail(models.Model):
     electricityPreviousUnit = models.IntegerField(default=0, blank=False); 
     electricityCurrentUnit = models.IntegerField(default=0, blank=False); 
     status = models.CharField(max_length=50, blank=False, default='Pending update')  # Pending update or Updated
+    
+class BookingLog(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bookingDate = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=50, default='Cancelled')
+    
+
+class CanceledBooking(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bookingDate = models.DateTimeField(default=timezone.now)
+    canceledDate = models.DateTimeField(default=timezone.now)
+    
