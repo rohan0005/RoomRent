@@ -232,7 +232,7 @@ def is_tenant_or_owner(user):
          
 # Tenant dashboard management
 @login_required(login_url='signin')
-@user_passes_test(is_tenant_or_owner)
+@user_passes_test(is_owner)
 def dashboard(request):    
     return render(request, 'Users profile/dashboard.html')
 

@@ -20,7 +20,7 @@
 
         {% elif request.user|has_group:"tenant" %}
 
-            <a href="{% url 'dashboard' %}">My Dashboard - tenant</a>
+            <a href="{% url 'myRoom' %}">My Dashboard - tenant</a>
 
         {% endif %} 
 

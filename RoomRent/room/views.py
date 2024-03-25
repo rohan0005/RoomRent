@@ -121,10 +121,8 @@ def listing(request):
             for document in room_documents:
                 new_room_document = RoomDocument.objects.create(room=room, document=document)
                 
-            messages.success(request, "Your room has been submitted for verification. Thank you!")
+            sweetify.success(request, "Your room has been submitted for verification. Thank you!")
             
-    if "close" in request.POST:
-        return redirect('listing')
 
 
     context ={

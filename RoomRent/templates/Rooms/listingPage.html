@@ -1,949 +1,297 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'Users Profile/NavigationBarBase/base.html' %}
+{% load static %}
+{% block title %}RoomRent | Dashboard{% endblock %}
+{% block content %}
 
-<head>
-    <!-- ROBOTO font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="static/css/styles.css"> <!--Load css file-->
-    <script src="static/js/styles.js"></script> <!-- Load Javascript file-->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
-</head>
+    <!-- Main -->
+    <div class="flex-1 bg-[#F3F3F3]">
+        <!-- Main container Start -->
+        <div class="container px-4 py-1 mx-auto">
 
-<body style="font-family: 'Roboto'">
+            <!-- CONTENTS -->
+            <div class="bg-white h-full  pb-[100px]  lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
 
-    <!-- Navigation section -->
-    <nav class="bg-white  fixed w-full z-30 top-0 start-0 border-b border-gray-200">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-6">
-            <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
-                type="button"
-                class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
-                <span class="sr-only">Open sidebar</span>
-                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path clip-rule="evenodd" fill-rule="evenodd"
-                        d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
-                    </path>
-                </svg>
-            </button>
-
-            <a href="{% url 'index' %}" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="/images/static images/logo/roomrentlogo.svg" class="h-8" alt="" />
-            </a>
-            <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                <button type="button"
-                    class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 "
-                    id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
-                    data-dropdown-placement="bottom">
-                    <span class="sr-only">Open user menu</span>
-                    <img class="w-8 h-8 rounded-full" src="{{user.userprofilepicture.image.url}}" alt="user photo">
-                </button>
-                <!-- Dropdown menu -->
-                <div class="w-[200px] z-50  hidden my-2 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-2xl  "
-                    id="user-dropdown">
-                    <div class="px-2 py-4 flex gap gap-6 border-b-2 border-[#E0E0E0]">
-                        <span class="pt-1 pl-2">
-                            <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg" stroke="#6C707C">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path
-                                        d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                        stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                        </g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path
-                                                d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                                stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                            <path
-                                                d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                                stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                        </g><svg width=" 64px"=""="" height="64px" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                stroke-linejoin="round"></g>
-                                            <g id="SVGRepo_iconCarrier">
-                                                <path
-                                                    d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                                    stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24"
-                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                        stroke-linejoin="round"></g>
-                                                    <g id="SVGRepo_iconCarrier">
-                                                        <path
-                                                            d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                                            stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                            stroke-linejoin="round"></path>
-                                                        <path
-                                                            d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                                            stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                            stroke-linejoin="round"></path>
-                                                    </g>
-                                                </path>
-                                            </g>
-                                        </svg>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt;
-                                    </path>
-                                    <path
-                                        d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                        stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                        </g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path
-                                                d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                                stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                            <path
-                                                d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                                stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                        </g>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt;
-                                    </path>
-                                </g>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt; <path
-                                    d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                    stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path
-                                            d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                            stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                        <path
-                                            d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                            stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                    </g><svg width=" 64px"=""="" height="64px" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                        </g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path
-                                                d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                                stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24"
-                                                fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                    stroke-linejoin="round"></g>
-                                                <g id="SVGRepo_iconCarrier">
-                                                    <path
-                                                        d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round"></path>
-                                                    <path
-                                                        d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                                        stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                                        stroke-linejoin="round"></path>
-                                                </g>
-                                            </path>
-                                        </g>
-                                    </svg>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt;
-                                </path>
-                                <path
-                                    d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                    stroke="#<svg width=" 64px"="" height="64px" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path
-                                            d="M12.1992 12C14.9606 12 17.1992 9.76142 17.1992 7C17.1992 4.23858 14.9606 2 12.1992 2C9.43779 2 7.19922 4.23858 7.19922 7C7.19922 9.76142 9.43779 12 12.1992 12Z"
-                                            stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                        <path
-                                            d="M3 22C3.57038 20.0332 4.74796 18.2971 6.3644 17.0399C7.98083 15.7827 9.95335 15.0687 12 15C16.12 15 19.63 17.91 21 22"
-                                            stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                    </g>" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt;
-                                </path> " stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"&gt;
-                            </svg>
-                        </span>
-                        <span class="block text-sm pt-2 text-gray-500 truncate">{{request.user}}</span>
-                    </div>
-                    <ul class="" aria-labelledby="user-menu-button">
-                        <li class="flex gap gap-6 pb-2 border-b-2 border-[#E0E0E0]">
-                            <span class="pt-1 pl-2">
-                                <svg width="28px" height="28px" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg" stroke="#000000">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M11.7 14C10.623 14 9.74999 13.1046 9.74999 12C9.74999 10.8954 10.623 10 11.7 10C12.7769 10 13.65 10.8954 13.65 12C13.65 12.5304 13.4445 13.0391 13.0789 13.4142C12.7132 13.7893 12.2172 14 11.7 14Z"
-                                            stroke="#969696" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M16.8841 16.063V14.721C16.8841 14.3887 17.0128 14.07 17.2419 13.835L18.1672 12.886C18.6443 12.3967 18.6443 11.6033 18.1672 11.114L17.2419 10.165C17.0128 9.93001 16.8841 9.61131 16.8841 9.27899V7.93599C16.8841 7.24398 16.3371 6.68299 15.6624 6.68299H14.353C14.029 6.68299 13.7182 6.55097 13.4891 6.31599L12.5638 5.36699C12.0867 4.87767 11.3132 4.87767 10.8361 5.36699L9.91087 6.31599C9.68176 6.55097 9.37102 6.68299 9.04702 6.68299H7.73759C7.41341 6.68299 7.10253 6.81514 6.87339 7.05034C6.64425 7.28554 6.51566 7.6045 6.51592 7.93699V9.27899C6.51591 9.61131 6.3872 9.93001 6.15809 10.165L5.23282 11.114C4.75573 11.6033 4.75573 12.3967 5.23282 12.886L6.15809 13.835C6.3872 14.07 6.51591 14.3887 6.51592 14.721V16.063C6.51592 16.755 7.06288 17.316 7.73759 17.316H9.04702C9.37102 17.316 9.68176 17.448 9.91087 17.683L10.8361 18.632C11.3132 19.1213 12.0867 19.1213 12.5638 18.632L13.4891 17.683C13.7182 17.448 14.029 17.316 14.353 17.316H15.6614C15.9856 17.3163 16.2966 17.1844 16.5259 16.9493C16.7552 16.7143 16.8841 16.3955 16.8841 16.063Z"
-                                            stroke="#969696" stroke-width="1.5" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                    </g>
-                                </svg>
-                            </span>
-                            <a href="{% url 'dashboard' %}" class="block py-2 text-sm text-gray-700 ">Manage profile</a>
-                        </li>
-
-                        <li class="pb-2 flex gap gap-6 pb-2 ">
-                            <span class="pt-2 pl-2">
-                                <svg width="24px" height="24px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-                                    fill="#6C707C" stroke="#6C707C" stroke-width="0.0002">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <rect x="0" fill="none" width="20" height="20"></rect>
-                                        <g>
-                                            <path
-                                                d="M13 3v2h2v10h-2v2h4V3h-4zm0 8V9H5.4l4.3-4.3-1.4-1.4L1.6 10l6.7 6.7 1.4-1.4L5.4 11H13z">
-                                            </path>
-                                        </g>
-                                    </g>
-                                </svg>
-                            </span>
-                            <a href="{% url 'signout' %}" class="block  py-2 text-sm text-gray-700 ">Sign out</a>
-                        </li>
-                    </ul>
+                <div class="text-2xl p-6 font-bold"> <!--HEADING OF LISTING PAGE-->
+                    <h1>ROOM LISTING</h1>
                 </div>
-                <button data-collapse-toggle="navbar-user" type="button"
-                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
-                    aria-controls="navbar-user" aria-expanded="false">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 17 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M1 1h15M1 7h15M1 13h15" />
-                    </svg>
-                </button>
-            </div>
 
+                <div class="p-6 bg-wite shadow-lg mx-10">
 
-            <div class="items-center gap-y-4 justify-between hidden w-full md:flex md:w-auto md:order-1"
-                id="navbar-user">
-                <ul
-                    class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white ">
-                    <li>
-                        <a href="#"
-                            class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 "
-                            aria-current="page">Home</a>
-                    </li>
-                    <li class="lg:pl-20">
-                        <a href="#"
-                            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 ">Rooms</a>
-                    </li>
-                    <li class="lg:pl-20">
-                        <a href="#"
-                            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Dashboard</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-
-
-    <!--MAIN-->
-
-    <!-- CONTENTS -->
-    <div class="bg-white h-full lg:mr-3 mt-[92px] md:ml-30 bg-white pr-3">
-        <!-- Heading lIST ROOM -->
-        <div class="flex">
-            <div class="pl-10 pt-5">
-                <a href="{% url 'myRoom' %}"><svg fill="#000000" width="32px" height="32px" viewBox="0 0 32 32"
-                        style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
-                        version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                        xmlns:serif="http://www.serif.com/" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M6.507,17.508l20.963,-0.008c0.828,-0 1.5,-0.673 1.5,-1.501c-0.001,-0.827 -0.673,-1.499 -1.501,-1.499l-20.975,0.008c0.088,-0.119 0.188,-0.231 0.298,-0.334c0,0 9.705,-9.079 9.705,-9.079c0.605,-0.565 0.636,-1.515 0.071,-2.12c-0.566,-0.604 -1.516,-0.636 -2.12,-0.07c-0,-0 -5.9,5.519 -9.705,9.078c-1.118,1.045 -1.749,2.509 -1.743,4.038c0.006,1.53 0.649,2.989 1.774,4.025c3.848,3.543 9.829,9.05 9.829,9.05c0.609,0.56 1.559,0.521 2.119,-0.088c0.561,-0.609 0.522,-1.558 -0.087,-2.119c-0,-0 -5.98,-5.507 -9.828,-9.05c-0.111,-0.102 -0.211,-0.213 -0.3,-0.331Z">
-                            </path>
-                            <g id="Icon"></g>
-                        </g>
-                    </svg>
-                </a>
-            </div>
-            <div>
-                <h1 class="text-2xl font-bold p-5">
-                    List Room
-                </h1>
-            </div>
-        </div>
-
-        <!-- step 1 container -->
-        <div class="container">
-            <!-- Input area -->
-            <form action="" method="post" enctype="multipart/form-data" onsubmit="return validateCheckboxes()">
-                {% csrf_token %}
-                <div class="main-container">
-
-                    <div class="text-xl pl-24">
-                        <div>
-                            <h1 class="font-bold text-xl">Step 1</h1>
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="flex items-center mb-5">
+                          <!--ROOM TITLE -->
+                          <label for="roomTitle" class="inline-block w-28 mr-6 text-left 
+                                                   font-bold text-gray-600">Room Title</label>
+                          <input required type="text" id="roomTitle" name="roomTitle" placeholder="Room Title.." class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                         </div>
 
-                        <h1 class="pt-5 ">Enter your room title, description and address</h1>
-                    </div>
-
-                    <div class="pt-5 pl-24 md:pr-[250px]">
-                        <div class="pb-5">
-                            <input type="text" id="roomTitle" name="roomTitle"
-                                class="outline outline-offset-2 outline-1  py-2 pl-2 w-[350px] md:w-full"
-                                placeholder="Room title" required>
+                        <div class="flex items-center mb-5">
+                          <!--ROOM Description -->
+                          <label for="roomDescription" class="inline-block w-28 mr-6 text-left 
+                                                   font-bold text-gray-600">Room Description</label>
+                          <textarea required type="text" id="roomDescription" name="roomDescription" placeholder="Short description about your room.." class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"></textarea>
                         </div>
 
-                        <div class="pb-5">
-                            <textarea rows="2" id="roomDescription" name="roomDescription"
-                                class="outline outline-offset-2 outline-1  py-3 pl-2 w-[350px] md:w-full"
-                                placeholder="Room description" required></textarea>
+                        <div class="flex items-center mb-5">
+                          <!--ROOM Address -->
+                          <label for="roomAddress" class="inline-block w-28 mr-6 text-left 
+                                                   font-bold text-gray-600">Room Address</label>
+                          <input required type="text" id="roomAddress" name="roomAddress" placeholder="Room Address.." class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        </div>
+                        
+                        <div class="flex items-center mb-5">
+                          <!--ROOM Detailed Address -->
+                          <label for="detailedRoomAddress" class="inline-block w-28 mr-6 text-left 
+                                                   font-bold text-gray-600">Room Detail Address</label>
+                          <textarea required type="text" id="detailedRoomAddress" name="detailedRoomAddress" placeholder="Room detailed address.." class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"></textarea>
                         </div>
 
-                        <div class="pb-5">
-                            <input type="text" id="roomAddress" name="roomAddress"
-                                class="outline outline-offset-2 outline-1  py-3 pl-2 w-[350px] md:w-full"
-                                placeholder="Room address" required>
-                        </div>
-                        <div>
-                            <textarea rows="2" id="detailedRoomAddress" name="detailedRoomAddress"
-                                class="outline outline-offset-2 outline-1  py-3 pl-2 w-[350px] md:w-full"
-                                placeholder="Room detailed address" required></textarea>
-                        </div>
-                    </div>
-
-                    <div class="pt-5 pl-24 md:pr-[40px]">
-
-                        <div class="">
-                            <h1 class="mt-5 font-semibold text-xl">Step 2</h1>
-
-                            <h1 class="text-xl mt-5 mb-7">Enter Room details</h1>
-
-                        </div>
-
-
-                        <div class="md:grid md:grid-cols-2">
-                            <div class="pt-5 py-10 md:flex">
-                                <h1 class="pb-2  text-xl ">Enter Floor</h1>
+                        <div class="flex items-center mb-5">
+                          <!--ROOM Floor -->
+                          <label for="name" class="inline-block w-28 mr-6 text-left font-bold text-gray-600">Room Floor</label>
                                 <select name="floor" required
-                                    class="outline outline-offset-2 outline-1 md:ml-6 px-3 py-2  bg-white rounded"
-                                    value={selectedValue} onChange={handleSelectChange}>
-                                    {genre.map((item, i) => (
-                                    <option value="" key={i}>
-                                        Select Floor
-                                    </option>
-                                    <option value="1st Floor" key={i}>
-                                        1st Floor
-                                    </option>
-                                    <option value="2nd Floor" key={i}>
-                                        2nd Floor
-                                    </option>
-                                    <option value="3rd Floor" key={i}>
-                                        3rd Floor
-                                    </option>
-                                    <option value="4th Floor" key={i}>
-                                        4th Floor
-                                    </option>
-                                    <option value="5th Floor" key={i}>
-                                        5th Floor
-                                    </option>
-                                    <option value="6th Floor" key={i}>
-                                        6th Floor
-                                    </option>
-                                    ))}
-                                </select>
-                            </div>
+                                class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                value={selectedValue} onChange={handleSelectChange}>
+                                {genre.map((item, i) => (
+                                <option value="" key={i}>
+                                    Select Floor
+                                </option>
+                                <option value="1st Floor" key={i}>
+                                    1st Floor
+                                </option>
+                                <option value="2nd Floor" key={i}>
+                                    2nd Floor
+                                </option>
+                                <option value="3rd Floor" key={i}>
+                                    3rd Floor
+                                </option>
+                                <option value="4th Floor" key={i}>
+                                    4th Floor
+                                </option>
+                                <option value="5th Floor" key={i}>
+                                    5th Floor
+                                </option>
+                                <option value="6th Floor" key={i}>
+                                    6th Floor
+                                </option>
+                                ))}
+                            </select>
+                        </div>
 
-                            <!-- BAthroom -->
-                            <div class="pt-5 md:flex pb-9 md:pl-10">
-                                <h1 class="pb-2 text-xl">Bathroom</h1>
-                                <input placeholder="Number of bathroom" min="1"
-                                    class="outline outline-offset-2 outline-1 rounded px-5  h-[40px] md:ml-6"
-                                    type="number" name="numberOfBathroom" required>
-                            </div>
+                        <div class="flex items-center mb-5">
+                            <!--ROOM BAthroom  -->
+                            <label for="numberOfBathroom" class="inline-block w-28 mr-6 text-left 
+                                                     font-bold text-gray-600">Num of Bathroom</label>
+                            <input required min="1" type="number" id="numberOfBathroom" name="numberOfBathroom" placeholder="Num of bathrooms in this room.." class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        </div>
 
-                            <!-- Flat -->
-                            <div class="pt-5 md:flex">
+                        <div class="flex items-center mb-5">
+                            <!--ROOM Flat -->
+                            <label for="flat" class="inline-block w-28 mr-6 text-left 
+                                                     font-bold text-gray-600">Room Flat</label>
+                            <input required type="number" min="1" id="flat" name="flat" placeholder="Room Flat num.." class="ml-[-12px] appearance-none block w-1/2 bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            <!--FLAT TYPE-->
+                            <select name="flatType"
+                            class="ml-4 appearance-none block w-2/2 bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                            value={selectedValue} onChange={handleSelectChange}>
+                            {genre.map((item, i) => (
+                            <option value="" key={i}>
+                                Choose type
+                            </option>
+                            <option value="BHK" key={i}>
+                                BHK
+                            </option>
+                            <option value="BK" key={i}>
+                                BK
+                            </option>
+                            <option value="RK" key={i}>
+                                RK
+                            </option>
+                            ))}
+                        </select>
+                        </div>
+                    
+                        <div class="flex items-center mb-5">
+                            <!--ROOM Parking -->
+                            <label for="roomTitle" class="inline-block w-28 mr-6 text-left 
+                            font-bold text-gray-600">Parking</label>
+                            <select name="parking" required
+                            class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                            value={selectedValue} onChange={handleSelectChange}>
+                            {genre.map((item, i) => (
+                            <option value="" key={i}>
+                                Parking Availability
+                            </option>
+                            <option value="Available" key={i}>
+                                Available
+                            </option>
+                            <option value="Not Available" key={i}>
+                                Not Available
+                            </option>
+                            ))}
+                            </select>
+                        </div>
 
-                                <h1 class=" text-xl pb-2">Enter Flat</h1>
 
-                                <div class="md:flex">
+                        <div class="flex items-center mb-5">
+                            <label for="amenities" class="inline-block w-28 mr-6 text-left 
+                                                     font-bold text-gray-600">Basic Amenities</label>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-5 gap-8 pt-4 justify-center">
                                     <div>
-                                        <input placeholder="Enter flat" min="1"
-                                            class="mb-5 outline outline-offset-2 outline-1 rounded px-3 w-[160px]  h-[40px] md:ml-9"
-                                            type="number" name="flat">
+                                        <input class="mr-2 leading-tight" type="checkbox" id="amenity1" name="amenity1" value="Medical">
+                                        <span>
+                                            Medical
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <input class="mr-2 leading-tight" type="checkbox" id="amenity2" name="amenity2" value="Water">
+                                        <span>
+                                            Water
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <input class="mr-2 leading-tight" type="checkbox" id="amenity3" name="amenity3" value="Fire extinguisher">
+                                        <span>
+                                            Fire extinguisher
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <input class="mr-2 leading-tight" type="checkbox" id="amenity4" name="amenity4" value="24/7 electricity">
+                                        <span>
+                                            24/7 electricity
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <input class="mr-2 leading-tight" type="checkbox" id="amenity5" name="amenity5" value="Air conditioning">
+                                        <span>
+                                            Air conditioning
+                                        </span>
                                     </div>
 
                                     <div>
-                                        <select name="flatType"
-                                            class="outline outline-offset-2 outline-1 md:ml-6 px-3 py-2 h-[40px]  bg-white rounded"
-                                            value={selectedValue} onChange={handleSelectChange}>
-                                            {genre.map((item, i) => (
-                                            <option value="" key={i}>
-                                                Choose type
-                                            </option>
-                                            <option value="BHK" key={i}>
-                                                BHK
-                                            </option>
-                                            <option value="BK" key={i}>
-                                                BK
-                                            </option>
-                                            <option value="RK" key={i}>
-                                                RK
-                                            </option>
-                                            ))}
-                                        </select>
+                                        <input class="mr-2 leading-tight" type="checkbox" id="amenity6" name="amenity6" value="Hot water">
+                                        <span>
+                                            Hot water
+                                        </span>
                                     </div>
 
+                                    <div>
+                                        <input class="mr-2 leading-tight" type="checkbox" id="amenity7" name="amenity7" value="Smoke alarm">
+                                        <span>
+                                            Smoke Alarm
+                                        </span>
+                                    </div>
+
+                                    <div>
+                                        <input class="mr-2 leading-tight" type="checkbox" id="amenity8" name="amenity8" value="Playground">
+                                        <span>
+                                            Playground
+                                        </span>
+                                    </div>
+
+                                    <div>
+                                        <input class="mr-2 leading-tight" type="checkbox" id="amenity9" name="amenity9" value="Garden">
+                                        <span>
+                                            Garden
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
+                            </div>    
 
-                            <!-- Parking -->
-                            <div class="pt-5 pt-9 md:pl-10 md:flex">
-                                <h1 class=" text-xl">Parking</h1>
-
-                                <div>
-                                    <select name="parking" required
-                                        class="outline outline-offset-2 outline-1 md:ml-11 px-3 py-2 h-[40px] mt-5 md:mt-0  bg-white rounded"
-                                        value={selectedValue} onChange={handleSelectChange}>
-                                        {genre.map((item, i) => (
-                                        <option value="" key={i}>
-                                            Parking Availability
-                                        </option>
-                                        <option value="Available" key={i}>
-                                            Available
-                                        </option>
-                                        <option value="Not Available" key={i}>
-                                            Not Available
-                                        </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="pt-5 pl-24 md:pr-[40px]">
-                        <div>
-                            <h1 class="mt-5 font-semibold text-xl">Step 3</h1>
-
-                            <h1 class="mt-5 text-xl mb-7">Choose Amenities</h1>
-
-                        </div>
-
-                        <div class="pt-5 mt-4 md:w-[1130px]  outline outline-offset-2 outline-1">
-
-                            <div class="md:grid md:grid-cols-3 gap-24 px-7 py-7 pb-7">
-                                <div class="amenity-checkbox pb-1">
-                                    <input type="checkbox" id="amenity1" name="amenity1" value="Medical"
-                                        onchange="highlightAmenity(this)" class="hidden peer">
-                                    <label for="amenity1"
-                                        class="block px-14 py-3 outline outline-offset-2 outline-1 cursor-pointer select-none">Medical</label>
-                                </div>
-
-                                <div class="amenity-checkbox  pb-1">
-                                    <input type="checkbox" id="amenity2" name="amenity2" value="Water"
-                                        onchange="highlightAmenity(this)" class="hidden peer">
-                                    <label for="amenity2"
-                                        class="block px-14 py-3 outline outline-offset-2 outline-1 cursor-pointer select-none">Water</label>
-                                </div>
-
-                                <div class="amenity-checkbox  pb-1">
-                                    <input type="checkbox" id="amenity3" name="amenity3" value="Fire extinguisher"
-                                        onchange="highlightAmenity(this)" class="hidden peer">
-                                    <label for="amenity3"
-                                        class="block px-14 py-3 outline outline-offset-2 outline-1 cursor-pointer select-none">Fire
-                                        extinguisher</label>
-                                </div>
-
-                                <div class="amenity-checkbox  pb-1">
-                                    <input type="checkbox" id="amenity4" name="amenity4" value="24/7 electricity"
-                                        onchange="highlightAmenity(this)" class="hidden peer">
-                                    <label for="amenity4"
-                                        class="block px-14 py-3 outline outline-offset-2 outline-1 cursor-pointer select-none">24/7
-                                        electricity</label>
-                                </div>
-                                <div class="amenity-checkbox  pb-1">
-                                    <input type="checkbox" id="amenity5" name="amenity5" value="Air conditioning"
-                                        onchange="highlightAmenity(this)" class="hidden peer">
-                                    <label for="amenity5"
-                                        class="block px-14 py-3 outline outline-offset-2 outline-1 cursor-pointer select-none">Air
-                                        conditioning</label>
-                                </div>
-                                <div class="amenity-checkbox  pb-1">
-                                    <input type="checkbox" id="amenity6" name="amenity6" value="Hot water"
-                                        onchange="highlightAmenity(this)" class="hidden peer">
-                                    <label for="amenity6"
-                                        class="block px-14 py-3 outline outline-offset-2 outline-1 cursor-pointer select-none">Hot
-                                        water</label>
-                                </div>
-
-                                <div class="amenity-checkbox  pb-1">
-                                    <input type="checkbox" id="amenity7" name="amenity7" value="Smoke alarm"
-                                        onchange="highlightAmenity(this)" class="hidden peer">
-                                    <label for="amenity7"
-                                        class="block px-14 py-3 outline outline-offset-2 outline-1 cursor-pointer select-none">Smoke
-                                        alarm</label>
-                                </div>
-
-                                <div class="amenity-checkbox  pb-1">
-                                    <input type="checkbox" id="amenity8" name="amenity8" value="Playground"
-                                        onchange="highlightAmenity(this)" class="hidden peer">
-                                    <label for="amenity8"
-                                        class="block px-14 py-3 outline outline-offset-2 outline-1 cursor-pointer select-none">Playground</label>
-                                </div>
-
-                                <div class="amenity-checkbox  pb-1">
-                                    <input type="checkbox" id="amenity9" name="amenity9" value="Garden"
-                                        onchange="highlightAmenity(this)" class="hidden peer">
-                                    <label for="amenity9"
-                                        class="block px-14 py-3 outline outline-offset-2 outline-1 cursor-pointer select-none">Garden</label>
-                                </div>
-
-                                <!-- Add more amenities here -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-5 pl-24 md:pr-[40px]">
-                        <div>
-                            <h1 class="mt-5 text-xl font-semibold">Step 4</h1>
-
-                            <h1 class="text-xl mt-5 mb-7">Add Rules for your room</h1>
-
-                        </div>
-
-                        <div class="pt-5 md:pr-[250px]">
-                            <div class="pb-10 flex">
+                            <div class="flex items-center mb-5">
+                                <!--ROOM Rules  -->
+                                <label for="ruleInput" class="inline-block w-28 mr-6 text-left 
+                                font-bold text-gray-600">Room Rules</label>
                                 <input type="text" id="ruleInput"
-                                    class="outline outline-offset-2 outline-1 py-3 pl-2 w-[350px] md:w-full"
-                                    placeholder="Enter Rules">
+                                class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                placeholder="Enter Rules">
                                 <button type="button" onclick="addRule()"
-                                    class="bg-[#1F2937] text-white ml-5 py-3 px-8">Add</button>
+                                class="bg-[#1F2937] text-white ml-5 py-3 px-8">Add</button>
                             </div>
 
-                            <div id="rulesContainerWrapper" style="display: none;">
+
+                            <div class="pb-5" id="rulesContainerWrapper" style="display: none;">
                                 <div id="rulesContainer"
-                                    class="pt-5 p-5 mt-4 md:w-[1130px] outline outline-offset-2 outline-1">
+                                    class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                                     <h1 class="text-2xl font-semibold pb-5 ">Rules</h1>
                                     <!-- Rules will be dynamically added here -->
                                     <input type="hidden" id="hiddenRulesInput" name="rules" value="" required>
                                 </div>
                             </div>
-                        </div>
 
-
-                    </div>
-
-
-                    <div class="pt-5 pl-24 md:pr-[40px]">
-                        <div>
-                            <h1 class="font-semibold mt-5 text-2xl">Step 5</h1>
-
-                            <h1 class="text-xl mt-5 mb-7">Utility Information</h1>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="pt-5 pl-24 md:pr-[40px]">
-                        <div class="md:grid md:grid-cols-2">
-                            <!-- Electricity -->
-                            <div class="pt-5 text-xl py-10 md:flex">
-                                <h1 class="pb-2">Electricity</h1>
-
-                                <input placeholder="Rs." min="1"
-                                    class="outline outline-offset-2 outline-1  px-5 mb-4 h-[40px] md:ml-6" step="0.01"
-                                    type="number" name="Electricity" required>
-
-                                <h1 class="pb-2 ml-4">Per Unit</h1>
-
+                            <!--UTILITY Information-->
+                            <div class="flex items-center mb-5">
+                                <!--ROOM Electricity unit -->
+                                <label for="Electricity" class="inline-block w-28 mr-6 text-left 
+                                                         font-bold text-gray-600">Electricity Rate</label>
+                                <input required type="number" id="Electricity"  min="1" name="Electricity" step="0.01" placeholder="Per Unit.." class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            </div>
+                            
+                            <div class="flex items-center mb-5">
+                                <!--ROOM Water  -->
+                                <label for="Water" class="inline-block w-28 mr-6 text-left 
+                                                         font-bold text-gray-600">Water Rate</label>
+                                <input required type="number" id="Water" name="Water" min="1" placeholder="Per Month.." class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             </div>
 
-                            <!-- Water -->
-                            <div class="pt-5 text-xl md:flex pb-9 md:pl-10">
-                                <h1 class="pb-2 ">Water</h1>
-
-                                <input placeholder="Rs." min="1"
-                                    class="outline outline-offset-2 outline-1  mb-4  px-5  h-[40px] md:ml-6"
-                                    type="number" name="Water" required>
-
-                                <h1 class="pb-2 ml-4">Per Month</h1>
-
+                            <div class="flex items-center mb-5">
+                                <!--ROOM Water  -->
+                                <label for="Trash" class="inline-block w-28 mr-6 text-left 
+                                                         font-bold text-gray-600">Trash Rate</label>
+                                <input required type="number" id="Trash" name="Trash" min="1" placeholder="Per Month.." class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             </div>
 
-                            <!-- Trash -->
-                            <div class="pt-5 text-xl md:flex">
-
-                                <h1 class="pb-2 mr-8">Trash</h1>
-
-                                <input placeholder="Rs." min="1"
-                                    class=" outline outline-offset-2 outline-1  mb-4  px-5  h-[40px] md:ml-6"
-                                    type="number" name="Trash" required>
-
-                                <h1 class="pb-2 ml-4">Per Month</h1>
-
+                            <div class="flex items-center mb-5">
+                                <!--ROOM RENT  -->
+                                <label for="Rent" class="inline-block w-28 mr-6 text-left 
+                                                         font-bold text-gray-600">Room Rate</label>
+                                <input required type="number" id="Rent" name="Rent" min="1" placeholder="Rent Rate Per Month.." class="appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             </div>
 
-                            <!-- Rent -->
-                            <div class="pt-5 pt-9 text-xl md:pl-10 md:flex">
-                                <h1 class="pb-2 mr-3">Rent</h1>
-
-                                <input placeholder="Rs." min="1"
-                                    class="outline outline-offset-2 outline-1 mb-4 px-5  h-[40px] md:ml-6" type="number"
-                                    name="Rent" required>
-
-                                <h1 class="pb-2 ml-4">Per Month</h1>
+                            <!--CHOOSING ROOM IMAGE -->
+                            <div class="flex items-center mb-5">
+                                <label for="Rent" class="inline-block w-28 mr-6 text-left 
+                                                            font-bold text-gray-600">Room Pictures</label>
+                                <label for="roomImage" class="sr-only">Choose file</label>
+                                <input type="file" name="roomImage" id="roomImage" 
+                                    accept="image/png, image/jpeg" multiple
+                                    class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none 
+                                    file:bg-gray-50 file:border-0
+                                    file:me-4
+                                    file:py-3 file:px-4
+                                    ">
                             </div>
-                        </div>
-                    </div>
 
 
-                    <div class="pt-5 pl-24 md:pr-[40px]"></div>
-
-                    <!-- Container for displaying uploaded Room images -->
-                    <div class="pl-24 md:pr-[40px] mt-16">
-                        <h1 class=" text-2xl font-semibold">Step 6</h1>
-                    </div>
-
-                    <div class="pl-24 md:pr-[40px] text-xl mt-16">
-                        <h1>Add Room images</h1>
-                    </div>
-
-
-                    <div id="image-container-images" class="grid grid-cols-2 px-12 gap-4 mt-4"></div>
-
-                    <label required for="room-image-input"
-                        class="mt-5 ml-24 bg-[#1F2937] cursor-pointer text-white  relative inline-flex items-center px-9 py-2 border border-transparent text-base leading-6 font-medium transition duration-150 ease-in-out">
-                        <span>Add Images</span>
-                        <input id="room-image-input" name="roomImage" type="file" accept="image/png, image/jpeg"
-                            multiple class="absolute block opacity-0 w-full h-full cursor-pointer" required />
-                    </label>
-
-                    <div class="pt-5 pl-24 md:pr-[40px] text-xl mt-16">
-                        <h1>Add Room documents</h1>
-                    </div>
-
-                    <!-- Container for displaying uploaded room documents -->
-                    <div id="image-container-documents" class="grid grid-cols-2 px-12 gap-4 mt-4"></div>
-
-                    <label required for="room-document-input"
-                        class="mt-5 ml-24 bg-[#1F2937] cursor-pointer text-white  relative inline-flex items-center px-9 py-2 border border-transparent text-base leading-6 font-medium transition duration-150 ease-in-out">
-                        <span>Add Documents</span>
-                        <input id="room-document-input" name="roomDocument" type="file"
-                            accept="image/png, image/jpeg, application/pdf" multiple
-                            class="absolute block opacity-0 w-full h-full cursor-pointer" required />
-                    </label>
-
-
-                    <!-- Cancel or Next button -->
-
-                    <div class=" pl-20 flex justify-between pt-10 md:pr-[250px] ">
-                        <div class="mt-2">
-                            <a href="{% url 'myRoom' %}" class="outline outline-offset-2 outline-1 py-3 px-6 ">Cancel</a>
-                        </div>
-
-                        <!-- NExt -->
-                        <div>
-
+                            <!--CHOOSING ROOM DOCUMENTS IMAGES-->
+                            <div class="flex items-center mb-5">
+                                <label for="Rent" class="inline-block w-28 mr-6 text-left 
+                                                            font-bold text-gray-600">Room Documents</label>
+                                <label for="roomDocument" class="sr-only">Choose file</label>
+                                <input type="file" name="roomDocument" id="roomDocument" 
+                                    accept="image/png, image/jpeg" multiple
+                                    class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none 
+                                    file:bg-gray-50 file:border-0
+                                    file:me-4
+                                    file:py-3 file:px-4
+                                    ">
+                            </div>
 
                             <button name="step1" type="submit"
-                                class="mb-4  bg-[#1F2937] text-white  py-3 px-8">Save</button>
+                            class="mb-4  bg-[#1F2937] text-white my-3  py-3 px-10 rounded">Save</button>  
+
                         </div>
-
-                    </div>
-
+                    </form>
 
                 </div>
 
-            </form>
-
-
-        </div>
-    </div>
-
-    {% if messages %}
-    {% for message in messages %}
-    <!-- Main modal -->
-    <div id="default-modal" tabindex="-1" aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 flex z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-2xl max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Success
-                    </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-hide="default-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <div class="p-4 md:p-5 space-y-4 text-white">
-                    <p>{{message}}</p>
-                </div>
-                <!-- Modal footer -->
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                        <button name="close" data-modal-hide="default-modal" type="submit"
-                            class="mb-4 border rounded text-white  py-3 px-8">Close</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
-    {% endfor %}
-    {% endif %}
 
-    <script>
-        // Show the modal when the page loads
-        window.addEventListener('DOMContentLoaded', function () {
-            const modal = document.getElementById('default-modal');
-            modal.classList.remove('hidden');
-            modal.setAttribute('aria-hidden', 'false');
-        });
-    </script>
+  <script src="{% static 'js/roomListing.js' %}" type="text/javascript"></script>
 
-    <!-- ROOM IMAGE and DOCUMENT-->
-    <script>
-        // Function to handle file input change for both images and documents
-        function handleFileInputChange(inputId, containerId) {
-            document.getElementById(inputId).addEventListener('change', function (event) {
-                const container = document.getElementById(containerId);
-                const files = event.target.files;
-
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    const reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        const fileUrl = e.target.result;
-                        const fileWrapper = document.createElement('div');
-                        fileWrapper.classList.add('relative');
-
-                        const fileElement = document.createElement('img');
-                        fileElement.src = fileUrl;
-                        fileElement.classList.add('w-full', 'h-auto', 'max-h-96', 'object-cover'); // Adjust styling as needed
-
-                        const closeButton = document.createElement('span');
-                        closeButton.innerHTML = '&times;';
-                        closeButton.classList.add('absolute', 'top-0', 'right-0', 'text-white', 'cursor-pointer', 'bg-red-500', 'rounded-full', 'p-1');
-
-                        closeButton.addEventListener('click', function () {
-                            container.removeChild(fileWrapper);
-                        });
-
-                        fileWrapper.appendChild(fileElement);
-                        fileWrapper.appendChild(closeButton);
-                        container.appendChild(fileWrapper);
-                    };
-
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        // Call the function for images and documents inputs
-        handleFileInputChange('room-image-input', 'image-container-images');
-        handleFileInputChange('room-document-input', 'image-container-documents');
-    </script>
-
-
-
-
-    <!-- JavaScript to validate checkboxes -->
-    <script>
-        function validateCheckboxes() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            var isChecked = false;
-            checkboxes.forEach(function (checkbox) {
-                if (checkbox.checked) {
-                    isChecked = true;
-                }
-            });
-            if (!isChecked) {
-                alert("Please select at least one Amenities.");
-                return false;
-            }
-            return true;
-        }
-    </script>
-
-    <!--FOR RULES-->
-    <script>
-        function addRule() {
-            var ruleInput = document.getElementById("ruleInput");
-            var ruleValue = ruleInput.value.trim();
-
-            if (ruleValue === "") {
-                alert("Rule cannot be empty");
-                return;
-            }
-
-            var rulesContainerWrapper = document.getElementById("rulesContainerWrapper");
-            rulesContainerWrapper.style.display = "block";
-
-            var rulesContainer = document.getElementById("rulesContainer");
-            var ruleElement = document.createElement("div");
-            ruleElement.textContent = ruleValue;
-            rulesContainer.appendChild(ruleElement);
-
-            ruleInput.value = ""; // Clear input field after adding rule
-            updateHiddenRulesInput();
-        }
-
-        function updateHiddenRulesInput() {
-            var rulesContainer = document.getElementById("rulesContainer");
-            var rules = rulesContainer.querySelectorAll("div");
-            var hiddenRulesInput = document.getElementById("hiddenRulesInput");
-            var rulesText = [];
-
-            rules.forEach(function (rule) {
-                rulesText.push(rule.textContent);
-            });
-
-            hiddenRulesInput.value = rulesText.join(", ");
-        }
-    </script>
-
-    <!-- Rules -->
-    <script>
-        var ruleCounter = 1; // Counter for numbering rules
-
-        function addRule() {
-            var ruleInput = document.getElementById("ruleInput");
-            var ruleValue = ruleInput.value.trim();
-
-            if (ruleValue === "") {
-                alert("Rule cannot be empty");
-                return;
-            }
-
-            var rulesContainerWrapper = document.getElementById("rulesContainerWrapper");
-            rulesContainerWrapper.style.display = "block";
-
-            var rulesContainer = document.getElementById("rulesContainer");
-            var ruleElement = document.createElement("div");
-            ruleElement.textContent = ruleCounter + ". " + ruleValue; // Include numbering
-            rulesContainer.appendChild(ruleElement);
-
-            ruleInput.value = ""; // Clear input field after adding rule
-            updateHiddenRulesInput();
-
-            ruleCounter++; // Increment the rule counter
-        }
-
-        // Remaining code remains the same
-
-    </script>
-
-    <!--highlight-->
-    <script>
-        function highlightAmenity(checkbox) {
-            // Implement any highlighting logic if needed
-        }
-
-        function validateAndProceed() {
-            // Get all checkboxes
-            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            var checked = false;
-
-            // Check if at least one checkbox is checked
-            checkboxes.forEach(function (checkbox) {
-                if (checkbox.checked) {
-                    checked = true;
-                }
-            });
-
-            // Proceed if at least one checkbox is checked
-            if (checked) {
-                // Proceed to the next step
-                // For example, you can redirect to another page or show/hide content
-                console.log("At least one checkbox is checked. Proceeding...");
-            } else {
-                // Display an error message or handle the case where no checkbox is checked
-                console.log("Please select at least one checkbox.");
-            }
-        }
-    </script>
-
-    <script>
-        function highlightAmenity(checkbox) {
-            const label = checkbox.nextElementSibling;
-            if (checkbox.checked) {
-                label.classList.remove("outline", "outline-offset-2", "outline-1");
-                label.classList.add("bg-[#4C505B]", "text-white");
-                // Store the value of the selected amenity in sessionStorage
-                sessionStorage.setItem(checkbox.value, "selected");
-            } else {
-                label.classList.remove("bg-[#4C505B]", "text-white");
-                label.classList.add("outline", "outline-offset-2", "outline-1");
-                // Remove the value from sessionStorage if the checkbox is unchecked
-                sessionStorage.removeItem(checkbox.value);
-            }
-        }
-
-        // Restore selected amenities from sessionStorage when the page loads
-        window.onload = function () {
-            const checkboxes = document.querySelectorAll('.amenity-checkbox input[type="checkbox"]');
-            checkboxes.forEach(function (checkbox) {
-                if (sessionStorage.getItem(checkbox.value) === "selected") {
-                    checkbox.checked = true;
-                    const label = checkbox.nextElementSibling;
-                    label.classList.remove("outline", "outline-offset-2", "outline-1");
-                    label.classList.add("bg-[#4C505B]", "text-white");
-                }
-            });
-        };
-    </script>
-
-
-
-    <script>
-        function showImageContainer() {
-            // Hide main container
-            document.querySelector('.main-container').style.display = 'none';
-            // Show image container
-            document.querySelector('.image-container').style.display = 'block';
-        }
-    </script>
-
-
-    <!-- JavaScript to show the modal when the page loads -->
-    <script>
-        // Show the modal when the page loads
-        window.addEventListener('DOMContentLoaded', function () {
-            const modal = document.getElementById('default-modal');
-            modal.classList.remove('hidden');
-            modal.setAttribute('aria-hidden', 'false');
-        });
-    </script>
-
-
-</body>
-
-</html>
+{% endblock %}
