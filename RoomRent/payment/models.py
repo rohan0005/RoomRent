@@ -11,6 +11,10 @@ class MyBalance(models.Model):
     
 class RoomBilling(models.Model):
     bookedRoom = models.OneToOneField(BookRoom, on_delete=models.CASCADE)
-    electricityUnit = models.IntegerField(blank=False); 
-    electricityAmount = models.IntegerField(blank=False); 
-    totalRoomRentAmount = models.IntegerField(blank=False); 
+    electricityUnit = models.IntegerField(default=0)
+    electricityAmount = models.IntegerField(default=0)
+    totalRoomRentAmount = models.IntegerField(default=0)
+    electricityPreviousUnit = models.IntegerField(default=0, blank=False) 
+    electricityCurrentUnit = models.IntegerField(default=0, blank=False) 
+    status = models.CharField(max_length=50, default='pending') # it can be [ updated, paid, pending ]
+    hasChargeLatePaymentFee = models.BooleanField(default=False) # if owner update to charge late payment Fee then tenant will be charge else they will not be charge if it is late

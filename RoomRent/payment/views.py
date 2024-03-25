@@ -7,7 +7,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from datetime import date, timedelta
-
+import sweetify
 
 import requests
 import json
@@ -122,66 +122,86 @@ def error(request):
 @login_required(login_url='signin')
 @user_passes_test(is_tenant_or_owner)
 def billing(request):
+    step = None
+    allPendingRoombillings = []
+    allUpdatedRentBillings = []
+    # For changing same page
+    if request.method == 'POST' and 'pendingUpdate' in request.POST:
+        step = 'pendingUpdate'
+    
+    elif request.method == 'POST' and 'updated' in request.POST:
+        step = 'updated'
+        
+    elif request.method == 'POST' and 'paid' in request.POST:
+        step = 'paid'
+    
+    
+    #FOR TENANT
     bookedRoomByCurrentUser = BookRoom.objects.filter(user=request.user, joined= True).first()
-    rentBill = RoomBilling.objects.filter(bookedRoom=bookedRoomByCurrentUser)
+    rentBillForCurrentUser = RoomBilling.objects.filter(bookedRoom=bookedRoomByCurrentUser, status="updated")
     print("REBTTTTTTTTT: ", bookedRoomByCurrentUser)
-    print("REBTTTTTTTTT: ", rentBill)
+    print("REBTTTTTTTTT: ", rentBillForCurrentUser)
     
-    today = date.today()
-    booked_rooms = BookRoom.objects.filter(moveInDate__lt=today)  # Filter rooms where move-in date is before today OR LESS THAN TODAY
     
-    roomBilling = [] 
-    collectRentForThisRoom = []
-       
-    for room in booked_rooms:
-        Billing = RoomBilling.objects.filter(bookedRoom=room).first()
-        roomBilling.append(Billing)
-        
-    for room in booked_rooms:
-        move_in_date = room.moveInDate
-        if move_in_date.month != today.month or (move_in_date.month == today.month and move_in_date.year != today.year ):  # Check if move-in date month is different from today's month and YEAR NE CHECK
+    # FOR owner
+    today = date.today() #gat the today date
+    rooms = Room.objects.filter(user=request.user) #Get all the room for current user
+    
+    for room in rooms: # Getting all the bookedRoom of the current user
+        updated_booked_rooms = BookRoom.objects.filter(room=room, joined=True).first()
+        UpdatedRentBillings = RoomBilling.objects.filter(bookedRoom=updated_booked_rooms).first()
+        if UpdatedRentBillings.status == "updated":
+            allUpdatedRentBillings.append(UpdatedRentBillings)
+                                                            
+        booked_rooms = BookRoom.objects.filter(moveInDate__lt=today, room=room, joined=True).first()  # Filter rooms where move-in date is before today OR LESS THAN TODAY
+        if booked_rooms:
+            # bookedroom.append(booked_rooms)  # yo na garda ne hunxa if yei code lekhne ho vane
             
-            # check if billing date is after 3 days or not
-            if today.day  + 1 == move_in_date.day or today.day  + 2 == move_in_date.day or today.day  + 3 == move_in_date.day or today.day == move_in_date.day:
-                
-                collectRentForThisRoom.append(room)
-                
-                # Get the day of the move-in date
-                move_in_day = move_in_date.day
-                
-                # Update move-in date to the same day next month
-                next_month_date = move_in_date.replace(month=move_in_date.month + 1)
-                # If move-in month was December, adjust year as well
-                if next_month_date.month == 1:
-                    next_month_date = next_month_date.replace(year=move_in_date.year + 1)
-                
-                # Store the next next billing date
-                room.rentBilledDate = next_month_date
-                room.save()
-
-          
-    print("collectRentForThisRoom", collectRentForThisRoom)
-    
-    if request.method == 'POST' :
-        electricityUnit = request.POST.get('electricityUnit')
-        electricityAmount = request.POST.get('electricityAmount')
-        totalAmount = request.POST.get('totalAmount')
+            roombilling = RoomBilling.objects.filter(bookedRoom=booked_rooms, status="pending").exclude(id=None).first() #get the instance of RoomBilling
+            if roombilling is not None:
+                allPendingRoombillings.append(roombilling)
+            
+            
+            if roombilling and booked_rooms.moveInDate == booked_rooms.rentBilledDate:
+                move_in_date = booked_rooms.rentBilledDate
+                try:
+                    next_month_date = move_in_date.replace(month=move_in_date.month + 1)
+                    booked_rooms.rentBilledDate = next_month_date
+                    booked_rooms.save()
+                except ValueError:
+                    next_month_date = move_in_date.replace(year=move_in_date.year + 1, month = 1)  #change the year if month is january
+                    booked_rooms.rentBilledDate = next_month_date
+                    booked_rooms.save()
+                    
+    if request.method == 'POST' and 'updatePendingRoom' in request.POST:
+        roombillingID = request.POST.get('roomBillingID')  
+        if "hasLatePaymentCharge" in request.POST:
+            # If checked set latePaymentCharge to True
+            latePaymentCharge = True
+        else:
+            # If not checked set latePaymentCharge to False
+            latePaymentCharge = False
+        updateBilling = RoomBilling.objects.get(pk=roombillingID)
         
-        for room in booked_rooms:
-            with transaction.atomic():
-                billing = RoomBilling.objects.create(bookedRoom=room, electricityUnit = electricityUnit, electricityAmount = electricityAmount, totalRoomRentAmount = totalAmount)
-                billing.save()
-                
-                electricityDetail = ElectricityUnitDetail.objects.filter(bookedRoom=room)
-                for detail in electricityDetail:
-                    detail.status = 'Updated'
-                    detail.save()
-              
+        # UPDAING THE TENANT BILL
+        updateBilling.electricityUnit = request.POST.get('electricityUnit')
+        updateBilling.electricityAmount = request.POST.get('electricityAmount')
+        updateBilling.totalRoomRentAmount = request.POST.get('totalAmount')
+        updateBilling.electricityPreviousUnit = request.POST.get('ElecPreviousUnit')
+        updateBilling.electricityCurrentUnit = request.POST.get('ElecCurrentUnit')
+        updateBilling.status = "updated"
+        updateBilling.hasChargeLatePaymentFee = latePaymentCharge
+        updateBilling.save()
+        sweetify.success(request, "Bill Updated !!")
+        return redirect('billing')
+          
+    print("allPendingRoombillings", allPendingRoombillings)
     context = {
-            'collectRentForThisRoom' : collectRentForThisRoom,
-            'roomBilling' : roomBilling,
-            'rentBill' : rentBill,
-        }
+        'step' : step,
+        'allPendingRoombillings' : allPendingRoombillings,
+        'allUpdatedRentBillings' : allUpdatedRentBillings,
+        'rentBillForCurrentUser' : rentBillForCurrentUser,
+    }
     
     return render(request, "Payment/rentBill.html", context)
 

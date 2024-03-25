@@ -1,35 +1,91 @@
-{% extends 'Users Profile/NavigationBarBase/base.html' %}
+
+{% extends 'Users Profile/NavigationBarBase/base.html' %} 
 {% load static %} 
 {% load custom_tags_payment %}
- {% block title %} RoomRent | Rent bills{% endblock%} 
- {% block content %}
+ {% block title %} RoomRent | Rent bills{% endblock%}
+{% block content %}
 
 <div class="flex-1 bg-[#F3F3F3]">
   <!-- Main container Start -->
   <div class="container px-4 py-1 mx-auto">
     <!-- HEADING CONTENTS -->
-    <div
-      class="bg-white h-full pb-[100px] lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white h-screen"
-    >
-      <div class="flex justify-between pr-3 {% if request.user|has_group:"owner" %} bg-[#EF6262] {% else %} bg-[#0AD674] {% endif %}text-white">
+    <div class="bg-white h-screen pb-[100px] lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
+      <!--HEADING-->
+      <div class="">
+        <div class="flex justify-between pr-3 {% if request.user|has_group:"owner"%} bg-[#EF6262] {% else %} bg-[#0AD674] {% endif %}text-white">
         <div>
           <h1 class="font-semibold text-[17px] md:text-3xl p-6">
-            {% if request.user|has_group:"owner" %} 
-            Rent that needs to be
-            collect with in few days 
-            {% else %} 
-            Rent that needs to be paid with
-            in few days 
-            {% endif %}
+            {% if request.user|has_group:"owner" %} Rent that needs to be collect
+            with in few days 
+                {% if step == 'updated' %} 
+                (UPDATED)
+                {% elif step == 'paid'%}
+                  (PAID)
+                {% else %}
+                (PENDING)
+                {% endif %}
+            
+            {% else %} Rent that needs to be paid with in few
+            days {% endif %}
           </h1>
         </div>
       </div>
 
-      {% if request.user|has_group:"owner" %} 
-      <div class="px-5">
-        <table
-          class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4"
-        >
+      <!-- CHANGE PAGE -->
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="sub-heading flex p-3 gap-3 gap">
+          <div>
+            <button type="submit" name="pendingUpdate" class="hover:bg-[#00ffc321] p-2 px-4 border text-[#39c9a7] 
+          {% if step == None or step == 'pendingUpdate' %}
+            bg-[#00ffc321]
+            {% else %}
+            bg-[#39c9a70d]
+          {% endif %}
+             border-[#39c9a71a]">Pendings</button>
+          </div>
+
+          
+          {% if request.user|has_group:"owner"%}
+            <div>
+              <button type="submit" name="updated" class=" relative 
+             {% if step == 'updated' %} 
+              bg-[#f58c5c24]
+               {% else %} 
+              bg-[#ddb21a1a] 
+            {% endif %} 
+            hover:bg-[#f58c5c24] p-2 px-4 text-[#ddb21a] border-[#f58c5c1a] border">Updated 
+           </button>
+
+            </div>
+          {% endif %}
+
+
+          <div>
+            <button type="submit" name="paid" class=" relative 
+            {% if step == 'paid' %}
+              bg-[#f58c5c24]
+              {% else %}
+              bg-[#f58c5c0d] 
+            {% endif %}
+            hover:bg-[#f58c5c24] p-2 px-4 text-[#f58c5c] border-[#f58c5c1a] border">Paid 
+            </button>
+
+          </div>
+
+        </div>
+      </form>
+
+
+      {% if step == None or step == "pendingUpdate" %}
+
+      <!-- BOOKING LISTS -->
+      <div class="md:px-10 mt-5">
+
+
+        {% if allPendingRoombillings %}
+
+        <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
           <tbody>
             <tr class="border-b">
               <th class="text-left p-3 px-5">Room title</th>
@@ -39,82 +95,56 @@
               <th class="text-left p-3 px-5"></th>
             </tr>
 
-
-
-          
-
-            {% for room in collectRentForThisRoom %}
-
+            {% for room in allPendingRoombillings %}
             <tr class="border-b hover:bg-gray-100">
               <td class="p-3 px-5">
                 <a
                   class="text-[#0766AD]"
-                  href="{% url 'roomMoreDetails' room.room.id %}"
-                  ><p>{{room.room.roomTitle}}</p></a
+                  href="{% url 'roomMoreDetails' room.bookedRoom.room.id %}" 
+                  ><p>{{room.bookedRoom.room.roomTitle}}</p></a
                 >
               </td>
-              <td class="p-3 px-5">
-                <p>{{room.moveInDate|date}}</p>
-              </td>
-              <td class="p-3 px-5">
-                <p>{{room.rentBilledDate|date}}</p>
-              </td>
 
               <td class="p-3 px-5">
-                <p>{{room.electricityunitdetail.status}}</p>
+                <p>{{room.bookedRoom.moveInDate|date}}</p>
               </td>
-
+              <td class="p-3 px-5">
+                <p>{{room.bookedRoom.rentBilledDate|date}}</p>
+              </td>
+              <td class="p-3 px-5">
+                <p>{{room.status}}</p>
+              </td>
               <td class="p-3 px-5 pl-3">
-                <button
-                  type="button"
+                <button type="button"
                   class="md:mr-3 text-sm bg-gray-700 hover:bg-gray-600 text-white md:py-2 md:px-3 rounded focus:outline-none focus:shadow-outline"
-                  data-modal-target="medium-modal-{{ room.room.id }}"
-                  data-modal-toggle="medium-modal-{{ room.room.id }}"
-                >
+                  data-modal-target="medium-modal-{{ room.id }}" data-modal-toggle="medium-modal-{{ room.id }}">
                   View details
                 </button>
               </td>
             </tr>
+
             <!-- view Modal -->
-            <div
-              id="medium-modal-{{ room.room.id }}"
-              tabindex="-1"
-              class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
-              >
+            <div id="medium-modal-{{ room.id }}" tabindex="-1"
+              class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
               <div class="relative w-full max-w-2xl max-h-full">
                 <!-- Modal content -->
                 <div class="relative bg-white rounded-lg shadow">
                   <!-- Modal header -->
-                  <div
-                    class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
-                  >
+                  <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
                     <h3 class="text-xl font-medium text-gray-900">
-                      {{room.room.roomTitle}}
+                      {{ room.bookedRoom.room.roomTitle }}
                     </h3>
-                    <button
-                      type="button"
+                    <button type="button"
                       class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                      data-modal-hide="medium-modal-{{ room.room.id }}"
-                    >
-                      <svg
-                        class="w-3 h-3"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                        />
+                      data-modal-hide="medium-modal-{{ room.id }}">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                       </svg>
                       <span class="sr-only">Close modal</span>
                     </button>
                   </div>
-                  <!-- Modal body -->
                   <form action="" method="post" class="ml-auto">
                     {% csrf_token %}
                     <div class="p-4">
@@ -123,12 +153,12 @@
                         <div class="text-xl">
                           <h1 class="font-bold">
                             Rent:
-                            <span>Rs. <span>{{room.room.rent}}</span></span>
+                            <span>Rs. <span>{{room.bookedRoom.room.rent}}</span></span>
                             <input
                               type="hidden"
                               name="rentAmount"
                               id="rentAmount"
-                              value="{{room.room.rent}}"
+                              value="{{room.bookedRoom.room.rent}}"
                             />
                           </h1>
                         </div>
@@ -138,12 +168,12 @@
                         <div class="mt-4">
                           <h1>
                             <span>Water: </span>Rs.
-                            <span>{{room.room.water}}</span>
+                            <span>{{room.bookedRoom.room.water}}</span>
                             <input
                               type="hidden"
                               name="waterRent"
                               id="waterRent"
-                              value="{{room.room.water}}"
+                              value="{{room.bookedRoom.room.water}}"
                             />
                           </h1>
                         </div>
@@ -151,22 +181,21 @@
                         <div class="mt-4">
                           <h1>
                             <span>Trash: </span>Rs.
-                            <span>{{room.room.trash}}</span>
-                            <input
-                              type="hidden"
-                              name="trashRent"
-                              id="trashRent"
-                              value="{{room.room.trash}}"
-                            />
+                            <span>{{room.bookedRoom.room.trash}}</span>
                           </h1>
                         </div>
+
+                        <div class="flex items-center py-2">
+                          <input checked id="checked-checkbox" name="hasLatePaymentCharge" type="checkbox" value="True" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 ">
+                          <label for="checked-checkbox" class="ms-2 font-bold text-gray-900 ">Charge late payment fee </label>
+                      </div>
 
                         <div class="mt-4">
                           <h1 class="font-bold">
                             <span
                               >Electricity:
                               <span
-                                >(Rs. <span>{{room.room.electricity}}</span> per
+                                >(Rs. <span>{{room.bookedRoom.room.electricity}}</span> per
                                 unit)</span
                               ></span
                             >
@@ -175,61 +204,76 @@
                             type="hidden"
                             id="electricityRate"
                             name="electricityRate"
-                            value="{{room.room.electricity}}"
+                            value="{{room.bookedRoom.room.electricity}}"
                           />
                         </div>
-
-                        {% if room.electricityunitdetail.status == 'Updated' and roomBilling %} 
-                        {% for billing in roomBilling %}
-
-                        <h1 class="pt-2">
-                          Electricity unit till date:
-                          <span>{{billing.electricityUnit}}</span>
-                        </h1>
-
-                        <h1 class="pt-2">
-                          Electricity Amount:
-                          <span>{{billing.electricityAmount}}</span>
-                        </h1>
-
-                        <h1 class="pt-4 font-bold text-xl">
-                          Total Rent Amount:
-                          <span>{{billing.totalRoomRentAmount}}</span>
-                        </h1>
-
-                        {% endfor %} 
-
-                        {% else %}
 
                         <!--ELECTRICITY calculation-->
                         <div class="" id="electricityDetails">
                           <div>
                             <h1 class="pt-4">
-                              <span class="text-[#EF6262]">Previous unit: </span
-                              ><span
-                                >{{room.electricityunitdetail.electricityPreviousUnit}}</span
+                              <span class="">Previous unit: </span>
+                              <span>
+                                {% if room.electricityPreviousUnit == 0 %}
+                                <!--if electricity unit is 0 that means tenant is new and its going to be first billing so manuay entering the previous unit -->
+                                <input
+                                  required
+                                  class="focus:bg-white focus:border-purple-500 shadow appearance-none border border-gray-200 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                  type="number"
+                                  name="previousUnit"
+                                  id="previousUnit"
+                                  min="1"
+                                  placeholder="Unit..."
+                                  
+                                />
+                                {% else %}
+                                <input type="hidden" name="previousUnit" id="previousUnit"
+                                value="{% if room.electricityPreviousUnit %}
+
+                              {{  room.electricityPreviousUnit }}
+
+                              {% endif %}"
                               >
-                              Unit
+                                <!--if electricity unit is not 0 that means tenant is not new so showing the previous unit -->
+                                {{  room.electricityPreviousUnit }}
+                              </span>
+                              {% endif %}
                             </h1>
+
                             <input
                               type="hidden"
-                              id="previousUnit"
-                              name="previousUnit"
-                              value="{{room.electricityunitdetail.electricityPreviousUnit}}"
+                              id="previousUnit-hidden"
+                              name="ElecPreviousUnit"
+                              value="
+                              {% if room.electricityPreviousUnit %}
+
+                              {{  room.electricityPreviousUnit }}
+
+                              {% else %}
+                                
+                              {% endif %}
+                                "
                             />
+
+                            <input
+                              type="hidden"
+                              id="currentUnit-hidden"
+                              name="ElecCurrentUnit"
+                              value=""
+                            />
+
                             <h1 class="pt-4">
-                              <span class="text-[#EF6262]">Current unit: </span
+                              <span class="">Current unit: </span
                               ><span
                                 ><input
                                   required
-                                  class="outline outline-red-500 outline-offset-2 outline-1 pl-2 px-2 ml-3 mr-3"
+                                  class="ml-2 focus:bg-white focus:border-purple-500 shadow appearance-none border border-gray-200 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                   type="number"
                                   name="currentUnit"
                                   id="currentUnit"
                                   min="{{room.electricityunitdetail.electricityPreviousUnit}}"
                                   placeholder="Unit..."
                               /></span>
-                              Unit
                             </h1>
                           </div>
 
@@ -238,7 +282,7 @@
                             <button
                               type="button"
                               id="calculateBtn"
-                              class="bg-[#0766AD] text-white mt-4 py-2 px-5"
+                              class="bg-[#0766AD] text-white mt-4 py-2 px-5 calculateBtn"
                             >
                               Calculate
                             </button>
@@ -246,7 +290,6 @@
                         </div>
                       </div>
                       <!--ELECTRICITY calculation END-->
-                      {% endif %}
                       <!-- AFTER CALCULATION -->
                       <div id="calculationResult" class="hidden mt-4">
                         <div class="mb-4">
@@ -285,30 +328,24 @@
                       </div>
                     </div>
                     <!-- Modal footer -->
-                    {% if room.electricityunitdetail.status != 'Updated' %}
                     <div
                       class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b"
                     >
                       <input
                         type="hidden"
-                        name="roomId"
+                        name="roomBillingID"
                         value="{{ room.id }}"
-                      />
-                      <input
-                        type="hidden"
-                        name="user"
-                        value="{{ room.user.id }}"
                       />
                       <button
                         data-modal-hide="medium-modal-{{ room.id }}"
                         type="submit"
-                        name="update"
+                        name="updatePendingRoom"
                         class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                       >
                         Update
                       </button>
                       <button
-                        data-modal-hide="medium-modal-{{ room.room.id }}"
+                        data-modal-hide="medium-modal-{{ room.id }}"
                         type="button"
                         name="reject"
                         class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
@@ -316,7 +353,6 @@
                         Cancel
                       </button>
                     </div>
-                    {% else %} {% endif %}
                   </form>
                 </div>
               </div>
@@ -324,89 +360,360 @@
             {% endfor %}
           </tbody>
         </table>
-      </div>
 
         {% else %}
+          
+        <div class="md:px-2 ">
 
+          {% if rentBillForCurrentUser %}
+
+          {% for billedRooms in rentBillForCurrentUser %}
+          
+          <!--START: BOOKED ROOMS details -->
+          <div class="pl-3 shadow-xl md:w-[320px]">
+            <div id="gallery" class="relative w-full" data-carousel="slide">
+                <!-- Carousel wrapper -->
+                
+                <div class="relative h-56 overflow-hidden rounded-lg">
+                    <!-- Item 1 -->
+                    {% for img in billedRooms.bookedRoom.room.images.all %}
+                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                        <img src="{{ img.image.url }}" class="absolute block max-w-full h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- INFO -->
+            <div class="p-2 font-semibold text-[#0766AD]">
+                <a href="{% url 'roomMoreDetails' billedRooms.bookedRoom.room.id %}"><h1>{{billedRooms.bookedRoom.room.roomTitle}}</h1></a>
+
+            </div>
+
+            <div class="p-2">
+              <h1><span class="font-bold">Moved In date: </span>{{billedRooms.bookedRoom.moveInDate|date}}</h1>
+
+            </div>
+
+            <div class="p-2">
+              <h1><span class="font-bold">Rent billed date: </span>{{billedRooms.bookedRoom.rentBilledDate|date}}</h1>
+
+            </div>
+
+            <div class="px-2 py-2">
+              <button type="submit" data-modal-target="medium-modal-{{billedRooms.id }}" data-modal-toggle="medium-modal-{{ billedRooms.id }}" class="w-full py-3 border border-solid border-[black]  font-medium rounded-md py-3">View Details</button>
+            </div>
+          
+                    <!-- view Modal -->
+                    <div id="medium-modal-{{ billedRooms.id }}" tabindex="-1"
+                    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div class="relative w-full max-w-2xl max-h-full">
+                      <!-- Modal content -->
+                      <div class="relative bg-white rounded-lg shadow">
+                        <!-- Modal header -->
+                        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                          <h3 class="text-xl font-medium text-gray-900">
+                            {{ billedRooms.bookedRoom.room.roomTitle }}
+                          </h3>
+                          <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                            data-modal-hide="medium-modal-{{ billedRooms.id }}">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                              viewBox="0 0 14 14">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                          </button>
+                        </div>
+                        <form action="" method="post" class="ml-auto">
+                          {% csrf_token %}
+                          <div class="p-4">
+                            <!--ROOM Details-->
+                            <div>
+                              <div class="text-xl">
+                                <h1 class="font-bold">
+                                  Rent:
+                                  <span>Rs. <span>{{billedRooms.bookedRoom.room.rent}}</span></span>
+                                  <input
+                                    type="hidden"
+                                    name="rentAmount"
+                                    id="rentAmount"
+                                    value="{{billedRooms.bookedRoom.room.rent}}"
+                                  />
+                                </h1>
+                              </div>
         
+                              <h1 class="mt-4 font-bold">Utility info:</h1>
+        
+                              <div class="mt-4">
+                                <h1>
+                                  <span>Water: </span>Rs.
+                                  <span>{{billedRooms.bookedRoom.room.water}}</span>
+                                </h1>
+                              </div>
+        
+                              <div class="mt-4 pb-2">
+                                <h1>
+                                  <span>Trash: </span>Rs.
+                                  <span>{{billedRooms.bookedRoom.room.trash}}</span>
+                                </h1>
+                              </div>
+        
+                              <div class="flex items-center py-2">
+                                <input 
+                                
+                                {% if billedRooms.hasChargeLatePaymentFee == True %}
+                                  checked
+                                {% else %}
+        
+                                {% endif %}
+                                  
+                                disabled 
+                                id="checked-checkbox" name="hasLatePaymentCharge" type="checkbox" value="True" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 ">
+                                <label for="checked-checkbox" class="ms-2 font-bold text-gray-900 ">If late then charge late payment fee</label>
+                            </div>
+        
+                              <div class="mt-4">
+                                <h1 class="font-bold">
+                                  <span
+                                    >Electricity:
+                                    <span
+                                      >(Rs. <span>{{billedRooms.bookedRoom.room.electricity}}</span> per
+                                      unit)</span
+                                    ></span
+                                  >
+                                </h1>
+                                <input
+                                  type="hidden"
+                                  id="electricityRate"
+                                  name="electricityRate"
+                                  value="{{billedRooms.bookedRoom.room.electricity}}"
+                                />
+                              </div>
+        
+                              <!--ELECTRICITY calculation-->
+                              <div class="" id="electricityDetails">
+                                <div>
+                                  <h1 class="pt-4">
+                                    <span class="">Previous unit: </span>
+                                    <span>
+                                      {{  billedRooms.electricityPreviousUnit }}
+                                    </span>
+                                  </h1>
+        
+                                  
+                                  <h1 class="pt-4">
+                                    <span class="">Current unit: <span>{{  billedRooms.electricityCurrentUnit }}</span></span
+                                    > 
+                                  </h1>
+                                </div>
+                              </div>
 
-<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-  <a href="#">
-      <img class="rounded-t-lg" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8NEA0NDQ8NDQ0NDQ8NDQ0NDQ8NDQ8PFREWFhYRFRUYHSkgGBolGxYTITEhJSkrLi4uFx80ODMsNyguNSsBCgoKDg0OGhAQFy0gIB0uLS0rLSstKysrLS0rKystLSsrKystKy0tLy0tLS0rKy0tLS0rKy0rKy0tLS0tLS0rLf/AABEIALIBGwMBEQACEQEDEQH/xAAbAAACAgMBAAAAAAAAAAAAAAAAAQIDBAYHBf/EAEwQAAICAQEDBAoQBAMIAwAAAAABAgMRBAUSIQYxQbIHEzJRYXFyc7PRFBYiIyQ0QlJTVIGRkpOx0nSCocFig/AVNURjZJSiwiUzQ//EABsBAQACAwEBAAAAAAAAAAAAAAABAwIEBQYH/8QAOhEAAgECAQcICQQDAQEAAAAAAAECAxEEBRIxM3GBsRMhMkFRUpHBFBUiNGGhstHwQlNy4RYjJAZD/9oADAMBAAIRAxEAPwDbUfLz1gAgkCAAAACLACAW0c1nm31om3hdFT+L4oqq6Y7fuVGoWgAAAADALdN3X8k+ozawet3S+llVboeHEqNUtEAABbfzrzdXo4mxiemv4x+lFVLova+LKzXLQAGCBAkGAWafnfm7PRyNnC6zdL6WV1ujvXFFRrlgEAAC6rubfJj10bdHU1d3Eqn047+BSahaAAEgCQAAAEQSAAgSMEDAAAMgDAAEFtHNZ5t9aJs4bRU/i+KKqumO37lRqFoAAAAAAFum7r+WfUZtYPW7pfSyqt0PDiio1S0AAALdRzrzdXo4mxiemv4x+lFVLova+LKzXLQAAAABAFun535Fno5GzhdZul9LK63R3riio17FgAAQC2rubfJj10bdHU1d3Eqn047+BUapaAsAJAAkWQBAAAIEgAAAwQAAADADIBdRzWebfWibWG0VP4viimrpjt+5UapaBFgAsAAAgFum7r+WfUZtYPWrZL6WVVuj4cUVGqWgTYALAs1HOvN1ejiX4npr+MfpRXS6L2viys1ywYAACAAkFmn7p+RZ6ORs4XWbpfSyut0d64orNctAEAAW1dzb5MeujZo6mru4lU+nHfwKjWLQyALIJEAAAAACRAAAAAADAAAAQABdRzWebfWibWG0VP4viiqr+nb9yrJqlo8ggAAAAiwLdP3X8k+ozawetWyX0srrdDw4oqNWxYGSQGQCy/nXm6vRxL8T01/GP0orpdF7XxZWaxYAAwBAAZEk9P3T8iz0cjYw2s3S+llVbo71xRUa5aMAMgF1T9zb5Meujao6mpsXEqn047+BTk1S0QAAAAAJEAAAAAAAAAAAAAwAALaOazzb60Taw2ip/F8UU1dMdv3KjVLQAAAYA8gFulWZY4cYz4vgu4ZuYCDnXUV2P6WUYiSjC7+HEqljo4rvtYNWSSdou6LY3a5yJiZAAW38683V6OJsYnpr+MfpRVS6L2viyBrlgEACABKAmySSzT878iz0cjYwus3S+lldbo71xRUa5YAAAF1Xc2+THro2qOpqbFxKp9OO/gUmqWgCQAEAAAAAAAAiSRkAAQAAAAAABdRzWebfWibeGXNP+L4opq6Y7fuVGoXAAAIPZ0WwHdXCxWqO+s43G8ce/k7+FyE69KNTlLZ3w/s51XH8nNxzdHxL/axL6Zflv1l/+Ny/d+X9lfrNdz5/0UajZUNLiVt6WVNRSrlvNuLWeD6MomGTIYGoqlSslp6vg/iRLFSrxcYw7Ov4llXJzfSlG+MoyWU1W8NfeYQ/8/nxUo1U0/h/Zk8pZrs4aPj/AET9rEvpo/lv1mX+OS/d+X9kes13Pn/R521tmvSuCc1Pf3uaO7jGPD4TmZRyc8Hm3lnZ1+q2i33NvDYnl781rGJqOdebq9HE1MT01/GP0oto9F7XxZA1y0aBAEWAmSSIAs0/O/Is9HI2MLrN0vpZXW6O9cUVGuWgAMAtq7m3yY9dG1R1NTdxKZ9OO/gUmqXAAAAAAAAAAkQAEgABkAAQOEHJqMU5SfMoptv7DKEJTebFXfwIlJRV27F3sK76G78qfqL/AEPEfty8GVekUu+vFB7Cu+hu/Kn6h6HiP25eDHpFLvrxRdTp7lGyLqtw4cE6591vRxjhznQweHr5lWE4ySzXZWenmNetVp50JRa09vUU+w7vobvyp+o5/oeI/bl4M2PSKXfXiiqyEod1GUfKTj+pVOlOHSi1tRbGUZaHcrcjCxlY3jYL+DU+S+sz6Bkv3SnsPN4zXy2meb5rHmbZ2T7K3Gp7koZWd3eTT8GV3jl5RyasZm+1Zx3m3hcVyF+a9zL0OmVNcKk21BYy+dvOW/vN3DUI0KUaceooq1HUm5vrMgvKzWeWLw9P4rP/AFPL/wDo1z09/kdfJS6e7zPDvlxXm6vRxOBiV7a2R+lHRpL2XtfFkEzWLBpgglkAiwABJZp+d+RZ6ORsYXWbpfSyqt0d64oqNctAAAC6rubfJj10bVHU1N3Eqn047+BSapaAAAAAAAAkRIAAAAADIAsgGfsJ/CafKfVZ0ske+Q/OpmrjdRL86zeD3p5wADXOUG1rabY1wUVFRjPMo5cuP6cMfecHKmVKuFqKEIrnV7v8/LnRweDhWg5SfWe7o7nZXXY1uucIya72VnB2aFR1KUZtWuk7GjUgoTcexlk4KSw0mn0NZRZKKkrNXMU2tB4e1uTsJpz06Vdi47nNCXg/wv8AocPHZFpVFnUVmvs6n9jo4bKEoO1TnXzM7YMWtPSpJqSUk0+DTUnlHQydFww0IvSka2LadaTWg9A3TWPL5QbYWhrha4ds37FXhS3cZjJ55n801MZilhoKTV7uxsYbDuvLNvY8FcvI/V3+av2nO9dx/bfib3qp99eBbHlvF/8A4P8ANX7TF5dgv/m/En1TLv8AyPP2xtpat1NV7na97g5b2c48XeOTlHKEcU4NQtm309d7dhvYTBOgpJyvcxtTJbyxzOup4znHvceBqY+CjVWa/wBMeCM8M24O/a+LIxZz2XMmiDEYIAEiALdK1vcebcszxx8iRvZPpqdazfVL6Wa+Jk40+btXFFTee8vAs4NOTu72sXxVkBiSABbV3Nvkx66Nqjqau7iVT6cd/AqNUtAAASIkAAAAAAARJJAAABZBJnbBfwmjyn1GdLJPvcPzqZq47US/Os3s94eaAA8jaG09FGbr1Dg51tcJ0ynutpPg919DRzcTi8HGeZWtddqbt8jcoYbEyjnU07P428zM0e0aL+FNkJtcd1PEkvJfE2qOJo1dXJMoqUKlPpxaMs2CoACmctyS+bLh/N/r9AC4A1PskPGmo/io+isOTljUrb5M6OTda9n2OexkeaaO4Zujmt+CfHM4r+pEI3qR2omT9l7DqOso09Fdlrpqarg5NKuGXjo5j2VaFGlTc3BcyvoR5ilKrUmoKT5/izzeT+vq1bnGWnqjKCUk92M048yWcdHA0cDiqOLbTpJNW7H5G1i8PUw6Tz27lm39jqce20xUZwXGEEkpx8S6UU5WyZGrDlKStKPUutfcnBYxwlmzfM/katGR45o7diRBAmybE2PU5NRjO/dlGMl2uTxJJrnXfO1kKEZYlqSv7L07UaOUW40k0+v7nq7d1dWlUFGiuU5547sYpRWM8ceE7uPxVHBZtqSbd+xeRzsLQqYi/t2sZ2gjTfXC1U1x31nDhF4ecNc3gNvDxoVqUaippXXYiiq6lObg5Pm+Jo7lz+M8BNe0z0sVzIeTAkyKkty1p8Uo5T4fLXFd83qNNPDVJJ6LX8TWnK1WKfxt4GOaJsgAAAAAAAAmwBZJJEAAJE2SCLZJlYztgP4VR5UuozpZJ97h+dTNXHr/AJ5fnWb8e6PMAAc15XWY1moXhr9FA8flWN8XLdwR6TJ7/wCeO/ieHHWSrlGcJOM4vejJPimalJuElKLs0bM7STi9DOtbH1nsiii9rDsrjKSXMpY4r78ntqFTlKcZ9qPLVYZk3HsZmFpWYm03ive+bOD++SX9wDIplmKfgAIarS13JRtrrtinvKNkIzSeMZw+nizCdOM1aSvtMozlF3i7GN/sbSfVdN+RX6iv0aj3F4Iz5er3n4klsjSritNp01xTVNfqHo1HuLwQ5er3n4l05xk5VSSaceKfFNPoZc0mrMrTs7ohotn06fe7TXGveeZYzl/ayqjh6VG/JxSuWVK1Sr03exlFxUalyk2V2pu+te9yfvkV8iT6fE/1PJ5ZybmPl6a5np+D7d528n4rPXJyfOtB4m8edsdOxByJsZWPW5JSzqf8qf6xO5kFf9L/AIvijn5UX+hbV5m26vRVXpK2EZpPKzzr7UerrYelWVqkb2OHTqzpu8HYtqgorcilGMcRSXBJY5iyMVGKjFWSMG23dmv+1RfTS/LXrPPy/wDPQbvyj8DqetJdz5j9qy+ml+Besj/HYfuPwHrSXc+ZjX7Nook6rNRh2R6YdziUWm8fbz+Ex9X4bDxnRlXs524j0mrVcaip9G/AyfavH6Z/gXrJ/wAch+4/Aj1pLu/MPauvppfgXrH+OQ/cfgPWku78xT5MpJvtz4JvuF6yJf8AnoKLfKPwJWU5N2zfma2meVOwGQLCySSAAACBImyQRbJMkiDZJJncnn8K0/lS6kjpZK97h+dTNXH+7y/OtHQT3J5cADlfLSeNdqfHX6GB5PKa/wCqW7gj0OBf+iO/ieNotJbqrFTRFznJ9HcxXzpPoRTQoTqyzYotq1Y01eTOx7M0a09NNEXlVVxhnv4XF/aeupQ5OCiuo85Unnycn1mUWGB5u3bcQhDpssiseBe6z/RfeAZmk7hAFwAAAAec38Il5MQD0QAAI2VqacZJOMk00+Zp9BjKKknGSumSm07o0PbeznpbMcXVPLrl4Pmvwo8RlLAPC1ObovR9j0uDxKrw+K0/c82UznJG7Y9TkdPOqfmZ/rE7uQ1/0PY/I52VdStq8zdLbsHrTzoaSzeUn/ix/RAGQAAB4W1NgO+12qzcUt3fTjl8Fjh9iOHjcjekV+Vz7X0/0dHD4/kqeZm37D2647qUVzJJLxI7aVlY5zJEgrv7mfky/QwqdB7CY6Uc5TPmp64ZAAAAABAskkkWCSLMkZEGyTIzuTz+F6fy5dSR0slL/rh+dTNTH+7y/OtHQz3B5YADEu2XprJOdmnosm8ZnOmuUnhY4toqlQpSedKKb2Fkas4qyk1vL6aIVrdrhGEfmwior7kWKKjzJWMG2+dssJIIXXRrjKdkowhBOUpyajGMVztt8yIbSV2Er6DV9Lr/APaNsb68+x45jTlY3lnDnjoy19yREJKSujKUXF2ZtNccJIyMTTeyrrLqNJRKi22ib1kYuVNk65OPabXhuL5spfcaWOk40007c5tYSKlN3XUcue3tf9d1v/d3/uOVy9TvPxOhyUO6vAdG3NfKdcfZuuxKcI/G7+mSXziynWm5JZzMJUoWfso7js7Qyr4zlOcubenJzk/tZ3jkHpgGLTtCqd1umUl26mMJzg+D3Jr3Ml31wa+wxUlexOa7XMoyIMXaWhhqa5VT5nxUumMuiSNfE4eGIpunPr+RbQrSozU4nNto0T09k6rFiUXz9El0SXgZ4mvhpUKjhLqPVUq0asFOPWZ3Iufwt+Ys60Tq5EVq72PyNDKjvRW37m3ayzB6k8+YNO21p4yUoSm3Jyyml0Jf2APOj2Q6n/w9n5kfUceWV4r9DOksmyf6kbFyf2wtdXO2MHWoWOvDkpZe6nn+pvYTFLEQckrWdjVxOHdGSi3c9Q2jXKtVd2uFlmM9rhKeObOE3gwqzzIOfYrmUI50lHtNdXK+H0Mvxr1HC9f0/wBt+J1fVE++gnyrjJNdplxTXdr1GMsv02muTfiFkmad85eBrKZ5U7VhpgixJMgDIIAkEASJkkkWSSQZkZGdydfwvT+U+pI6eSveofnUzUyh7vL860dEPbHlgAK67ozc1FpuuW5NLnjLdUsP7JRf2kKSejqJsWEkGHti2+ui2elrhdfGLlXVOTiptdGV04zjw94xm2o3iucyik3znCeUPKrW7Qe7qbN2tP4vXF1VRkn0x520/nN4OLVrzqc0jp06UIc6Ot9j3TpbP0c+mVWX+KR1sPqonPr6xmzlxUan2SNlX6zTUV6at2zjqo2SinGOIqqxZ9010tfeaeNpzqU0oq/ObWFnGE25PqOee0naX1Sf5lP7jleh1+6b/pNLvcSWn5FbRjZVJ6SeI2Qk32ynglJN/KLKeFrKSbiYyxFJp+0dsyd05AwDjvL3a1uh20tTQ8TropzF9zODzvQl4H6n0HNxM3CqpI3qEFOnms6lsHa9Wvor1NL9zNYlF91XNc8JeFep9JvU6iqRzkalSDhLNZ6BYYHicqNiLWVZhhX1put82934PwP+j+00Mfg1iIc3SWj7G3g8U6EufQ9P3NO5Ct+zZwkmpRotUotYaalFNNd85eSYONdp9j8joZRkpUU12rzN41FWT0ZxDxtbpMgHLq5cftPH1Fzs9LB8x1DsaP4Nd/Ev0cDtZI1L2+SOVlLWrZ5s246xzzE2t8X1HmLeoyjFamex8C2hrY7VxOZxZ4BnsC1GAJogxGiCCSIMWMgBkARIEwZEWZElbJMkZvJz43p/Ll1JHTyV71D86maeUPd5fnWjox7Y8sABz3Ubf9gbY1SseNNe6IXZ5oPtMN2z7OnwN95HJliOSxck9DtwOiqPKYZNaVfidBTzxR1jnDAOWdlDknuuW0tNH3Mn8Lriu5l9Ml3n8rw8elnNxlD9cd5vYWt+h7jc+QP+7dD5p9eRt4bVRNavrGbAXlQAAAABg665xnUl8pS/o4+sAzYPKQBxbsqVZ2lN/wDT0/3OPj5Wqbjp4RewUcieUM9m3ZlmWmtxG+C4471kV85f1WV3ijDYnkpc+h6S2vQ5SPNpO3UWxsjGyElOE4qUZReYyi1lNM7yaaujkNNOzJkkHkPYsI6xa6GIylTOq6OOE23Hdn41u4ff4d7jQqEVV5RdnOW8s3T5N9pnygXlRhamoA4lW+P2s8jU0s9HDQjqfYy+K3fxMvRwOzknUvb5I5mUdYtnmzbzqnPMTa/xfU+Yt6jKMTqZ7HwLaGtjtXE5jA8Az15bExZJNGJDJogxGQQMEAAIEiZKJIsklFcjJGRm8nH8L03ly6kjpZK96h+dTNLKHu8vzrOjHtjy4wDjXL//AHhq/HV6CB5zH+8S3cDtYTUrfxNt7GvKLt9b0V0vftPHNTb4zpXDHjjwXia8J08BiM+OY9KNLGUc2WctDN4OgaRGyCmpRklKMk4yjJZTT4NNdKDVweG9XpNj1VUXWdp0+ZRolNTkudy3MpPis9POl4yq8KUUm7IstKo20iv28bL+uV/hs/aR6RS7xPIVO6P277L+uV/hs/aR6TS7w5Cp3Re3jZf1yv8ADZ+0n0il3hyFTuh7edl/XK/w2ftHpFPvDkanYW3a+rUTplTPfilLLUZLGXHvrwMuKj2qnwQBybsk1b2vk/8Ak1f3OBlKVq247GBjelvNY7Sc7ONzNN27HvKTtElodRL3myXvE5PhXY33D/wt/c/Hw62T8XZ8nLR1HPxmHus+OnrOmZO0csABMAxdQgDg1XO/G/1PJVdLPRQ0I6r2Mvit38S/RwOxknUvb5I5uUdYtnmzcDqnPMTa/wAX1PmLeoyjE6mex8C2hrY7VxOYQPAs9eWxMWSTRgQTRBiMgDBAACBImSCLJMiuRmiTN5OfHNP5cupI6WSveofnUzSyh7vL860dGye1PLhkA45y+X/yGr8dXoIHnMf7xLdwO3hNSt/E17R6yzS21ail7tlU1OL6H30/A1lPwMro1HCSkuozqQU00+s7tsPateuoq1NXc2R91FvjCa4Sg/CmejpVFUipI4lSDhJxZnlhgYO3NlVa6izTXrMLFwa7qElzTj3mmYVIKcc1mUJOLujg+2NhWaK+zTXL3UHwku5nB804+B+tdBwKydKTizsUnGpG6MZaQo5QtzCMtGTyozB6XSe+VLv2QX/ki2nU9pFc4eyzv+m2dGvmSR6M4hnx4AHMuX0M62Xma/0Z5nKztX3I7uTl/p3s190nLzjezTHuoLYzMXE6NyD5S+yoexNRL4TVH3Em+N1a6fKXT3+fvnpcBiuVjmy0r5nCxeH5N5y0M2/J0DTBsAxb2AcHpXF+N/qeSqv2mejgdW7GXxW7+Jfo4HYyRqXt8kczKOsWzzZt51TnmJtf4vqfMW9RlGJ1M9j4FtDWx2ricwijwLPXlkTEksRiCSIMWSRDIGQAAESBMkkgyTIrkZIBpdVKiyF0Mb8G3HeWVzNcfvNnD1pUZqcdKKa1JVIOEtDPRnyy1i5lR+XL9x1llmv2LwOc8mUe1+P9FE+XGtXydP8AlT/cZrK9fsXgYvJtL4mr7Y1lmqts1Fqj2yzd3txNR9zFRWFnvJGtUrurNzlpZfCkqcc1dR5dlYUg0exye5Q6rZysjp9xxtalKFsXOKkuG8sNYeOH2LvG1Rxk6KaiUVMPGp0j2l2QNofN0v5M/wB5b60q/Ar9Ap/El7ftofN035U/3mPrWr8CfV9P4nlbc25ftDc9kQoUq292ddcozw+eOXJ8CivjJVks5LmLqOFjSfs3POjSabkbOaKVIzxmkdPV75V52HWRfRl7a2lVSPss7y2etPOCyAc65bLOsl5qv9GeWyw/9+5HoMmr/TvZ46rOPnHRsV20mUZGLiedJzpnC6qThZXJThNc6a/1zG7QquDTTNarTUlZnWuS+3obRoVixG2GIX1L5E++v8L50/s6Gerw9dVoZy3nn69F0pWPXbLykxr2AcOoXF+NnkK3SZ6SnoR1Hsa/Frv4l+jgdnJGpe3yRy8paxbPNm3ZOsc8xNrfF9R5i3qMoxWpnsfAtoa2O1cTmcUeAZ7AnEgE0YgkiDFkiCAFgAsBEgTBJEkki0SSVyiZBoonWZpmDRROosUjFopnQZqRg4lL05mpmLiEdMHMZhbHTmLmZZpYtOY55OaNaYjPJzCfaCM8nNISoJUyHEonp2mmuDTymuhlsaludFcoXM17Y1/1vUfjZuesK3fZr+h0u6icNs6/61f+NmLyjX77JWDpd1CnZbdLftnKyeEt6Ty8LoNKtXlUedJ3Zs06UYK0VYvhA1Wy9Ic6wpBowNTp8l8J2KpRMCud+mlKemtsplKO7KVcnFtZzhnRoYqUOi7GnVoKelXMe/bu1c8Nfql/mM344+dtJqSwkewnRt3aXytbqX47GYzx1TqkTHCw7oaepnMnK5vRjY6b2OljTXfxL9HA72R9S9vkjk5S1q2ebNrydY5xibUfvGo8xb1GUYrUT2PgW0NbHauJzZHgD2BNGIJEAkiDFkgQAAACBImCREgQJItE3BBxMgQlAm5FiDrJziLEe1GWcRYFUHIWJxqMc4lImqzHOJsS7WRnE2JbguBOsZxBB0mWcLCdAzxYapGcLE41mLZJYomNyLjaFwVzrySmDEuoLozMXEwbdKu8XxqFLgVLTYMs8jMLoV4MXIySOgdj/wCL3fxD9HA9HkXUy2+SOJlPWrZ5s2c7BzTF2n/9Go8xb1GUYrUT2PgW0NbHauJzdHgD2BNMgEkYgkiCCQMQAAgEckmQAAAAAiQLAuSJxJuBbouA3SbgN0i4GkLglggDIIAAMABgC490EXDdAuGALjwCAAE0CUyuUTJMyMeyosUjGxS6jPOMbC7WTnCxbVbZDhCc4JvLUZyis9/gZRrTirRk0YypxlpSZatXd9Lb+ZP1kvEVe+/FkcjT7q8ET9k2vKdljT4NOyTTX3mLxFVqzm/FmSpQX6V4EEUFpNEAmiGCRiQNAgYAAEQSAAAAAAAACJAYADAAYAHggDwAAIGAAAAgYAAAAAAACAIsGSISRkmSQcTK4I7ouRYW6TcDUSLgaQJJJEAaQBIxAwBkEAAAAgAAGAAAAAAAA8ABgAMAgYAAACAAAAAAAAAAAAAAASRYJIskkTRJIsEgWAQGAB4BIwAIAyCBgAQBggQAAkAABA0AAAAAANADBAAAAAAAACAAAAAAAAAAAAEwSJgkTJJIgkDIAAAAAAYgAAAJIEAQAAAA/9k=" alt="" />
-  </a>
-  <div class="p-5">
-      <a href="#">
-          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
-      </a>
-      <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-      <a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-          Read more
-           <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-          </svg>
-      </a>
-  </div>
-</div>
+                              <div>
+                                <input
+                                  
+                                  type="hidden"
+                                  name="roomBillingID"
+                                  value="{{ billedRooms.id }}"
+                                />
+                                <button
+                                  data-modal-hide="medium-modal-{{ billedRooms.id }}"
+                                  type="submit"
+                                  name="payRoomRent"
+                                  class="px-7 py-3 mt-2  text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm text-center"
+                                >
+                                  Pay with Khalti
+                                </button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
 
-
-{% endif %}
+          {% endfor %}
+    
       </div>
+
+      {% endif %}
+
+        {% endif %}
+
+      </div>
+
+      <!-- updated options -->
+      {% elif step == "updated" %}
+      <div class="md:px-10 mt-5">
+
+        {% if allUpdatedRentBillings %}
+      
+        
+        <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
+        <tbody>
+          <tr class="border-b">
+            <th class="text-left p-3 px-5">Room title</th>
+            <th class="text-left p-3 px-5">Movedin date</th>
+            <th class="text-left p-3 px-5">Billed date</th>
+            <th class="text-left p-3 px-5">Status</th>
+            <th class="text-left p-3 px-5"></th>
+          </tr>
+
+          {% for billedRooms in allUpdatedRentBillings %}
+          <tr class="border-b hover:bg-gray-100">
+            <td class="p-3 px-5">
+              <a
+                class="text-[#0766AD]"
+                href="" 
+                ><p>{{billedRooms.bookedRoom.room.roomTitle}}</p></a
+              >
+            </td>
+
+            <td class="p-3 px-5">
+              <p>{{billedRooms.bookedRoom.moveInDate|date}}</p>
+            </td>
+            <td class="p-3 px-5">
+              <p>{{billedRooms.bookedRoom.rentBilledDate|date}}</p>
+            </td>
+            <td class="p-3 px-5">
+              <p>{{billedRooms.status}}</p>
+            </td>
+            <td class="p-3 px-5 pl-3">
+              <button type="button"
+                class="md:mr-3 text-sm bg-gray-700 hover:bg-gray-600 text-white md:py-2 md:px-3 rounded focus:outline-none focus:shadow-outline"
+                data-modal-target="medium-modal-{{ billedRooms.id }}" data-modal-toggle="medium-modal-{{ billedRooms.id }}">
+                View details
+              </button>
+            </td>
+          </tr>
+
+          <!-- view Modal -->
+          <div id="medium-modal-{{ billedRooms.id }}" tabindex="-1"
+            class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative w-full max-w-2xl max-h-full">
+              <!-- Modal content -->
+              <div class="relative bg-white rounded-lg shadow">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                  <h3 class="text-xl font-medium text-gray-900">
+                    {{ billedRooms.bookedRoom.room.roomTitle }}
+                  </h3>
+                  <button type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                    data-modal-hide="medium-modal-{{ billedRooms.id }}">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                      viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                  </button>
+                </div>
+                <form action="" method="post" class="ml-auto">
+                  {% csrf_token %}
+                  <div class="p-4">
+                    <!--ROOM Details-->
+                    <div>
+                      <div class="text-xl">
+                        <h1 class="font-bold">
+                          Rent:
+                          <span>Rs. <span>{{billedRooms.bookedRoom.room.rent}}</span></span>
+                          <input
+                            type="hidden"
+                            name="rentAmount"
+                            id="rentAmount"
+                            value="{{billedRooms.bookedRoom.room.rent}}"
+                          />
+                        </h1>
+                      </div>
+
+                      <h1 class="mt-4 font-bold">Utility info:</h1>
+
+                      <div class="mt-4">
+                        <h1>
+                          <span>Water: </span>Rs.
+                          <span>{{billedRooms.bookedRoom.room.water}}</span>
+                        </h1>
+                      </div>
+
+                      <div class="mt-4 pb-2">
+                        <h1>
+                          <span>Trash: </span>Rs.
+                          <span>{{billedRooms.bookedRoom.room.trash}}</span>
+                        </h1>
+                      </div>
+
+                      <div class="flex items-center py-2">
+                        <input 
+                        
+                        {% if billedRooms.hasChargeLatePaymentFee == True %}
+                          checked
+                        {% else %}
+
+                        {% endif %}
+                          
+                        disabled 
+                        id="checked-checkbox" name="hasLatePaymentCharge" type="checkbox" value="True" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 ">
+                        <label for="checked-checkbox" class="ms-2 font-bold text-gray-900 ">If late then charge late payment fee</label>
+                    </div>
+
+                      <div class="mt-4">
+                        <h1 class="font-bold">
+                          <span
+                            >Electricity:
+                            <span
+                              >(Rs. <span>{{billedRooms.bookedRoom.room.electricity}}</span> per
+                              unit)</span
+                            ></span
+                          >
+                        </h1>
+                        <input
+                          type="hidden"
+                          id="electricityRate"
+                          name="electricityRate"
+                          value="{{billedRooms.bookedRoom.room.electricity}}"
+                        />
+                      </div>
+
+                      <!--ELECTRICITY calculation-->
+                      <div class="" id="electricityDetails">
+                        <div>
+                          <h1 class="pt-4">
+                            <span class="">Previous unit: </span>
+                            <span>
+                              {{  billedRooms.electricityPreviousUnit }}
+                            </span>
+                          </h1>
+
+                          
+                          <h1 class="pt-4">
+                            <span class="">Current unit: <span>{{  billedRooms.electricityCurrentUnit }}</span></span
+                            > 
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+       {% else %}         
+        <h1 class="text-[18px] pl-4 pt-4">Nothing to show here</h1>
+      {% endif %}
 
-    <script>
-      document
-        .getElementById("calculateBtn")
-        .addEventListener("click", function () {
-          var previousUnit = parseInt(
-            document.getElementById("previousUnit").value
-          );
-          var currentUnit = parseInt(
-            document.getElementById("currentUnit").value
-          );
-          var electricityRate = parseInt(
-            document.getElementById("electricityRate").value
-          );
 
-          var rentAmount = parseInt(
-            document.getElementById("rentAmount").value
-          );
-          var waterRent = parseInt(document.getElementById("waterRent").value);
-          var trashRent = parseInt(document.getElementById("trashRent").value);
+      {% elif step == "paid" %} <!--PAID-->
+      <h1 class="text-[18px] pl-4">PAID</h1>
 
-          if (!isNaN(currentUnit)) {
-            var newUnit = currentUnit - previousUnit;
-
-            var electricityAmount = newUnit * electricityRate;
-            var totalAmount =
-              electricityAmount + rentAmount + waterRent + trashRent;
-
-            document.getElementById("electricityAmount").textContent =
-              "Rs. " + electricityAmount;
-            document.getElementById("totalAmount").textContent =
-              "Rs. " + totalAmount;
-
-            document.getElementById("totalAmount-hidden").value = totalAmount;
-            document.getElementById("electricityUnit-hidden").value = newUnit;
-            document.getElementById("electricityAmount-hidden").value =
-              electricityAmount;
-
-            document.getElementById("electricityUnit").textContent =
-              newUnit + " Unit";
-
-            // Show the result div
-            document
-              .getElementById("calculationResult")
-              .classList.remove("hidden");
-
-            document
-              .getElementById("electricityDetails")
-              .classList.add("hidden");
-          } else {
-            alert("Please enter a valid current unit.");
-          }
-        });
-    </script>
-
-    {% endblock %}
+      {% endif %}
+    </div>
   </div>
-</div>
+
+  <script src="{% static 'js/rentBillCalculation.js' %}" type="text/javascript"></script>
+
+  {% endblock %}

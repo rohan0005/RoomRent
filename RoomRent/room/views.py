@@ -227,14 +227,7 @@ def myRoom(request):
             step = 'myroom'
         elif 'bookinglog' in request.POST:
             step = 'bookinglog'
-            
-    if request.method == 'POST':
-        if 'dismissLog' in request.POST:
-            bookinglogID = request.POST.get('bookingLogID')
-            print("bookinglogID", bookinglogID)
-            step = 'bookinglog'
-            log = BookingLog.objects.filter(pk=bookinglogID)
-            log.delete()
+
             
 
     context = {
@@ -332,7 +325,7 @@ def roomMoreDetails(request, room_id):
                 feedback = request.POST.get("feedback")
                 roomDetail.roomfeedbacks_set.create(user=currentUser,feedback=feedback) # save feedback after tenant submit moveout
                 BookedRoomDetails.save()
-                messages.success(request, "Moveout informed")
+                sweetify.success(request, "Moveout informed")
                 return redirect("roomMoreDetails", room_id = room_id)
             
         elif 'removeTenant' in request.POST: # Remove the tenant from this room after moveout is completed
@@ -342,9 +335,14 @@ def roomMoreDetails(request, room_id):
                 roomDetail.save()
                 bookedThisRoom = BookRoom.objects.filter(joined=True, room=room_id).first()
                 balance = MyBalance.objects.filter(bookedRoom=bookedThisRoom)
+                electricityDetails = ElectricityUnitDetail.objects.filter(bookedRoom=bookedThisRoom)
+                electricityDetails.delete()
+                billing = RoomBilling.objects.filter(bookedRoom=bookedThisRoom) #Delete the billing model associated with this bookedroom 
+                billing.delete()
+                
                 balance.delete()
                 isJoinedThisRoom.delete()
-                messages.success(request, "Tenant Movedout")
+                sweetify.success(request, "Tenant Movedout")
                 return redirect("roomMoreDetails", room_id = room_id)
                 
             
@@ -367,7 +365,7 @@ def roomMoreDetails(request, room_id):
                 room.save() # Update the room details
 
                 # Save the booking
-                booking = BookRoom.objects.create(room=room, moveInDate=moveInDate , user=user)
+                booking = BookRoom.objects.create(room=room, moveInDate=moveInDate , user=user, rentBilledDate=moveInDate)
                 booking.save()
                 
                 # CREATE MY BALANCE MODEL AFTER TENANT JOINS THE ROOm
@@ -432,6 +430,8 @@ def viewBooking(request):
                 # Update the 'joined' attribute to True
                 booking.joined = True
                 booking.save()  # Save the changes
+                billing = RoomBilling.objects.create(bookedRoom=booking) # create the billing model for the joined user
+                billing.save()
             print("USERNAME IS  : ", user)
             allBookingMadeByUser = BookRoom.objects.filter(user=user, joined = False)
             user = User.objects.get(pk=user)
@@ -467,13 +467,12 @@ def viewBooking(request):
             
             remainingBookingsForUser.delete() #Remaining bookings for user to be deleted:
             remainingBookingsForRoom.delete() #Remaining bookings for room to be deleted:
-            
-            prevElcUnit = request.POST.get("previousElectricityUnit")
-            electricityDetails = ElectricityUnitDetail.objects.create(bookedRoom=booking,electricityPreviousUnit=prevElcUnit)
+                         
+
+            electricityDetails = ElectricityUnitDetail.objects.create(bookedRoom=booking)
             electricityDetails.save()
-            
-                
-            messages.success(request, "Booking approved")
+
+            sweetify.success(request, "Booking approved")
             return redirect("viewBooking")
   
     
