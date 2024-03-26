@@ -314,7 +314,7 @@ def roomMoreDetails(request, room_id):
         if 'moveout' in request.POST:
             with transaction.atomic():
                 moveOutDate = request.POST.get("moveInOrMoveoutDate")  #get the moveout date
-                parsed_date = datetime.strptime(moveOutDate, '%m/%d/%Y')
+                parsed_date = datetime.strptime(moveOutDate, '%Y-%m-%d')
                 moveOutDate = timezone.make_aware(parsed_date, timezone.get_current_timezone())
                 BookedRoomDetails = BookRoom.objects.get(user=currentUser, room=room_id)
                 BookedRoomDetails.moveOutDate = moveOutDate
@@ -348,7 +348,7 @@ def roomMoreDetails(request, room_id):
             with transaction.atomic():
                 #Get move in date and change the format 
                 requestedMoveInDate = request.POST.get("moveInOrMoveoutDate") 
-                parsed_date = datetime.strptime(requestedMoveInDate, '%m/%d/%Y')
+                parsed_date = datetime.strptime(requestedMoveInDate, '%Y-%m-%d')
                 moveInDate = parsed_date.strftime('%Y-%m-%d')
 
                 # Get the room id

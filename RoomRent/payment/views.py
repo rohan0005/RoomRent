@@ -150,8 +150,9 @@ def billing(request):
     for room in rooms: # Getting all the bookedRoom of the current user
         updated_booked_rooms = BookRoom.objects.filter(room=room, joined=True).first()
         UpdatedRentBillings = RoomBilling.objects.filter(bookedRoom=updated_booked_rooms).first()
-        if UpdatedRentBillings.status == "updated":
-            allUpdatedRentBillings.append(UpdatedRentBillings)
+        if UpdatedRentBillings:
+            if UpdatedRentBillings.status == "updated":
+                allUpdatedRentBillings.append(UpdatedRentBillings)
                                                             
         booked_rooms = BookRoom.objects.filter(moveInDate__lt=today, room=room, joined=True).first()  # Filter rooms where move-in date is before today OR LESS THAN TODAY
         if booked_rooms:

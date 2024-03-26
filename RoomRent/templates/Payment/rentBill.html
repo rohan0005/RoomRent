@@ -145,11 +145,12 @@
                       <span class="sr-only">Close modal</span>
                     </button>
                   </div>
-                  <form action="" method="post" class="ml-auto">
+                  <form action="" method="post" class="ml-auto ">
                     {% csrf_token %}
                     <div class="p-4">
                       <!--ROOM Details-->
                       <div>
+
                         <div class="text-xl">
                           <h1 class="font-bold">
                             Rent:
@@ -157,7 +158,8 @@
                             <input
                               type="hidden"
                               name="rentAmount"
-                              id="rentAmount"
+                              id="rentAmount-{{room.id}}"
+                              class="xyz"
                               value="{{room.bookedRoom.room.rent}}"
                             />
                           </h1>
@@ -172,7 +174,7 @@
                             <input
                               type="hidden"
                               name="waterRent"
-                              id="waterRent"
+                              id="waterRent-{{room.id}}"
                               value="{{room.bookedRoom.room.water}}"
                             />
                           </h1>
@@ -183,6 +185,12 @@
                             <span>Trash: </span>Rs.
                             <span>{{room.bookedRoom.room.trash}}</span>
                           </h1>
+                          <input
+                              type="hidden"
+                              name="trashRent"
+                              id="trashRent-{{room.id}}"
+                              value="{{room.bookedRoom.room.trash}}"
+                            />
                         </div>
 
                         <div class="flex items-center py-2">
@@ -202,14 +210,14 @@
                           </h1>
                           <input
                             type="hidden"
-                            id="electricityRate"
+                            id="electricityRate-{{room.id}}"
                             name="electricityRate"
                             value="{{room.bookedRoom.room.electricity}}"
                           />
                         </div>
 
                         <!--ELECTRICITY calculation-->
-                        <div class="" id="electricityDetails">
+                        <div class="" id="electricityDetails-{{room.id}}">
                           <div>
                             <h1 class="pt-4">
                               <span class="">Previous unit: </span>
@@ -221,7 +229,7 @@
                                   class="focus:bg-white focus:border-purple-500 shadow appearance-none border border-gray-200 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                   type="number"
                                   name="previousUnit"
-                                  id="previousUnit"
+                                  id="previousUnit-{{room.id}}"
                                   min="1"
                                   placeholder="Unit..."
                                   
@@ -242,7 +250,7 @@
 
                             <input
                               type="hidden"
-                              id="previousUnit-hidden"
+                              id="previousUnit-hidden-{{room.id}}"
                               name="ElecPreviousUnit"
                               value="
                               {% if room.electricityPreviousUnit %}
@@ -257,7 +265,7 @@
 
                             <input
                               type="hidden"
-                              id="currentUnit-hidden"
+                              id="currentUnit-hidden-{{room.id}}"
                               name="ElecCurrentUnit"
                               value=""
                             />
@@ -270,7 +278,7 @@
                                   class="ml-2 focus:bg-white focus:border-purple-500 shadow appearance-none border border-gray-200 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                   type="number"
                                   name="currentUnit"
-                                  id="currentUnit"
+                                  id="currentUnit-{{room.id}}"
                                   min="{{room.electricityunitdetail.electricityPreviousUnit}}"
                                   placeholder="Unit..."
                               /></span>
@@ -283,6 +291,7 @@
                               type="button"
                               id="calculateBtn"
                               class="bg-[#0766AD] text-white mt-4 py-2 px-5 calculateBtn"
+                              onclick="calculate({{room.id}})"
                             >
                               Calculate
                             </button>
@@ -291,14 +300,14 @@
                       </div>
                       <!--ELECTRICITY calculation END-->
                       <!-- AFTER CALCULATION -->
-                      <div id="calculationResult" class="hidden mt-4">
+                      <div id="calculationResult-{{room.id}}" class="hidden mt-4">
                         <div class="mb-4">
                           <h1>
                             Electricity unit till date:
-                            <span id="electricityUnit"></span>
+                            <span id="electricityUnit-{{room.id}}"></span>
                             <input
                               type="hidden"
-                              id="electricityUnit-hidden"
+                              id="electricityUnit-hidden-{{room.id}}"
                               name="electricityUnit"
                               value=""
                             />
@@ -307,20 +316,20 @@
 
                         <div>
                           <h1>
-                            Electricity: <span id="electricityAmount"></span>
+                            Electricity: <span id="electricityAmount-{{room.id}}"></span>
                             <input
                               type="hidden"
-                              id="electricityAmount-hidden"
+                              id="electricityAmount-hidden-{{room.id}}"
                               name="electricityAmount"
                               value=""
                             />
                           </h1>
                         </div>
                         <div class="mt-4 font-bold text-xl">
-                          <h1>Total amount: <span id="totalAmount"></span></h1>
+                          <h1>Total amount: <span id="totalAmount-{{room.id}}"></span></h1>
                           <input
                             type="hidden"
-                            id="totalAmount-hidden"
+                            id="totalAmount-hidden-{{room.id}}"
                             name="totalAmount"
                             value=""
                           />
@@ -667,12 +676,6 @@
                             ></span
                           >
                         </h1>
-                        <input
-                          type="hidden"
-                          id="electricityRate"
-                          name="electricityRate"
-                          value="{{billedRooms.bookedRoom.room.electricity}}"
-                        />
                       </div>
 
                       <!--ELECTRICITY calculation-->
@@ -692,6 +695,25 @@
                           </h1>
                         </div>
                       </div>
+
+                      <div class="mt-4">
+                        <h1 class="font-bold">
+                          <span
+                            >Electricity Amount:
+                            <span
+                              >Rs. <span>{{billedRooms.electricityAmount}}</span></span></span>
+                        </h1>
+                      </div>
+
+                      <div class="mt-4 text-xl">
+                        <h1 class="font-bold">
+                          <span
+                            >Total Amount:
+                            <span
+                              >Rs. <span>{{billedRooms.totalRoomRentAmount}}</span></span></span>
+                        </h1>
+                      </div>
+
                     </div>
                   </div>
                 </form>
