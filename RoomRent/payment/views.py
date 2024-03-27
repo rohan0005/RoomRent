@@ -6,24 +6,13 @@ from .models import *
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import sweetify
+from dateutil.relativedelta import relativedelta
+
 
 import requests
 import json
-
-@login_required(login_url='signin')
-@user_passes_test(is_tenant)
-def myBalance(request):
-    hasBooking = BookRoom.objects.filter(user=request.user).first()  # there is only one object so we used .first()
-    balance = MyBalance.objects.filter(bookedRoom=hasBooking)
-    
-    context = {
-        'hasBooking' : hasBooking,
-        'balance' : balance,
-    }
-    
-    return render(request, 'Payment/myBalance.html', context)
 
 def initkhalti(request):
     
@@ -41,7 +30,7 @@ def initkhalti(request):
 
     payload = json.dumps({
         "return_url": return_url,
-        "website_url": "http://127.0.0.1:8000",
+        "website_url": "http://127.0.0.1:9000",
         "amount": amount,
         "purchase_order_id": purchase_order_id,
         "purchase_order_name": "test",
@@ -66,13 +55,13 @@ def initkhalti(request):
             return redirect("verify")
         
         else:
-            return redirect("mybalance")
+            sweetify.error(request, "Something went wrong.")
+            return redirect("billing")
     except KeyError:
         return redirect("error") 
         
 
     
-
 def verifyKhalti(request):
     url = "https://a.khalti.com/api/v2/epayment/lookup/"
     if request.method == 'GET':
@@ -92,20 +81,96 @@ def verifyKhalti(request):
         new_res = json.loads(res.text)
         print("new_res",new_res)
         
+        try:
+            
+            if new_res['status'] == 'Completed':
+                
+                total_amount = new_res['total_amount']
+                transaction_id = new_res['transaction_id']
+                
+                ini_time_for_now = datetime.now().date()
+                currentUser=request.user
+                
+                booked_room = get_object_or_404(BookRoom, user=request.user, joined=True)
+                room_bill = get_object_or_404(RoomBilling, bookedRoom=booked_room)
+                
+                billedDate = booked_room.rentBilledDate.date()
+                print("billedDate:", billedDate)
+                
+                # CALCULATE THE LATE PAYMENt
+                late =  str(ini_time_for_now - \
+                             billedDate)
+                if "days" in late.split(',')[0].strip() or "day" in late.split(',')[0].strip():
+                    lateDay = late.split(',')[0].strip()  # extracting the first part days
+                    late_Days = int(lateDay[0].strip())
+                else:
+                    late_Days = int(0)
+                
+                nextBillDate = billedDate + relativedelta(months=1)  # Change the next bill date to another month date
 
-        if new_res['status'] == 'Completed':
-            booked_room = get_object_or_404(BookRoom, user=request.user)
-            amount = new_res['total_amount']
-            balance = MyBalance.objects.get(bookedRoom=booked_room)
 
-            balance.amount += amount
-            balance.amountUpdatedOn = timezone.now()
-            balance.save()
+                print("new_datenew_datenew_date: ", nextBillDate)
+                
+                if room_bill.hasChargeLatePaymentFee == True:
+                    late_fee = late_Days * 50 # Calculate the late fee if owner has charge late payment
+                else:
+                    late_fee = 0 
+                
+                if room_bill.deposit == 0:
+                    deposited_amount = booked_room.room.rent
+                else:
+                    deposited_amount = 0
 
-            return render(request, "Payment/verify.html")
-        
-        else:
-            return redirect('error')
+                try:
+                    with transaction.atomic():
+                        
+                        # CREATE THE OBJECT HERE FOR PaymentHistory Model
+                        payment_history = PaymentHistory.objects.create(
+                            room=booked_room.room,
+                            tenantUser=request.user,
+                            paidDate = ini_time_for_now,
+                            billedDate = billedDate,
+                            lateDays = late_Days,
+                            lateFee= late_fee,
+                            depositedAmount = deposited_amount,
+                            totalPaidAmount = total_amount,
+                            transactionID = transaction_id
+                        )
+                        
+                        payment_history.save()
+                        
+                        # In BookRoom Model assign the rent billed date to next month date
+                        booked_room.rentBilledDate = nextBillDate
+                        booked_room.save()
+
+                        if room_bill.deposit == 0:  # If deposite is 0  then store the deposite
+                            room_bill.deposit = booked_room.room.rent
+                            
+                        # Update other details of RoomBilling model after payment completed
+                        room_bill.status = 'pending'
+                        
+                        # Update the electricity unit
+                        # store the current unit in previous unit and make current unit 0
+                        currentUnitForPreviousUnit = room_bill.electricityCurrentUnit
+                        room_bill.electricityPreviousUnit = currentUnitForPreviousUnit
+                        
+                        room_bill.electricityUnit = 0
+                        room_bill.electricityAmount = 0
+                        room_bill.totalRoomRentAmount= 0
+                        room_bill.save()
+                        
+                        return render(request, "Payment/verify.html")
+
+                except Exception as e:
+                    print("An error occurred:", e)
+                    return redirect('error')
+                
+            else:
+                return redirect('error')
+            
+        except KeyError:
+            return redirect("error") 
+            
 
 
     
@@ -139,9 +204,6 @@ def billing(request):
     #FOR TENANT
     bookedRoomByCurrentUser = BookRoom.objects.filter(user=request.user, joined= True).first()
     rentBillForCurrentUser = RoomBilling.objects.filter(bookedRoom=bookedRoomByCurrentUser, status="updated")
-    print("REBTTTTTTTTT: ", bookedRoomByCurrentUser)
-    print("REBTTTTTTTTT: ", rentBillForCurrentUser)
-    
     
     # FOR owner
     today = date.today() #gat the today date
@@ -155,14 +217,18 @@ def billing(request):
                 allUpdatedRentBillings.append(UpdatedRentBillings)
                                                             
         booked_rooms = BookRoom.objects.filter(moveInDate__lt=today, room=room, joined=True).first()  # Filter rooms where move-in date is before today OR LESS THAN TODAY
+        
         if booked_rooms:
-            # bookedroom.append(booked_rooms)  # yo na garda ne hunxa if yei code lekhne ho vane
+            currentTime = datetime.now().date()
+            future_date_after_3days = booked_rooms.rentBilledDate + timedelta(days=3)
+            future_date_after_2days = booked_rooms.rentBilledDate + timedelta(days=2)
+            future_date_after_1days = booked_rooms.rentBilledDate + timedelta(days=1)
+            if future_date_after_3days.date() == booked_rooms.rentBilledDate.date() or future_date_after_2days.date() == booked_rooms.rentBilledDate.date() or future_date_after_1days.date() == booked_rooms.rentBilledDate.date() or currentTime > booked_rooms.rentBilledDate.date() :
+                roombilling = RoomBilling.objects.filter(bookedRoom=booked_rooms, status="pending").exclude(id=None).first() #get the instance of RoomBilling
+                if roombilling is not None:
+                    allPendingRoombillings.append(roombilling)
             
             roombilling = RoomBilling.objects.filter(bookedRoom=booked_rooms, status="pending").exclude(id=None).first() #get the instance of RoomBilling
-            if roombilling is not None:
-                allPendingRoombillings.append(roombilling)
-            
-            
             if roombilling and booked_rooms.moveInDate == booked_rooms.rentBilledDate:
                 move_in_date = booked_rooms.rentBilledDate
                 try:
@@ -184,17 +250,22 @@ def billing(request):
             latePaymentCharge = False
         updateBilling = RoomBilling.objects.get(pk=roombillingID)
         
+        rentAmount = request.POST.get('rentAmount')
+        print("rentAmount:", rentAmount)
         # UPDAING THE TENANT BILL
-        updateBilling.electricityUnit = request.POST.get('electricityUnit')
-        updateBilling.electricityAmount = request.POST.get('electricityAmount')
-        updateBilling.totalRoomRentAmount = request.POST.get('totalAmount')
-        updateBilling.electricityPreviousUnit = request.POST.get('ElecPreviousUnit')
-        updateBilling.electricityCurrentUnit = request.POST.get('ElecCurrentUnit')
-        updateBilling.status = "updated"
-        updateBilling.hasChargeLatePaymentFee = latePaymentCharge
-        updateBilling.save()
-        sweetify.success(request, "Bill Updated !!")
+            
+        with transaction.atomic():
+            updateBilling.electricityUnit = request.POST.get('electricityUnit')
+            updateBilling.electricityAmount = request.POST.get('electricityAmount')
+            updateBilling.totalRoomRentAmount = request.POST.get('totalAmount')
+            updateBilling.electricityPreviousUnit = request.POST.get('ElecPreviousUnit')
+            updateBilling.electricityCurrentUnit = request.POST.get('ElecCurrentUnit')
+            updateBilling.status = "updated"
+            updateBilling.hasChargeLatePaymentFee = latePaymentCharge
+            updateBilling.save()
+            sweetify.success(request, "Bill Updated !!")
         return redirect('billing')
+  
           
     print("allPendingRoombillings", allPendingRoombillings)
     context = {

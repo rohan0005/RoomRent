@@ -332,13 +332,11 @@ def roomMoreDetails(request, room_id):
                 roomDetail.isBooked = False
                 roomDetail.save()
                 bookedThisRoom = BookRoom.objects.filter(joined=True, room=room_id).first()
-                balance = MyBalance.objects.filter(bookedRoom=bookedThisRoom)
                 electricityDetails = ElectricityUnitDetail.objects.filter(bookedRoom=bookedThisRoom)
                 electricityDetails.delete()
                 billing = RoomBilling.objects.filter(bookedRoom=bookedThisRoom) #Delete the billing model associated with this bookedroom 
                 billing.delete()
                 
-                balance.delete()
                 isJoinedThisRoom.delete()
                 sweetify.success(request, "Tenant Movedout")
                 return redirect("roomMoreDetails", room_id = room_id)
@@ -365,10 +363,7 @@ def roomMoreDetails(request, room_id):
                 # Save the booking
                 booking = BookRoom.objects.create(room=room, moveInDate=moveInDate , user=user, rentBilledDate=moveInDate)
                 booking.save()
-                
-                # CREATE MY BALANCE MODEL AFTER TENANT JOINS THE ROOm
-                balance = MyBalance.objects.create(bookedRoom=booking)
-                balance.save()
+              
                 
                 sweetify.success(request, "Room Booked!")
                 
@@ -506,13 +501,11 @@ def viewBooking(request):
             bookDate = booking.bookingDate
             bookUser = booking.user
             roomID = booking.room
-            balance = MyBalance.objects.filter(bookedRoom=booking)
             canceledBookingDetails = CanceledBooking.objects.create(user=bookUser, room=roomID, bookingDate= bookDate, canceledDate= timezone.now())
             bookinglog = BookingLog.objects.create(user=bookUser, room=roomID, bookingDate= bookDate, status='Rejected')
             bookinglog.save()
             canceledBookingDetails.save()
             room.save()
-            balance.delete()
             booking.delete() # Reject booking
             sweetify.error(request, "Booking rejected")
             step = "canceledBookings"

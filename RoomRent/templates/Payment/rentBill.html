@@ -35,6 +35,7 @@
       <form action="" method="post">
         {% csrf_token %}
         <div class="sub-heading flex p-3 gap-3 gap">
+          {% if request.user|has_group:"owner"%}
           <div>
             <button type="submit" name="pendingUpdate" class="hover:bg-[#00ffc321] p-2 px-4 border text-[#39c9a7] 
           {% if step == None or step == 'pendingUpdate' %}
@@ -45,8 +46,6 @@
              border-[#39c9a71a]">Pendings</button>
           </div>
 
-          
-          {% if request.user|has_group:"owner"%}
             <div>
               <button type="submit" name="updated" class=" relative 
              {% if step == 'updated' %} 
@@ -59,20 +58,6 @@
 
             </div>
           {% endif %}
-
-
-          <div>
-            <button type="submit" name="paid" class=" relative 
-            {% if step == 'paid' %}
-              bg-[#f58c5c24]
-              {% else %}
-              bg-[#f58c5c0d] 
-            {% endif %}
-            hover:bg-[#f58c5c24] p-2 px-4 text-[#f58c5c] border-[#f58c5c1a] border">Paid 
-            </button>
-
-          </div>
-
         </div>
       </form>
 
@@ -235,7 +220,7 @@
                                   
                                 />
                                 {% else %}
-                                <input type="hidden" name="previousUnit" id="previousUnit"
+                                <input type="hidden" name="previousUnit" id="previousUnit-{{room.id}}"
                                 value="{% if room.electricityPreviousUnit %}
 
                               {{  room.electricityPreviousUnit }}
@@ -247,6 +232,8 @@
                               </span>
                               {% endif %}
                             </h1>
+
+                            <input type="hidden" name="rentAmount" value="{{  room.bookedRoom.room.rent }}">
 
                             <input
                               type="hidden"
@@ -370,8 +357,8 @@
           </tbody>
         </table>
 
+        <!--IF OWNER THEN SHOW rentBillForCurrentUser-->
         {% else %}
-          
         <div class="md:px-2 ">
 
           {% if rentBillForCurrentUser %}
@@ -435,7 +422,7 @@
                             <span class="sr-only">Close modal</span>
                           </button>
                         </div>
-                        <form action="" method="post" class="ml-auto">
+                        <form action="{% url 'initiate' %}" method="post" class="ml-auto">
                           {% csrf_token %}
                           <div class="p-4">
                             <!--ROOM Details-->
@@ -516,9 +503,88 @@
                                     <span class="">Current unit: <span>{{  billedRooms.electricityCurrentUnit }}</span></span
                                     > 
                                   </h1>
+
+                                  <h1 class="pt-4">
+                                    <span class="">Calculated unit: <span>{{  billedRooms.electricityUnit }}</span></span
+                                    > 
+                                  </h1>
+
+                                  <h1 class="pt-4 font-bold">
+                                    <span class="">Electricity Amount: <span>Rs. {{  billedRooms.electricityAmount }}</span></span
+                                    > 
+                                  </h1>
+
                                 </div>
                               </div>
 
+                              {% if billedRooms.hasChargeLatePaymentFee == True %}
+                              <div class="py-3 ">
+                                <h1 class="font-bold">Late payment charge: <span>Rs. <span>50 per day</span></span></h1>
+
+                                <h1 class="py-3">Late payment fee: <span>Rs. <span>
+
+                                  {% if billedRooms.bookedRoom.rentBilledDate  %}    <!--The with tag is used to create variables in Django templates.-->
+                                  {{billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since|multiply:50 }}
+
+                                  {% endif %}
+                                </span> 
+                                
+                                
+                                {% if billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since == "0" %}
+                                  (Not Late !)
+
+                                  {% else %}
+                                  ({{billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since}} Day[s] late) 
+                                {% endif %}
+                                  
+                              </span></h1>
+
+                              </div>
+                              {% endif %}
+
+                              {% if billedRooms.deposit == 0 %}
+                        
+                              <div class="mt-1">
+                                <h1><span class=" font-bold">Deposit: </span><span class=" font-bold">Rs. <span>{{billedRooms.bookedRoom.room.rent}}</span></span><span class="text-gray-600"> (we store your Deposit For security purpose)</span></h1>
+                              </div>
+        
+                              <div class="mt-4 text-xl">
+                                <h1 class="font-bold">
+                                  <span
+                                    >Total Amount:
+                                    <span
+                                      >Rs. <span>
+                                        
+                                        {% if billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since == "0" %}
+                                            {{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}
+                                            <input type="hidden" name="amount" value="{{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}" id="amt">
+                                        {% else %}
+                                            <input type="hidden" name="lateFee" id="lateFee" value="{{billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since|multiply:50}}">
+                                            <input type="hidden" id="totalRoomRentAmountHidden" name="totalRoomRentAmountHidden" value="{{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}">
+                                            <span id="totalRoomRentAmountShown"></span>
+                                            <input type="hidden" name="amount" value="{{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}" id="amt">
+                                        {% endif %}
+                                      
+                                      </span></span></span>
+                                </h1>
+                              </div>
+        
+                              {% else %}
+        
+                              <div class="mt-4 text-xl">
+                                <h1 class="font-bold">
+                                  <span
+                                    >Total Amount:
+                                    <span
+                                      >Rs. <span>{{billedRooms.totalRoomRentAmount}}</span></span></span>
+                                </h1>
+                              </div>
+
+                              <input type="hidden" name="amount" value="{{billedRooms.totalRoomRentAmount}}" id="amt">
+        
+        
+                              {% endif %}
+                              
                               <div>
                                 <input
                                   
@@ -526,6 +592,10 @@
                                   name="roomBillingID"
                                   value="{{ billedRooms.id }}"
                                 />
+                                <input type="hidden" name="purchase_order_id" id="pid" value="{{ request.user }}">
+                                
+                                <input type="hidden" name="return_url" value="http://127.0.0.1:9000/verify">
+
                                 <button
                                   data-modal-hide="medium-modal-{{ billedRooms.id }}"
                                   type="submit"
@@ -544,6 +614,25 @@
           {% endfor %}
     
       </div>
+
+      {% else %}
+
+      <!--IF THERE IS NO DATA THEN DISPLAY NO DATA IMAGE-->
+
+      <div>
+        <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+
+          <div class="text-5xl text-gray-700">
+            <h1 class="p-20 mt-10">All upto date!!</h1>
+          </div>
+
+          <div class="mb-10 pb-10">
+            <img class="h-full" src="https://img.freepik.com/free-vector/businessman-holding-pencil-big-complete-checklist-with-tick-marks_1150-35019.jpg?t=st=1711554381~exp=1711557981~hmac=ba25f2f0b574ba967e168929d0ef6802184c99d7639daca24701da34ce39efd6&w=996" alt="" srcset="">
+          </div>
+
+        </div>
+      </div>
+      
 
       {% endif %}
 
@@ -573,7 +662,7 @@
             <td class="p-3 px-5">
               <a
                 class="text-[#0766AD]"
-                href="" 
+                href="{% url 'roomMoreDetails' billedRooms.bookedRoom.room.id %}" 
                 ><p>{{billedRooms.bookedRoom.room.roomTitle}}</p></a
               >
             </td>
@@ -698,12 +787,30 @@
 
                       <div class="mt-4">
                         <h1 class="font-bold">
-                          <span
-                            >Electricity Amount:
+                          <span>
+                        
+                            Electricity Amount:
                             <span
                               >Rs. <span>{{billedRooms.electricityAmount}}</span></span></span>
                         </h1>
                       </div>
+
+                      {% if billedRooms.deposit == 0 %}
+                        
+                      <div class="mt-4">
+                        <h1><span class=" font-bold">Deposit: </span><span class=" font-bold">Rs. <span>{{billedRooms.bookedRoom.room.rent}}</span></span><span class="text-gray-600"> (we store your Deposit For security purpose)</span></h1>
+                      </div>
+
+                      <div class="mt-4 text-xl">
+                        <h1 class="font-bold">
+                          <span
+                            >Total Amount:
+                            <span
+                              >Rs. <span>{{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}</span></span></span>
+                        </h1>
+                      </div>
+
+                      {% else %}
 
                       <div class="mt-4 text-xl">
                         <h1 class="font-bold">
@@ -714,6 +821,8 @@
                         </h1>
                       </div>
 
+
+                      {% endif %}
                     </div>
                   </div>
                 </form>
@@ -725,17 +834,41 @@
       </table>
     </div>
        {% else %}         
-        <h1 class="text-[18px] pl-4 pt-4">Nothing to show here</h1>
+        <!--IF THERE IS NOTHING THAT HAS BEEN UPDATED -->
+        <div>
+          <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+  
+            <div class="text-4xl text-gray-700">
+              <h1 class="p-20 mt-10">You do not have updated any Rent.</h1>
+            </div>
+  
+            <div class="mb-10 pb-10">
+              <img class="h-full" src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-626.jpg?t=st=1711554232~exp=1711557832~hmac=37016879347cb8d2f27fd08a298ba926cba908b323b269e7d74d518fd5c3d68b&w=996" alt="" srcset="">
+            </div>
+  
+          </div>
+        </div>
       {% endif %}
-
-
-      {% elif step == "paid" %} <!--PAID-->
-      <h1 class="text-[18px] pl-4">PAID</h1>
 
       {% endif %}
     </div>
   </div>
+<script>
 
+  document.addEventListener("DOMContentLoaded", function() {
+    // Get the values from the hidden input fields
+    var lateFee = parseFloat(document.getElementById("lateFee").value);
+    var totalRoomRentAmountHidden = parseFloat(document.getElementById("totalRoomRentAmountHidden").value);
+
+    // Calculateing the total room rent amount
+    var totalRoomRentAmount = lateFee + totalRoomRentAmountHidden;
+  
+    // Displaying the total room rent amount
+    document.getElementById("totalRoomRentAmountShown").textContent = totalRoomRentAmount;
+  
+    // Set the value of the amount input field
+    document.getElementById("amt").value = totalRoomRentAmount;
+  });</script>
   <script src="{% static 'js/rentBillCalculation.js' %}" type="text/javascript"></script>
 
   {% endblock %}
