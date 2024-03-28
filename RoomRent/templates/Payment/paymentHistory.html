@@ -1,0 +1,146 @@
+{% extends 'Users Profile/NavigationBarBase/base.html' %}
+ {% load static %} 
+ {% load custom_tags_payment %} 
+{% block title %} RoomRent | Payment history{%endblock%} 
+
+{% block content %}
+
+<div class="flex-1 bg-[#F3F3F3]">
+  <!-- Main container Start -->
+  <div class="container px-4 py-1 mx-auto">
+    <!-- HEADING CONTENTS -->
+    <div
+      class="bg-white h-screen pb-[100px] lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white"
+    >
+            
+        <!--MAIN CONTAINER-->
+        <div class="bg-[#793FDF] p-5 text-white">
+            <p class="md:text-3xl text-xl capitalize">
+              
+              {% if request.user|has_group:"owner" %}
+                Payment transactions History
+                {% else %}
+                Payment transactions made by you
+              {% endif %}
+                
+            </p>
+          </div>
+
+      <!--HEADING-->
+      <div>
+
+        {% if allOwnerPaymentHistory|length != 0 and request.user|has_group:"owner" %}
+        <div class="px-10 mt-10 ">
+            <!-- component -->
+            <div class="flex flex-col overflow-x-auto">
+                <div class="sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-left text-sm font-light border-2">
+                                <thead class="border-b font-medium bg-gray-200">
+                                <tr>
+                                    <th scope="col" class="p-4 w-1/4">Room Title</th>
+                                    <th scope="col" class="p-4 w-1/4">Paid by</th>
+                                    <th scope="col" class="p-4 w-1/4">Billed date</th>
+                                    <th scope="col" class="p-4 w-1/4">Paid on</th>
+                                    <th scope="col" class="p-4 w-1/4">Late days</th>
+                                    <th scope="col" class="p-4 w-1/4">Late fee</th>
+                                    <th scope="col" class="p-4 w-1/4">Deposited amount</th>
+                                    <th scope="col" class="p-4 w-1/4">Total amount</th>
+                                    <th scope="col" class="p-4 w-1/4">Transaction id</th>
+                                </tr>
+                                </thead>
+                                {% for payment in allOwnerPaymentHistory %}
+                                <tbody>
+                                    <tr class="border-2 ">
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.room.roomTitle}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.tenantUser}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.billedDate|date}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.paidDate|date}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.lateDays}} Day[s]</td>
+                                        <td class="whitespace-nowrap px-6 py-4 ">NRS. {{payment.lateFee}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.depositedAmount}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.totalPaidAmount}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.transactionID}}</td>
+                                    </tr>
+                                </tbody>
+                                {% endfor %} 
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% elif roomPaymentFromTenant and request.user|has_group:"tenant" %}
+
+        <div class="main-container-for-tenant">
+
+          {% for payment in roomPaymentFromTenant %} 
+          <div class="px-10 mt-10 ">
+            <!-- component -->
+                <div class="flex flex-col overflow-x-auto">
+                    <div class="sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full text-left text-sm font-light border-2">
+                                    <thead class="border-b font-medium bg-gray-200">
+                                    <tr>
+                                        <th scope="col" class="p-4 w-1/4">Room Title</th>
+                                        <th scope="col" class="p-4 w-1/4">Paid by</th>
+                                        <th scope="col" class="p-4 w-1/4">Billed date</th>
+                                        <th scope="col" class="p-4 w-1/4">Paid on</th>
+                                        <th scope="col" class="p-4 w-1/4">Late days</th>
+                                        <th scope="col" class="p-4 w-1/4">Late fee</th>
+                                        <th scope="col" class="p-4 w-1/4">Deposited amount</th>
+                                        <th scope="col" class="p-4 w-1/4">Total amount</th>
+                                        <th scope="col" class="p-4 w-1/4">Transaction id</th>
+                                    </tr>
+                                    </thead>
+                                    {% for payment in roomPaymentFromTenant %}
+                                    <tbody>
+                                        <tr class="border-2 ">
+                                            <td class="whitespace-nowrap px-6 py-4">{{payment.room.roomTitle}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4">{{payment.tenantUser}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4">{{payment.billedDate|date}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4">{{payment.paidDate|date}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4">{{payment.lateDays}} Day[s]</td>
+                                            <td class="whitespace-nowrap px-6 py-4 ">NRS. {{payment.lateFee}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.depositedAmount}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.totalPaidAmount}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4">{{payment.transactionID}}</td>
+                                        </tr>
+                                    </tbody>
+                                    {% endfor %} 
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           {% endfor %}
+        </div>
+
+        {% else %}
+
+        <div>
+            <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+    
+              <div class="text-4xl text-gray-700 md:w-2/3 tracking-wide leading-relaxed">
+                <h1 class="p-20 mt-10">No Transactions Yet.</h1>
+              </div>
+    
+              <div class="mb-8 mt-8 pb-8 md:w-3/4">
+                <img class="h-full" src="https://img.freepik.com/free-vector/wallet-concept-illustration_114360-1647.jpg?w=740&t=st=1711623249~exp=1711623849~hmac=143fd0da04d8ed46961220acdc4e279143e521eb5e30fe07381724ce52bde771" alt="" srcset="">
+              </div>
+    
+            </div>
+          </div>
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

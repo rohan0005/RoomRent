@@ -153,7 +153,19 @@
                     {% endfor %}
                     {% elif not bookedRoomDetails and request.user|has_group:"tenant" %}
 
-                    <h1 class="text-xl">Currently you have not joined the room</h1>
+                    <div>
+                        <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+                
+                          <div class="text-4xl text-gray-700 md:w-2/3 tracking-wide leading-relaxed  ">
+                            <h1 class="p-20 mt-10">Currently you have not joined the room !!</h1>
+                          </div>
+                
+                          <div class="mb-10 pb-10 md:w-2/3">
+                            <img class="h-full" src="https://img.freepik.com/free-vector/divorce-breakup-concept_52683-42192.jpg?t=st=1711559363~exp=1711562963~hmac=3204b65dd78507bbcbcdc08c98d2dfc566d6193e1e0402c9373a40bc9d012a76&w=740" alt="" srcset="">
+                          </div>
+                
+                        </div>
+                      </div>
                     
                     {% endif %}
                     
@@ -250,7 +262,19 @@
 
                 
                 {% if not bookingLog %}
-                    <h1 class="pl-7">No Booking logs</h1>
+                <div>
+                    <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+            
+                      <div class="text-4xl text-gray-700 md:w-2/3 tracking-wide leading-relaxed">
+                        <h1 class="p-20 mt-10">No Booking logs</h1>
+                      </div>
+            
+                      <div class="mb-10 pb-10 md:w-2/3 ">
+                        <img class="h-full" src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg?t=st=1711560880~exp=1711564480~hmac=47c7a05594417c56d738d20ad90f46cba7268ff534874bbe6db1ec00d9ce4edb&w=996" alt="" srcset="">
+                      </div>
+            
+                    </div>
+                  </div>
                 {% endif %}
 
 

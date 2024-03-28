@@ -277,3 +277,26 @@ def billing(request):
     
     return render(request, "Payment/rentBill.html", context)
 
+def paymentHistory(request):
+    allOwnerPaymentHistory = []
+    roomUploadedByOwner = Room.objects.filter(user=request.user)
+    if roomUploadedByOwner:
+        for room in roomUploadedByOwner:
+            payment_history = PaymentHistory.objects.filter(room=room)
+            if payment_history is not None:
+                for payment in payment_history:
+                    print("Payment History:",   )
+                    allOwnerPaymentHistory.append(payment)
+                
+                
+    roomPaymentFromTenant =  PaymentHistory.objects.filter(tenantUser=request.user)
+    
+    print("allOwnerPaymentHistory :", allOwnerPaymentHistory)
+    print("roomPaymentFromTenant", roomPaymentFromTenant)
+    context = {
+        "allOwnerPaymentHistory" : allOwnerPaymentHistory,
+        "roomPaymentFromTenant" : roomPaymentFromTenant,
+    }
+    
+    return render(request, "Payment/paymentHistory.html", context)
+
