@@ -1,59 +1,182 @@
-{% load custom_tags %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'Users Profile/NavigationBarBase/base.html' %}
+{% load custom_tags_payment %}
+{% load static %} 
+{% block title %} RoomRent | Payment history{%endblock%} 
+{% block content %}
+<style>
+* {
+  box-sizing: border-box;
+}
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-</head>
+body,
+html {
+  
+  background-color: #ffffff;
+  color: rgb(47, 47, 47);
+}
 
-<body>
-    <p>This is landing page</p>
-    <br /><br /><br />
+h1 {
+  margin: 50px 0;
+  text-align: center;
+}
 
-    {% if request.user.is_authenticated and not request.user.is_superuser and request.user|has_group:"owner" or request.user|has_group:"tenant" %} 
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+.fadeInUp-animation {
+  animation: 2.5s fadeInUp;
+}
+
+
+body {
+    animation: fadeInAnimation ease 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+</style>
+
+
+<div class="">
+    <!-- HERO SECTION -->
+    <div class="flex justify-between bg-[#edf0f5] p-20">
+        <div class="p-2 w-3/5  py-52 px-10  ">
+            <div class="text-[45px] leading-relaxed">
+                <span>Discover Comfort, </span>
+                <span><span class="text-[#ff4135]">Rent</span> with Confidence!</span> 
+            </div>
+            <div class="pt-3">
+                <span>Your Space, Your Rules, Rent with Ease!</span>
+            </div>
+            <div class="pt-7">
+                <a href="{% url 'room' %}" class="inline-block px-8 py-4 border-2 border-black rounded text-center text-lg font-medium text-black hover:bg-black hover:text-white transition duration-300">
+                    Explore Now <span class="ml-2">&#8594;</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="IMAGE_CONTAINER w-full w-4/5 pt-5 ">
+            <img src="{% static 'images/Landing-Page/main.png' %}" class="fadeInUp-animation w-full" id="main-image" alt="" />
+        </div>
+    </div>
+
+
+
+    <!-- Flat type -->
+    <div class="flat-type-main-container mt-10 p-20">
+        <div class="flex justify-center text-4xl font-bold">
+            <p>Room Flat Types</p>
+        </div>
+        <div class="flex justify-center mt-3 text-xl">
+            <p> Room Flat that you can search for.
+            </p>
+        </div>
+
+        <!-- Flat types -->
+        <div class="flex justify-center gap-24 mt-10">
+            <div class="border border-gray-300 px-20 py-5 mt-7">
+                <p class="flex justify-center font-bold pb-3">BHK</p>
+                <p class="flex justify-center">Bedroom, Hall, and Kitchen</p>
+            </div>
+            <div class="border border-gray-300 px-20 py-5 mt-7">
+                <p class="flex justify-center font-bold pb-3">BK</p>
+                <p class="flex justify-center">Bedroom and Kitchen</p>
+            </div>
+            <div class="border border-gray-300 px-20 py-5 mt-7">
+                <p class="flex justify-center font-bold pb-3">RK</p>
+                <p class="flex justify-center">Room and Kitchen</p>
+            </div>
+        </div>
+
+        <!-- About Us -->
+        <div class="body-container-two flex justify-around mb-36 mt-40">
+            <div class="col-1-container-one ">
+                <img src="{% static 'images/Landing-Page/sofaimage.jpg' %}" alt="">
+            </div>
+
+            <div class="col-2-container-two leading-relaxed py-7">
+                <h2 class="text-4xl pb-7">About Us</h2>
+                <p class="pb-2">Welcome to  RoomRent! We're on a mission to redefine the rental experience.</p>
+                <p class="pb-2">Join us for a seamless and enjoyable journey in the world of rentals.</p>
+                <p class="pb-2">Thank you for choosing RoomRent.</p>
+            </div>
+        </div>
+
+
+        <!-- WHY CHOOSE US -->
+        <div class="Why-choose-us-container divide-y divide-slate-300 mb-10 mt-10">
+            <div class="flex justify-center text-4xl font-bold mb-10">
+                <h2>Why Choose RoomRent ?</h2>
+            </div>
+
+            <div class="flex justify-between py-10 px-20">
+
+                <div class="">
+                    <div class="flex gap-5">
+                        <div>
+                            <svg fill="#000000" height="64px" width="64px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.00 511.00" xml:space="preserve" transform="rotate(0)matrix(1, 0, 0, 1, 0, 0)" stroke="#000000" stroke-width="0.00511"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="9.197999999999999"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M471.5,28h-432C17.72,28,0,45.72,0,67.5v256C0,345.28,17.72,363,39.5,363h176c4.142,0,7.5-3.358,7.5-7.5 s-3.358-7.5-7.5-7.5h-176C25.991,348,15,337.009,15,323.5v-256C15,53.991,25.991,43,39.5,43h432c13.509,0,24.5,10.991,24.5,24.5 v256c0,4.142,3.358,7.5,7.5,7.5s7.5-3.358,7.5-7.5v-256C511,45.72,493.28,28,471.5,28z"></path> <path d="M63.5,307h152c4.142,0,7.5-3.358,7.5-7.5s-3.358-7.5-7.5-7.5h-152c-4.142,0-7.5,3.358-7.5,7.5S59.358,307,63.5,307z"></path> <path d="M151,155.5v-32c0-12.958-10.542-23.5-23.5-23.5h-48C66.542,100,56,110.542,56,123.5v32c0,12.958,10.542,23.5,23.5,23.5h48 C140.458,179,151,168.458,151,155.5z M71,155.5V147h8.5c4.142,0,7.5-3.358,7.5-7.5s-3.358-7.5-7.5-7.5H71v-8.5 c0-4.687,3.813-8.5,8.5-8.5H96v49H79.5C74.813,164,71,160.187,71,155.5z M127.5,164H111v-49h16.5c4.687,0,8.5,3.813,8.5,8.5v8.5 h-8.5c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h8.5v8.5C136,160.187,132.187,164,127.5,164z"></path> <path d="M56,251.5c0,4.142,3.358,7.5,7.5,7.5s7.5-3.358,7.5-7.5v-16c0-4.142-3.358-7.5-7.5-7.5s-7.5,3.358-7.5,7.5V251.5z"></path> <path d="M80,235.5v16c0,4.142,3.358,7.5,7.5,7.5s7.5-3.358,7.5-7.5v-16c0-4.142-3.358-7.5-7.5-7.5S80,231.358,80,235.5z"></path> <path d="M104,235.5v16c0,4.142,3.358,7.5,7.5,7.5s7.5-3.358,7.5-7.5v-16c0-4.142-3.358-7.5-7.5-7.5S104,231.358,104,235.5z"></path> <path d="M128,235.5v16c0,4.142,3.358,7.5,7.5,7.5s7.5-3.358,7.5-7.5v-16c0-4.142-3.358-7.5-7.5-7.5S128,231.358,128,235.5z"></path> <path d="M175,251.5v-16c0-4.142-3.358-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v16c0,4.142,3.358,7.5,7.5,7.5S175,255.642,175,251.5z"></path> <path d="M199,251.5v-16c0-4.142-3.358-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v16c0,4.142,3.358,7.5,7.5,7.5S199,255.642,199,251.5z"></path> <path d="M215.5,228c-4.142,0-7.5,3.358-7.5,7.5v16c0,4.142,3.358,7.5,7.5,7.5s7.5-3.358,7.5-7.5v-16 C223,231.358,219.642,228,215.5,228z"></path> <path d="M247,251.5v-16c0-4.142-3.358-7.5-7.5-7.5s-7.5,3.358-7.5,7.5v16c0,4.142,3.358,7.5,7.5,7.5S247,255.642,247,251.5z"></path> <path d="M415.5,179c21.78,0,39.5-17.72,39.5-39.5S437.28,100,415.5,100h-48c-21.78,0-39.5,17.72-39.5,39.5s17.72,39.5,39.5,39.5 H415.5z M343,139.5c0-13.509,10.991-24.5,24.5-24.5h48c13.509,0,24.5,10.991,24.5,24.5S429.009,164,415.5,164h-48 C353.991,164,343,153.009,343,139.5z"></path> <path d="M473.781,274.948c-1.705-1.179-3.822-1.599-5.848-1.164c-6.816,1.47-13.691,2.216-20.434,2.216 c-33.301,0-63.826-16.915-81.652-45.247c-1.373-2.182-3.77-3.506-6.348-3.506s-4.975,1.324-6.348,3.506 C335.326,259.085,304.801,276,271.5,276c-6.742,0-13.617-0.746-20.434-2.216c-2.024-0.436-4.143-0.016-5.848,1.164 c-1.705,1.179-2.846,3.012-3.151,5.062c-1.372,9.2-2.067,18.449-2.067,27.49c0,78.615,49.25,152.258,117.106,175.108 c0.776,0.261,1.585,0.392,2.394,0.392s1.617-0.131,2.394-0.392C429.75,459.758,479,386.115,479,307.5 c0-9.041-0.695-18.29-2.067-27.49C476.627,277.959,475.486,276.127,473.781,274.948z M285.252,407.035 C265.744,377.584,255,342.235,255,307.5c0-5.801,0.313-11.699,0.932-17.616c5.206,0.742,10.417,1.116,15.568,1.116 c30.881,0,59.683-12.584,80.5-34.458v208.044C326.04,453.367,302.616,433.248,285.252,407.035z M433.748,407.035 c-17.364,26.213-40.787,46.332-66.748,57.552V256.542C387.817,278.416,416.619,291,447.5,291c5.151,0,10.362-0.375,15.568-1.116 c0.619,5.917,0.932,11.815,0.932,17.616C464,342.235,453.256,377.584,433.748,407.035z"></path> </g> </g></svg>
+                        </div>
+                        <div><p class="font-bold">Secure Payment</p><p>We ensure secure payment with KHALTI</p></div>
+                    </div>
     
-        {% if request.user|has_group:"owner" %}
+                </div>
+                <div class="">
+                    <div class="flex gap-5">
+                        <div>
+                            <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M19 10L19 20H5M15.5 6.5L12 3L5 10V16M12 11V17M9 14H15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        </div>
+                        <div><p class="font-bold">Affordable Price</p><p>Join the room according to your budget.</p></div>
+                    </div>
+                </div>
 
-            <a href="{% url 'dashboard' %}">My Dashboard- owner</a>
 
-        {% elif request.user|has_group:"tenant" %}
+                <div class="">
+                    <div class="flex gap-5">
+                        <div>
+                            <svg fill="#000000" width="64px" height="64px" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="m49.83 32.45a1.43 1.43 0 0 0 -1.39-1.45h-12a1.43 1.43 0 0 0 -1.44 1.44v1.44a1.43 1.43 0 0 0 1.4 1.44h6.14l-11 11a1.42 1.42 0 0 0 0 2l1 1a1.54 1.54 0 0 0 1.09.45 1.32 1.32 0 0 0 .94-.38l11-11v6a1.43 1.43 0 0 0 1.43 1.44h1.53a1.43 1.43 0 0 0 1.47-1.4z"></path> <path d="m19.91 32.07h-4.08a1.12 1.12 0 0 1 -1.15-1.07v-1.3a8.18 8.18 0 0 1 5.47-7.7 6.16 6.16 0 0 0 2.61-1.71 6.56 6.56 0 0 0 -9.38-9.15 5.77 5.77 0 0 0 -1.88 3.6 1.17 1.17 0 0 1 -1.23.89h-4.08a1.17 1.17 0 0 1 -1.19-1.17v-.1a13.31 13.31 0 0 1 3.89-8.08 13.38 13.38 0 0 1 9.55-3.68 13.1 13.1 0 0 1 4 25.39 1.83 1.83 0 0 0 -1.23 1.63v1.23a1.27 1.27 0 0 1 -1.3 1.22zm1.3 8.57a1.24 1.24 0 0 1 -1.21 1.23h-4.09a1.27 1.27 0 0 1 -1.23-1.23v-4.08a1.25 1.25 0 0 1 1.23-1.22h4.09a1.25 1.25 0 0 1 1.22 1.22z"></path> </g> </g></svg>
+                        </div>
+                        <div><p class="font-bold">24 / 7 Service</p><p>We are online 24 / 7. Contact us anytime.</p></div>
+                    </div>
+                </div>
 
-            <a href="{% url 'myRoom' %}">My Dashboard - tenant</a>
+            </div>
+             <div class="divide-y divide-slate-300">
+        </div>
+        </div>
 
-        {% endif %} 
+    </div>
+</div>
+<script>
+    document.getElementById('errorAlert').addEventListener('click', function () {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+        footer: '<a href>Why do I have this issue?</a>'
+    })
+});
+</script>
+<!-- FOOTER -->
+<div class="p-10 bg-[#edf0f5] flex justify-center">
+    <p>RoomRent © 2024 All Right Reserved</p>    
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.5/sweetalert2.all.min.js"></script>
 
-    {% elif request.user.is_authenticated and not request.user.is_superuser %}
-
-        NOT A VERIFIED USER
-
-        <br />
-    {% endif %}
-
-    <br /><br /><br />
-
-    {% if request.user.is_authenticated %}
-
-    <a href="{% url 'signout' %}">Logout</a>
-
-    {% else %}
-
-    <a href="{% url 'signin' %}">Login</a>
-
-    {% endif %}
-
-    <br /><br />
-
-    {% if request.user.is_superuser %}
-
-    <a href="{% url 'adminDashboard' %}">Admin Dashboard</a>
-
-    {% endif %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.5/sweetalert2.all.min.js"></script>
-
-</body>
-
-</html>
-{% load sweetify %}
-{% sweetify %}
+{% endblock %}
