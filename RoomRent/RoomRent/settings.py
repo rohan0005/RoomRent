@@ -160,6 +160,8 @@ EMAIL_HOST_USER = 'room.rent.webapp@gmail.com'
 EMAIL_HOST_PASSWORD = 'myje qmqh duuu fbsv' 
 EMAIL_USE_TLS = True
 
+PASSWORD_RESET_TIMEOUT = 14400
+
 # KHALTI_SECRET_KEY = "13a1ca52c9fc420295ea401a3b546306"
 # KHALTI_VERIFY_URL = "https://khalti.com/api/v2/payment/verify/"
 

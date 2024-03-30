@@ -5,9 +5,18 @@ from django.contrib import messages
 from .models import *
 from .forms import *
 from django.db import transaction
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger #for pagination 
-from django.core.mail import send_mail # For sending email notifications
+from django.core.mail import send_mail, EmailMessage # For sending email notifications
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_str
+from .tokens import generate_token
+from django.conf import settings
+from userManagement.checkUserGroup import *
+
+import re
 
 import sweetify
 
@@ -19,13 +28,26 @@ def SignupUser(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST, request.FILES) # Get the form data and if user uploads files get files too 
         if form.is_valid():
-        # Get the username
+            if User.objects.filter(email=request.POST.get('email')).exists():
+                sweetify.error(request, "Email already registered!")
+                return redirect('signup')
+            # Get the username
             username = form.cleaned_data.get('username')
             # An atomic transaction guarantees that all operations within the block are treated as a single unit. 
             # If any operation fails, the entire transaction is rolled back, 
             # undoing all changes made within the block.
+            if 'contact' in request.POST:
+                contact_number = request.POST.get('contact')
+            if not re.match(r'^(98|97)\d{8}$', contact_number):
+                sweetify.error(request,"Invalid contact number")                  
+                return redirect('signup')
+
             with transaction.atomic():
-                user = form.save()
+                user = form.save(commit=False)
+                user.is_active = False
+                user.save()
+                
+                
                 # saving user contact number and address
                 details = UserAdditionalDetail(user=user, contact_number=request.POST.get('contact'))
                 details.save()
@@ -44,13 +66,41 @@ def SignupUser(request):
                     for citizenship_image in images:
                         citizenship = UserCitizenship(user=user, image=citizenship_image)
                         citizenship.save()
-                    sweetify.success(request,"Account Created for " + username)                  
+                    # sweetify.success(request,"Account Created for " + username)                  
                 
                 # If user choose to become tenant then adding them to tenant group
                 else:
                     group, created = Group.objects.get_or_create(name='tenant')
                     user.groups.add(group)
-                    sweetify.success(request,"Account Created for " + username)
+                    # sweetify.success(request,"Account Created for " + username)
+                
+                # SEND MAIL
+                # Send welcome email
+                subject = "Welcome to RoomRent Website"
+                message = f"Hello {user.username}!\n\nThank you for registering on our website. Please confirm your email address to activate your account.\n\nRegards,\nRoomRent"
+                from_email = settings.EMAIL_HOST_USER
+                to_list = [user.email]
+                send_mail(subject, message, from_email, to_list, fail_silently=True)
+                
+                # Send email confirmation link
+                current_site = get_current_site(request)
+                email_subject = "Confirm Your Email Address"
+                message2 = render_to_string('Users profile/email_confirmation.html', {
+                'name': user.username,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': generate_token.make_token(user)
+                })
+                email = EmailMessage(
+                email_subject,
+                message2,
+                settings.EMAIL_HOST_USER,
+                [user.email],
+                )
+                send_mail(email_subject, message2, from_email, to_list, fail_silently=True)
+                sweetify.success(request, "Your account has been created successfully! Please check your email to confirm your email address and activate your account.")
+                return redirect('signin')
+                
             return redirect('signin') # After creating the user redirect to the signin page
         # If form is not valid
         elif not form.is_valid():
@@ -71,7 +121,7 @@ def SigninUser(request):
         if user is not None:
             login(request, user)
             sweetify.success(request, 'Successfully Signed In')
-            return redirect('/')
+            return redirect('index')
         # If user password or username is incorrect
         else:
             sweetify.error(request, 'Username or Password is incorrect')
@@ -214,22 +264,6 @@ def pendingRequests(request):
     
     return render(request, 'Admin/pendingRequests.html', context)
 
-
-# Owner and Tenant Management view
-
-# Check if user is owner or not
-def is_owner(user):
-    return user.groups.filter(name='owner').exists()
-
-# Check if user is tenant or not
-def is_tenant(user):
-    return user.groups.filter(name='tenant').exists()
-
-# Check if user is tenant or owner
-def is_tenant_or_owner(user):
-    return user.is_authenticated and user.groups.filter(name='tenant').exists() or user.groups.filter(name='owner').exists()
-
-         
 # Tenant dashboard management
 @login_required(login_url='signin')
 @user_passes_test(is_owner)
@@ -316,3 +350,24 @@ def changePassword(request):
                     update_session_auth_hash(request, request.user)
                     
     return render(request, 'Users profile/changePassword.html')
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))  
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and generate_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        target_groups = ['tenant']
+        if user.groups.filter(name__in=target_groups).exists():
+            sweetify.success(request, "Your account has been activated!")
+        else:
+            sweetify.success(request, "Your account has been activated. Please wait for the admin approval.")
+        return redirect('signin')
+    else:
+        sweetify.error(request, "Something went erong while activating your account")
+        return redirect('signin')

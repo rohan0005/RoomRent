@@ -15,7 +15,7 @@ urlpatterns = [
     path('dashboard', views.dashboard, name='dashboard'),   
     path('dashboard/editProfile', views.editProfile, name='editProfile'), 
     path('dashboard/changePassword', views.changePassword, name='changePassword'),   
-    
-    # path('owner/dashboard/editProfile', views.changePassword, name='changePassword'),   
+    path('activate/<uidb64>/<token>', views.activate, name='activate'),
+
     
 ]
