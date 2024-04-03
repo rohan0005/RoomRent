@@ -57,13 +57,6 @@ class BookRoom(models.Model):
     def __str__(self):
         return f"{self.user}'s booking"
     
-    
-class ElectricityUnitDetail(models.Model):
-    bookedRoom = models.OneToOneField(BookRoom, on_delete= models.CASCADE)
-    electricityPreviousUnit = models.IntegerField(default=0, blank=False); 
-    electricityCurrentUnit = models.IntegerField(default=0, blank=False); 
-    status = models.CharField(max_length=50, blank=False, default='Pending update')  # Pending update or Updated
-    
 class BookingLog(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

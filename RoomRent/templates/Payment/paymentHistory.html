@@ -47,6 +47,7 @@
                                     <th scope="col" class="p-4 w-1/4">Late fee</th>
                                     <th scope="col" class="p-4 w-1/4">Deposited amount</th>
                                     <th scope="col" class="p-4 w-1/4">Total amount</th>
+                                    <th scope="col" class="p-4 w-1/4">System Commission</th>
                                     <th scope="col" class="p-4 w-1/4">Transaction id</th>
                                 </tr>
                                 </thead>
@@ -61,6 +62,7 @@
                                         <td class="whitespace-nowrap px-6 py-4 ">NRS. {{payment.lateFee}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.depositedAmount}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.totalPaidAmount}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.systemCommissionAmount}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">{{payment.transactionID}}</td>
                                     </tr>
                                 </tbody>
@@ -76,7 +78,7 @@
 
         <div class="main-container-for-tenant">
 
-          {% for payment in roomPaymentFromTenant %} 
+          
           <div class="px-10 mt-10 ">
             <!-- component -->
                 <div class="flex flex-col overflow-x-auto">
@@ -100,7 +102,7 @@
                                     {% for payment in roomPaymentFromTenant %}
                                     <tbody>
                                         <tr class="border-2 ">
-                                            <td class="whitespace-nowrap px-6 py-4">{{payment.room.roomTitle}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4"><a href="{% url 'roomMoreDetails' payment.room.id %}" class="text-[#4097d7]">{{payment.room.roomTitle}}</a></td>
                                             <td class="whitespace-nowrap px-6 py-4">{{payment.tenantUser}}</td>
                                             <td class="whitespace-nowrap px-6 py-4">{{payment.billedDate|date}}</td>
                                             <td class="whitespace-nowrap px-6 py-4">{{payment.paidDate|date}}</td>
@@ -118,7 +120,7 @@
                     </div>
                 </div>
             </div>
-           {% endfor %}
+   
         </div>
 
         {% else %}

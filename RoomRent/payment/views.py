@@ -280,16 +280,15 @@ def billing(request):
 def paymentHistory(request):
     allOwnerPaymentHistory = []
     roomUploadedByOwner = Room.objects.filter(user=request.user)
-    if roomUploadedByOwner:
+    if roomUploadedByOwner: #If the owner has room
         for room in roomUploadedByOwner:
-            payment_history = PaymentHistory.objects.filter(room=room)
+            payment_history = PaymentHistory.objects.filter(room=room, hasReleasedFund=True)  # get the payment history for a particular room
             if payment_history is not None:
                 for payment in payment_history:
-                    print("Payment History:",   )
-                    allOwnerPaymentHistory.append(payment)
+                    allOwnerPaymentHistory.append(payment) # append it to the list allOwnerPaymentHistory
                 
                 
-    roomPaymentFromTenant =  PaymentHistory.objects.filter(tenantUser=request.user)
+    roomPaymentFromTenant =  PaymentHistory.objects.filter(tenantUser=request.user) # get the payment history of the current tenant user
     
     print("allOwnerPaymentHistory :", allOwnerPaymentHistory)
     print("roomPaymentFromTenant", roomPaymentFromTenant)
@@ -299,4 +298,38 @@ def paymentHistory(request):
     }
     
     return render(request, "Payment/paymentHistory.html", context)
+
+def paymentHistoryAdminView(request):
+    step = None
+    if request.method == "POST":
+        if "pendingRefunds" in request.POST:
+            step = "pendingRefunds"
+        elif "completedRefunds" in request.POST:
+            step = "completedRefunds"
+        elif "refund" in request.POST:
+            commissionRate = 0.005    #Commission rate is 0.5%
+            paymentHistoryID = request.POST.get("paymentHistoryID")
+            print("paymentHistoryID", paymentHistoryID)
+            paymentHistory = PaymentHistory.objects.get(pk=paymentHistoryID)
+            
+            # CALCULATION FOR COMMISSION AMOUNT
+            amount = paymentHistory.totalPaidAmount
+            commissionAmount = amount * commissionRate
+            updateTotalAmount = amount - commissionAmount
+            
+            paymentHistory.hasReleasedFund=True
+            paymentHistory.systemCommissionAmount = commissionAmount
+            paymentHistory.totalPaidAmount = updateTotalAmount
+            paymentHistory.save()  # save the commission and update the total amount
+            sweetify.success(request, "Amount Refunded to owner.")
+
+    print("stepppppp:", step)
+    allPaymentHistory = PaymentHistory.objects.filter(hasReleasedFund=False)
+    allPaymentHistoryWithReleasedFund = PaymentHistory.objects.filter(hasReleasedFund=True)
+    context = {
+        'allPaymentHistory' : allPaymentHistory,
+        "step" : step,
+        "allPaymentHistoryWithReleasedFund" : allPaymentHistoryWithReleasedFund,
+    }
+    return render(request, "Admin/paymentHistoryAdmin.html", context)
 

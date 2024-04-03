@@ -294,6 +294,7 @@ def roomMoreDetails(request, room_id):
     hasJoinedMyRoom = BookRoom.objects.filter(room=room_id, joined=True).exists()
     # Check if there is a move out date or not
     hasNotMoveOutDate = BookRoom.objects.filter(joined=True, room=room_id, moveOutDate__isnull=True).exists()
+    bookedRoomInfo = BookRoom.objects.filter(joined=True, room=room_id)
     feedbacks = RoomFeedbacks.objects.filter(room=room_id)
         
     roomDetail = Room.objects.get(id=room_id)
@@ -328,18 +329,59 @@ def roomMoreDetails(request, room_id):
             
         elif 'removeTenant' in request.POST: # Remove the tenant from this room after moveout is completed
             with transaction.atomic():
+                user = request.POST.get("tenantUser")
+                print("tenantUser:", user)
+                roomId = room_id
+                
+                userForEmail = User.objects.get(pk=user)
+                user_email = userForEmail.email
+                room = Room.objects.get(id=roomId)
+                
+                booking = BookRoom.objects.get(room=roomId, joined=True)
+                roombilling = RoomBilling.objects.get(bookedRoom=booking)
+                
+                depositeAmount = roombilling.deposit
+                
+                fineAmount = request.POST.get("fineAmount")
+                fineReason = request.POST.get("fineReason")
+                
+                if not fineAmount == '' and not fineReason == '':
+                    message = f"Dear {userForEmail.username},\n\
+                    We have received your move-out request for the room '{room.roomTitle}'. \n\
+                    Your deposit refund will be processed shortly.\n\
+                    From you deposit amount Rs. {depositeAmount}, we have charged you fine of Rs. {fineAmount} because of the following reason:\n\
+                    {fineReason}\n\
+                    Regards,\n\
+                    [RoomRent]"
+                else:
+                    message = f"Dear {userForEmail.username},\n\
+                    We have received your move-out request for the room '{room.roomTitle}'. \n\
+                    Your deposit refund will be processed shortly.\n\
+                    Regards,\n\
+                    [RoomRent]"
+                    
+                print(message)
+                    
+
+                send_mail(
+                "Tenant Move-Out Completed",
+                message,
+                "room.rent.webapp@gmail.com",
+                [user_email],
+                fail_silently=False,
+                )
+                        
                 roomDetail.isAvailable = True
                 roomDetail.isBooked = False
                 roomDetail.save()
                 bookedThisRoom = BookRoom.objects.filter(joined=True, room=room_id).first()
-                electricityDetails = ElectricityUnitDetail.objects.filter(bookedRoom=bookedThisRoom)
-                electricityDetails.delete()
                 billing = RoomBilling.objects.filter(bookedRoom=bookedThisRoom) #Delete the billing model associated with this bookedroom 
                 billing.delete()
+                # EMAIL
                 
                 isJoinedThisRoom.delete()
                 sweetify.success(request, "Tenant Movedout")
-                return redirect("roomMoreDetails", room_id = room_id)
+            return redirect("roomMoreDetails", room_id = room_id)
                 
             
         else:
@@ -380,6 +422,7 @@ def roomMoreDetails(request, room_id):
         'hasJoinedMyRoom' : hasJoinedMyRoom,
         'hasNotMoveOutDate' : hasNotMoveOutDate,
         'feedbacks' : feedbacks,
+        'bookedRoomInfo' : bookedRoomInfo
     }
     
     return render(request, 'Rooms/roomMoreDetails.html', context)
@@ -460,10 +503,6 @@ def viewBooking(request):
             
             remainingBookingsForUser.delete() #Remaining bookings for user to be deleted:
             remainingBookingsForRoom.delete() #Remaining bookings for room to be deleted:
-                         
-
-            electricityDetails = ElectricityUnitDetail.objects.create(bookedRoom=booking)
-            electricityDetails.save()
 
             sweetify.success(request, "Booking approved")
             return redirect("viewBooking")

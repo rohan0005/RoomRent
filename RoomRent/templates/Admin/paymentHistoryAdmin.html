@@ -1,0 +1,252 @@
+{% extends 'Admin/NavigationBarBase/base.html' %}
+{% load static %}
+{% load custom_tags_calculateCommission %}
+{% block title %}RoomRent | Payments{% endblock %}
+{% block content %}
+
+<form action="" method="post">
+                {% csrf_token %}
+      <!-- START: ROOMS, order and pending request information section -->
+      <div class="flex-1 bg-[#F3F3F3] ">
+        <div class="bg-white p-5 h-screen">
+          <div>
+
+            <div class="bg-[#793FDF] p-5 w-full mb-3">
+                <p class="md:text-3xl text-xl capitalize  text-white ">
+                    Payment transactions 
+                    <span>
+                        {% if step == None or step == "pendingRefunds" %}
+                        (Pending Refunds)
+
+                        {% else %}
+
+                        (Completed Refunds)
+                        {% endif %}
+                    </span>
+                </p>
+            </div>
+
+            <div class="flex mb-3 gap-5 ">
+                <button
+                type="submit" name="pendingRefunds"
+                class="inline-block rounded bg-[#dc4c64]  px-6 py-2.5 text-xs font-bold uppercase leading-normal text-white shadow-danger-3 transition duration-150 ease-in-out hover:bg-danger-accent-300 hover:shadow-danger-2 focus:bg-danger-accent-300 focus:shadow-danger-2 focus:outline-none focus:ring-0 active:bg-danger-600 active:shadow-danger-2 motion-reduce:transition-none ">
+                Pending Refunds
+                </button>
+
+                <button
+                type="submit" name="completedRefunds"
+                class="inline-block rounded  bg-[#14a44d] px-6 py-2.5 text-xs font-bold uppercase leading-normal text-white shadow-success-3 transition duration-150 ease-in-out hover:bg-success-accent-300 hover:shadow-success-2 focus:bg-success-accent-300 focus:shadow-success-2 focus:outline-none focus:ring-0 active:bg-success-600 active:shadow-success-2 motion-reduce:transition-none ">
+                Completed Refunds
+                </button>
+            </div>
+           
+            
+              <div class="flex flex-col 
+              {% if allPaymentHistoryWithReleasedFund or allPaymentHistory %}
+              {% if step == None or step == 'pendingRefunds' %}
+                    {% if allPaymentHistory %}
+                        overflow-x-auto
+                    {% else %}
+                    {% endif %}
+                {% elif step == 'completedRefunds' and allPaymentHistoryWithReleasedFund %}
+                overflow-x-auto
+                {% else %}
+              {% endif %}
+              {% endif %}
+                 ">
+                <div class="sm:-mx-6 lg:-mx-8">
+                    <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                        <div class="overflow-x-auto">
+                            {% if step == None or step == "pendingRefunds" %}
+                                    
+                            
+                            {% if allPaymentHistory %}
+                            
+                            <table class="min-w-full text-left text-sm font-light border-2">
+                                <thead class="border-b font-medium bg-gray-200">
+                                <tr>
+                                    <th scope="col" class="p-4 w-1/4">Room Title</th>
+                                    <th scope="col" class="p-4 w-1/4">Paid by</th>
+                                    <th scope="col" class="p-4 w-1/4">Paid to</th>
+                                    <th scope="col" class="p-4 w-1/4">Billed date</th>
+                                    <th scope="col" class="p-4 w-1/4">Paid on</th>
+                                    <th scope="col" class="p-4 w-1/4">Late days</th>
+                                    <th scope="col" class="p-4 w-1/4">Late fee</th>
+                                    <th scope="col" class="p-4 w-1/4">Deposited amount</th>
+                                    <th scope="col" class="p-4 w-1/4">Total amount</th>
+                                    <th scope="col" class="p-4 w-1/4">Transaction id</th>
+                                    <th scope="col" class="p-4 w-1/4"></th>
+                                </tr>
+                                </thead>
+                                
+                                {% for payment in allPaymentHistory %}
+                                <tbody>
+                                    <tr class="border-2 ">
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.room.roomTitle}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.tenantUser}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.room.user.username}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.billedDate|date}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.paidDate|date}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.lateDays}} Day[s]</td>
+                                        <td class="whitespace-nowrap px-6 py-4 ">NRS. {{payment.lateFee}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.depositedAmount}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.totalPaidAmount}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.transactionID}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">
+                                            <!-- Modal toggle -->
+                                            <button data-modal-target="default-modal-{{ payment.id }}" data-modal-toggle="default-modal-{{ payment.id }}" class="block text-white bg-[#14a44d]  focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center " type="button">
+                                                Release Fund
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+
+                          
+                                <!-- Main modal -->
+                                <div id="default-modal-{{ payment.id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                    <div class="relative p-4 w-full max-w-2xl max-h-full">
+                                        <!-- Modal content -->
+                                        <div class="relative bg-white rounded-lg shadow">
+                                            <!-- Modal header -->
+                                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                                                <h3 class="text-xl font-semibold text-gray-900">
+                                                    Confirm Release Fund
+                                                </h3>
+                                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-hide="default-modal-{{ payment.id }}">
+                                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                    </svg>
+                                                    <span class="sr-only">Close modal</span>
+                                                </button>
+                                            </div>
+                                            <!-- Modal body -->
+                                            <div class="p-4 md:p-5 space-y-4">
+                                                <p class="text-base leading-relaxed text-gray-500">
+                                                    Deduct the commissions before transferring the amount of the room to the owner.
+                                                </p>
+
+                                                <p class="text-base leading-relaxed text-gray-500">
+                                                    Commissions Rate: 0.5 %
+                                                </p>
+
+                                                <p class="text-base leading-relaxed text-gray-600">Total Amount: <span class="font-bold">Rs. </span><span class="font-bold">{{ payment.totalPaidAmount }}</span></p>
+                                                <p class="text-base leading-relaxed text-gray-600">commission Amount: <span class="font-bold">Rs. </span><span class="font-bold">{{ payment.totalPaidAmount|calculateCommission }}</span></p>
+                                                
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                                                <button data-modal-hide="default-modal-{{ payment.id }}" type="submit" name="refund" class="text-white bg-[#14a44d]  focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Release Fund</button>
+                                                <button data-modal-hide="default-modal-{{ payment.id }}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %} 
+  
+                            
+                            </table>
+                            {% else %}
+                            <h1>NO PENDING REFUNDS Found !!</h1>
+                            {% endif %}
+                            <!--IF UPDATED-->
+
+                            {% else %}
+                            
+                            {% if allPaymentHistoryWithReleasedFund %}
+                                
+                                
+                            <table class="min-w-full text-left text-sm font-light border-2">
+                                <thead class="border-b font-medium bg-gray-200">
+                                <tr>
+                                    <th scope="col" class="p-4 w-1/4">Room Title</th>
+                                    <th scope="col" class="p-4 w-1/4">Paid by</th>
+                                    <th scope="col" class="p-4 w-1/4">Paid to</th>
+                                    <th scope="col" class="p-4 w-1/4">Billed date</th>
+                                    <th scope="col" class="p-4 w-1/4">Paid on</th>
+                                    <th scope="col" class="p-4 w-1/4">Late days</th>
+                                    <th scope="col" class="p-4 w-1/4">Late fee</th>
+                                    <th scope="col" class="p-4 w-1/4">Deposited amount</th>
+                                    <th scope="col" class="p-4 w-1/4">Total amount</th>
+                                    <th scope="col" class="p-4 w-1/4">System commission</th>
+                                    <th scope="col" class="p-4 w-1/4">Transaction id</th>
+                                </tr>
+                                </thead>
+                                
+                                {% for payment in allPaymentHistoryWithReleasedFund %}
+                                <tbody>
+                                    <tr class="border-2 ">
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.room.roomTitle}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.tenantUser}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.room.user.username}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.billedDate|date}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.paidDate|date}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.lateDays}} Day[s]</td>
+                                        <td class="whitespace-nowrap px-6 py-4 ">NRS. {{payment.lateFee}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.depositedAmount}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.totalPaidAmount}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.systemCommissionAmount}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">{{payment.transactionID}}</td>
+                                    </tr>
+                                </tbody>
+
+                          
+                                <!-- Main modal -->
+                                <div id="default-modal-{{ payment.id }}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                    <div class="relative p-4 w-full max-w-2xl max-h-full">
+                                        <!-- Modal content -->
+                                        <div class="relative bg-white rounded-lg shadow">
+                                            <!-- Modal header -->
+                                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
+                                                <h3 class="text-xl font-semibold text-gray-900">
+                                                    Confirm Release Fund
+                                                </h3>
+                                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-hide="default-modal-{{ payment.id }}">
+                                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                    </svg>
+                                                    <span class="sr-only">Close modal</span>
+                                                </button>
+                                            </div>
+                                            <!-- Modal body -->
+                                            <div class="p-4 md:p-5 space-y-4">
+                                                <p class="text-base leading-relaxed text-gray-500">
+                                                    Deduct the commissions before transferring the amount of the room to the owner.
+                                                </p>
+
+                                                <p class="text-base leading-relaxed text-gray-500">
+                                                    Commissions Rate: 0.5 %
+                                                </p>
+
+                                                <p class="text-base leading-relaxed text-gray-600">Total Amount: <span class="font-bold">Rs. </span><span class="font-bold">{{ payment.totalPaidAmount }}</span></p>
+                                                <p class="text-base leading-relaxed text-gray-600">commission Amount: <span class="font-bold">Rs. </span><span class="font-bold">{{ payment.totalPaidAmount|calculateCommission }}</span></p>
+                                                
+                                            </div>
+                                            <!-- Modal footer -->
+                                            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                                                <button data-modal-hide="default-modal-{{ payment.id }}" type="submit" name="refund" class="text-white bg-[#14a44d]  focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Release Fund</button>
+                                                <button data-modal-hide="default-modal-{{ payment.id }}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %} 
+  
+                            
+                            </table>
+                            {% else %}
+                            <h1>NO COMPLETED REFUNDS Found !!</h1>
+                            {% endif %}
+
+
+
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <input type="hidden" name="paymentHistoryID" id = "paymentHistoryID" value="" class="paymentHistoryID">
+
+        </form>
+
+{% endblock %}

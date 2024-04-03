@@ -26,3 +26,5 @@ class PaymentHistory(models.Model):
     depositedAmount = models.IntegerField(blank=False)
     totalPaidAmount = models.IntegerField(blank=False)
     transactionID = models.CharField(blank=False, max_length=100)
+    hasReleasedFund = models.BooleanField(default=False)
+    systemCommissionAmount = models.IntegerField(default=0)
