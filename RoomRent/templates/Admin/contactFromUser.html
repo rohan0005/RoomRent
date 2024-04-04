@@ -1,0 +1,134 @@
+{% extends 'Admin/NavigationBarBase/base.html' %}
+{% load static %} 
+{% block title %} RoomRent | contacts{% endblock %}
+{% block content %}
+
+<div class="flex-1 bg-[#F3F3F3]">
+  <div class="bg-white p-5 h-screen">
+    <div>
+      <div class="bg-[#1D77FF] p-5 w-full mb-3">
+        <p class="md:text-3xl text-xl capitalize text-white">
+          All contact us messages submitted by users
+        </p>
+      </div>
+    </div>
+
+    <div class="lg:grid lg:grid-cols-3 gap-10 lg:px-3 lg:py-4">
+      {% for contactData in contactUsData %}
+
+      <div class="max-w-sm rounded overflow-hidden shadow-lg border h-[290px]">
+        <div class="px-6 lg:py-4">
+          <div class="font-bold text-md mb-2 flex justify-between">
+            <p>By <span>{{contactData.fullName}}</span></p>
+
+            {% if contactData.status == 'pending' %}
+            <p class="text-red-400">pending check</p>
+            {% else %}
+            <p class="text-emerald-400">Checked</p>
+            {% endif %}
+          </div>
+          <p class="text-gray-700 text-base">
+            {{contactData.message|truncatewords:30}}
+          </p>
+        </div>
+        <div class="px-6 pt-4 pb-2">
+          <p class="text-gray-700 text-base">
+            Submitted date: <span>{{contactData.contactedOn.date}}</span>
+          </p>
+        </div>
+        <div class="px-2 py-4">
+          <button
+            data-modal-target="default-modal-{{contactData.id}}"
+            data-modal-toggle="default-modal-{{contactData.id}}"
+            class="w-full flex justify-center border border-solid border-[black] font-medium rounded-md py-3"
+          >
+            View More
+          </button>
+        </div>
+      </div>
+
+      <!-- Main modal -->
+      <div
+        id="default-modal-{{contactData.id}}"
+        tabindex="-1"
+        aria-hidden="true"
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+      >
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+          <!-- Modal content -->
+          <div class="relative bg-white rounded-lg shadow">
+            <!-- Modal header -->
+            <div
+              class="flex items-center justify-between p-4 md:p-5 border-b rounded-t"
+            >
+              <h3 class="text-xl font-semibold text-gray-900">
+                Submitted by {{contactData.fullName}}
+              </h3>
+              <button
+                type="button"
+                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                data-modal-hide="default-modal-{{contactData.id}}"
+              >
+                <svg
+                  class="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5 space-y-4">
+                <div class="pb-2">
+                    <span class="font-bold">User email: </span>{{contactData.email}}
+                </div>
+                {{contactData.message}}
+            </div>
+            <!-- Modal footer -->
+            <div
+              class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b"
+            >
+            
+            {% if contactData.status == "pending"  %}
+                
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="ContactID" value="{{contactData.id}}">
+              <button
+                type="submit"
+                name="markAsRead"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              >
+                Mark as Read
+              </button>
+            </form>
+            {% else %}
+                       
+            {% endif %}
+              <button
+                data-modal-hide="default-modal-{{contactData.id}}"
+                type="button"
+                class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
