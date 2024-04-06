@@ -9,7 +9,7 @@ from django.utils import timezone
 from datetime import date, timedelta, datetime
 import sweetify
 from dateutil.relativedelta import relativedelta
-
+from django.core.mail import send_mail
 
 import requests
 import json
@@ -252,6 +252,23 @@ def billing(request):
             # If not checked set latePaymentCharge to False
             latePaymentCharge = False
         updateBilling = RoomBilling.objects.get(pk=roombillingID)
+        roomName = updateBilling.bookedRoom.room.roomTitle
+        
+        userID = updateBilling.bookedRoom.user.id
+        
+        #send mail
+        userForEmail = User.objects.get(pk=userID)
+        user_email = userForEmail.email
+        
+        # Sending mail after room booking is rejected
+        send_mail(
+        "Room rent bill updated",
+        f"Your bill for {roomName} has been generated. Please view and pay it via our website.",
+        "room.rent.webapp@gmail.com",
+        [user_email],
+        fail_silently=False,
+        )
+
         
         rentAmount = request.POST.get('rentAmount')
         print("rentAmount:", rentAmount)
@@ -315,6 +332,15 @@ def paymentHistoryAdminView(request):
             print("paymentHistoryID", paymentHistoryID)
             paymentHistory = PaymentHistory.objects.get(pk=paymentHistoryID)
             
+            user_email = paymentHistory.room.user.email
+            send_mail(
+                "Payment Released",
+                "Dear Owner,\n\nWe are pleased to inform you that the payment for your room has been successfully released.\n\nThank you for using our platform. \n\nBest regards,\n[RoomRent] Team",
+                "room.rent.webapp@gmail.com",
+                [user_email],
+                fail_silently=False
+            )
+                        
             # CALCULATION FOR COMMISSION AMOUNT
             amount = paymentHistory.totalPaidAmount
             commissionAmount = amount * commissionRate
@@ -324,6 +350,9 @@ def paymentHistoryAdminView(request):
             paymentHistory.systemCommissionAmount = commissionAmount
             paymentHistory.totalPaidAmount = updateTotalAmount
             paymentHistory.save()  # save the commission and update the total amount
+            
+            
+            
             sweetify.success(request, "Amount Refunded to owner.")
 
     print("stepppppp:", step)

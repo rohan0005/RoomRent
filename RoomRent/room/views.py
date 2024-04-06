@@ -145,22 +145,63 @@ def pendingRooms(request):
     # Handeling room approvals
     if request.method == 'POST':
         room_id = request.POST.get('room_id')
-        print("ROOM ID IS:", room_id)
+        user = request.POST.get("user")
+        userForEmail = User.objects.get(pk=user)
+        user_email = userForEmail.email
         room = get_object_or_404(Room, pk=room_id)
         if "approve" in request.POST:
             # Approving room
             room.listed_date = timezone.now()  # Update the listed_date to the current time
             room.approved = True # set the approverd to True
             room.save()
+            # Sending mail after room booking is rejected
+            send_mail(
+            "Room Listing Approved",
+            f"We are pleased to inform you that your request to list your room has been approved. Your room is now listed on our platform and visible to all users. Thank you for choosing our platform",
+            "room.rent.webapp@gmail.com",
+            [user_email],
+            fail_silently=False,
+            )
             sweetify.success(request, "Room approved")
             return redirect('pendingRooms')
 
         
         # IF rejected room
         else:
+            send_mail(
+            "Room Listing Rejected",
+            f"We regret to inform you that your request to list your room has been rejected. Thank you for considering our platform. Thank you for considering our platform.",
+            "room.rent.webapp@gmail.com",
+            [user_email],
+            fail_silently=False,
+            )
             room.delete()
             sweetify.error(request, "Room rejected")
             return redirect('pendingRooms')
+        
+        
+        
+            user = request.POST.get("user")
+            roomId = request.POST.get('roomId')
+            
+            userForEmail = User.objects.get(pk=user)
+            
+            user_email = userForEmail.email
+            
+            
+            
+            booking = BookRoom.objects.get(user=user, id=roomId)
+            room_id = booking.room.id
+            room = Room.objects.get(id=room_id)
+            
+            # Sending mail after room booking is rejected
+            send_mail(
+            "Room joining request Rejected",
+            f"Your request for joining {room.roomTitle} is rejected",
+            "room.rent.webapp@gmail.com",
+            [user_email],
+            fail_silently=False,
+            )
     
     
     # Pagination
@@ -456,7 +497,24 @@ def viewBooking(request):
         with transaction.atomic():
             user = request.POST.get("user")
             roomId = request.POST.get('roomId')
+            print("roomID", roomId)
+            booking = BookRoom.objects.get(user=user, id=roomId)
+            room_id = booking.room.id
+            roomInstance = Room.objects.get(id=room_id)
+
+            #send mail
+            userForEmail = User.objects.get(pk=user)
+            user_email = userForEmail.email
             
+            # Sending mail after room booking is rejected
+            send_mail(
+            "Booking accepted",
+            f"Your Booking for joining {roomInstance.roomTitle} is accepted",
+            "room.rent.webapp@gmail.com",
+            [user_email],
+            fail_silently=False,
+            )
+
             # Retrieve the BookRoom instance based on the user and room
             booking = BookRoom.objects.filter(user=user, id=roomId).first()
             if booking:
@@ -507,9 +565,6 @@ def viewBooking(request):
             sweetify.success(request, "Booking approved")
             return redirect("viewBooking")
   
-    
-        
-        
     elif request.method == 'POST' and "reject" in request.POST:
         with transaction.atomic():
             

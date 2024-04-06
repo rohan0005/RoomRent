@@ -37,23 +37,16 @@
         <div class="sub-heading flex p-3 gap-3 gap">
           {% if request.user|has_group:"owner"%}
           <div>
-            <button type="submit" name="pendingUpdate" class="hover:bg-[#00ffc321] p-2 px-4 border text-[#39c9a7] 
-          {% if step == None or step == 'pendingUpdate' %}
-            bg-[#00ffc321]
-            {% else %}
-            bg-[#39c9a70d]
-          {% endif %}
-             border-[#39c9a71a]">Pendings</button>
+            <button type="submit" name="pendingUpdate" class="p-2 px-4 border text-white
+            bg-[#54b4d3]
+            text-white
+          ">Pendings</button>
           </div>
 
             <div>
               <button type="submit" name="updated" class=" relative 
-             {% if step == 'updated' %} 
-              bg-[#f58c5c24]
-               {% else %} 
-              bg-[#ddb21a1a] 
-            {% endif %} 
-            hover:bg-[#f58c5c24] p-2 px-4 text-[#ddb21a] border-[#f58c5c1a] border">Updated 
+              bg-[#e4a11b]
+              text-white p-2 px-4 text-[#ddb21a] border-[#f58c5c1a] border">Updated 
            </button>
 
             </div>
@@ -72,7 +65,7 @@
 
         <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
           <tbody>
-            <tr class="border-b">
+            <tr class="border-b bg-gray-200">
               <th class="text-left p-3 px-5">Room title</th>
               <th class="text-left p-3 px-5">Movedin date</th>
               <th class="text-left p-3 px-5">Billed date</th>
@@ -648,7 +641,7 @@
         
         <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
         <tbody>
-          <tr class="border-b">
+          <tr class="border-b bg-gray-200">
             <th class="text-left p-3 px-5">Room title</th>
             <th class="text-left p-3 px-5">Movedin date</th>
             <th class="text-left p-3 px-5">Billed date</th>

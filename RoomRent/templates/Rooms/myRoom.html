@@ -13,50 +13,40 @@
 
             <!-- CONTENTS -->
             <div class="bg-white h-screen  pb-[100px]  lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
+        <div class="bg-[#793FDF] p-5 text-white">
+          <h1 class="font-semibold text-[17px] md:text-3xl "> 
+            {% if request.user.is_authenticated and not request.user.is_superuser and notJoinedAndPending %} 
+             <span class="text-white">Pending approval to join room</span><span> ( {% if step == None or step == 'myroom' %} My Room {% else %} Booking Logs {% endif %} )</span>
 
-                <!-- HEADING -->
-                <div class="flex justify-between pr-3">
-                    <div>
-                        <h1 class="font-semibold text-[17px] md:text-3xl p-6"> 
-                            {% if request.user.is_authenticated and not request.user.is_superuser and notJoinedAndPending %} 
-                             <span class="text-[#0766AD]">Pending approval</span>
+             {% elif bookedRoomDetails or request.user|has_group:"tenant" %}
 
-                             {% elif bookedRoomDetails or request.user|has_group:"tenant" %}
+            My Joined Room
 
-                            My Joined Room
+             {% elif request.user|has_group:"owner" %}
 
-                             {% elif request.user|has_group:"owner" %}
+            My Room Listings
 
-                            My Room Listings
-
-                            {% endif %}
-                            </h1>
-                    </div>
-                </div>
-
+            {% endif %}
+            </h1>
+          </div>
+                
                 {% if  request.user|has_group:"tenant" %} 
                 <!-- CHANGE PAGE -->
                 <form action="" method="post">
                     {% csrf_token %}
                     <div class="sub-heading flex p-3 gap-3 gap">
                     <div>
-                        <button type="submit" name="myroom" class="hover:bg-[#00ffc321] p-2 px-4 border text-[#39c9a7] 
-                        {% if step == None or step == 'myroom' %}
-                        bg-[#00ffc321]
-                        {% else %}
-                        bg-[#39c9a70d]
-                        {% endif %} 
-                        border-[#39c9a71a]">My Room</button>
+                        <button type="submit" name="myroom" class=" p-2 px-4 border text-[#39c9a7] 
+                        bg-[#54b4d3]
+                        text-white
+                        ">My Room</button>
                     </div>
 
                     <div>
                         <button type="submit" name="bookinglog" class=" relative 
-                        {% if step == 'bookinglog' %}
-                        bg-[#f58c5c24]
-                        {% else %}
-                        bg-[#f58c5c0d] 
-                        {% endif %} 
-                    hover:bg-[#f58c5c24] p-2 px-4 text-[#f58c5c] border-[#f58c5c1a] border">Booking Logs 
+                        bg-[#e4a11b]
+                        text-white
+                        p-2 px-4 text-[#e4a11b]">Booking Logs 
                     
                   
                     </button>
@@ -292,9 +282,9 @@
 
                 {% if bookingLog %}
                 <!--BOOKING LOGS DETAILS-->
-                <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
+                <table class="w-full md:text-md text-sm bg-white shadow-md rounded mb-4 mx-10">
                     <tbody>
-                      <tr class="border-b bg-gray-100">
+                      <tr class="border-b bg-gray-200">
                         <th class="text-left p-3 px-5">Room Title</th>
                         <th class="text-left p-3 px-5">Booked on</th>
                         <th class="text-left p-3 px-5">Owner</th>

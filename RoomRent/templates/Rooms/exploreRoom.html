@@ -203,12 +203,28 @@
 
         {% else %}
             {% if search or flat or parking or floor or rent %}
-                <div class="no-room-container flex justify-center mt-20 md:text-3xl">
-                    <h1>No Rooms found matching your search criteria</h1>
+                <div class="no-room-container flex justify-center md:text-3xl">
+                    <div class="no-room-container flex justify-center md:text-3xl">
+                        <!-- No users message -->
+                      <div class="container mx-auto flex flex-col items-center justify-center h-[500px]">
+                          <div class="lg:text-4xl text-xl  text-gray-700 tracking-wide leading-relaxed mb-6">
+                            <h1>No Rooms found matching your search criteria</h1>
+                          </div>
+                          <img class="h-64 w-64 mb-10" src="{% static 'images/static images/Icons/notfound.svg' %}" alt="">
+                      </div>
+                      
+                  </div>
                 </div>
             {% else %}
-                <div class="no-room-container flex justify-center mt-20 md:text-3xl">
-                    <h1>No Rooms are listed currently</h1>
+                <div class="no-room-container flex justify-center md:text-3xl">
+                      <!-- No users message -->
+                    <div class="container mx-auto flex flex-col items-center justify-center h-[500px]">
+                        <div class="lg:text-4xl text-2xl  text-gray-700 tracking-wide leading-relaxed mb-6">
+                            <h1>No Rooms are listed currently</h1>
+                        </div>
+                        <img class="h-64 w-64 mb-10" src="{% static 'images/static images/Icons/searchHouse.svg' %}" alt="">
+                    </div>
+                    
                 </div>
         {% endif %}
 

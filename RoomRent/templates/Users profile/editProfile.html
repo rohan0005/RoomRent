@@ -14,33 +14,6 @@
                     <div>
                         <h1 class="font-semibold text-[18px] md:text-3xl pl-16 p-6">Edit Profile</h1>
                     </div>
-                    {% if messages %}
-                    <!-- Success or error message start -->
-                    <div id="toast-success" class="flex h-12 md:w-[250px]  mt-4">
-                        <!-- ICON -->
-                        <div class="rounded-l-lg  w-1/5 bg-[#2FDD92] flex justify-center p-2">
-                            <span>
-                                <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5001 2.91602C9.47925 2.91602 2.91675 9.47852 2.91675 17.4993C2.91675 25.5202 9.47925 32.0827 17.5001 32.0827C25.5209 32.0827 32.0834 25.5202 32.0834 17.4993C32.0834 9.47852 25.5209 2.91602 17.5001 2.91602ZM17.5001 29.166C11.0688 29.166 5.83341 23.9306 5.83341 17.4993C5.83341 11.0681 11.0688 5.83268 17.5001 5.83268C23.9313 5.83268 29.1667 11.0681 29.1667 17.4993C29.1667 23.9306 23.9313 29.166 17.5001 29.166ZM24.1938 11.0535L14.5834 20.6639L10.8063 16.9014L8.75008 18.9577L14.5834 24.791L26.2501 13.1243L24.1938 11.0535Z" fill="white"/>
-                                </svg>
-                            </span>
-                        </div>
-
-                        <!-- MEssage -->
-                        <div class="border-[#CECECE] border-l-0 w-4/5 p-3 border outline-none">
-                            <p class="left-0 text-[#0AD674] font-medium lg:text-[15px] text-[15px]">
-                            
-                                
-                                {% for msg in messages %}
-                                    {{msg}}
-                                {% endfor %}
-                                    
-                            
-                            </p>
-                        </div>
-                    </div>
-                    {% endif %}
-                    <!-- Success or error message End -->
                 </div>
 
                 <!-- FORM Start -->

@@ -152,17 +152,6 @@ def adminDashboard(request):
     totalVerifiedUsers = User.objects.filter(groups__name__in=['owner', 'tenant']).count()       
     totalUsersWhoRequestForOwner = User.objects.filter(groups__isnull=True).exclude(is_superuser=True).count()
     totalRooms = Room.objects.all().count()
-    
-    # Handle user delete
-    if request.method == 'POST':
-        if "deleteUser" in request.POST:
-            if "user" in request.POST:
-                username = request.POST.get("user")
-                user = User.objects.get(username=username)
-                user.delete()
-                messages.success(request, 'User deleted successfully')
-                return redirect('adminDashboard')
-
 
     # Set the number of items per page
     items_per_page = 4  
@@ -265,6 +254,15 @@ def userMoreDetail(request, user_id):
         elif "block" in request.POST:
             username = request.POST.get("user")
             user = User.objects.get(username=username)
+            user_email = user.email
+             # Sending mail after user is approved
+            send_mail(
+            "Account Blocked",
+            "Your account has been Blocked in RoomRent website. Please Contact to admin.",
+            "room.rent.webapp@gmail.com",
+            [user_email],
+            fail_silently=False,
+            )
             userDetail = UserAdditionalDetail.objects.get(user=user)
             userDetail.has_blocked = True
             userDetail.save()
@@ -273,6 +271,15 @@ def userMoreDetail(request, user_id):
         elif "unblock" in request.POST:
             username = request.POST.get("user")
             user = User.objects.get(username=username)
+            user_email = user.email
+             # Sending mail after user is approved
+            send_mail(
+            "Account Unblocked",
+            "Your account has been Unblocked in RoomRent website. You can now signin.",
+            "room.rent.webapp@gmail.com",
+            [user_email],
+            fail_silently=False,
+            )
             userDetail = UserAdditionalDetail.objects.get(user=user)
             userDetail.has_blocked = False
             userDetail.save()
@@ -321,14 +328,14 @@ def editProfile(request):
             additionalDetail = user.useradditionaldetail
             additionalDetail.contact_number = request.POST.get('contact')
             additionalDetail.save()
-            messages.success(request, 'Profile Updated')           
+            sweetify.success(request, 'Profile Updated')           
         
         if "saveImage" in request.POST:
             # Saving user New profile
             user_profile = UserProfilePicture.objects.get(user=user)
             user_profile.image = request.FILES['img']
             user_profile.save()
-            messages.success(request, 'Profile Picture Updated')
+            sweetify.success(request, 'Profile Picture Updated')
         
         if "deleteImage" in request.POST:
             user_profile = UserProfilePicture.objects.get(user=user)
@@ -336,7 +343,7 @@ def editProfile(request):
             # Saving user default profile
             user_default_profile_picture = UserProfilePicture(user=user)
             user_default_profile_picture.save()
-            messages.success(request, 'Profile Picture updated.')
+            sweetify.success(request, 'Profile Picture updated.')
             
         return redirect('editProfile')                
                 
@@ -360,21 +367,21 @@ def changePassword(request):
             
             # If current password is incorrect display error message
             if not request.user.check_password(current_password):
-                messages.error(request, 'Current password is incorrect.')
+                sweetify.error(request, 'Current password is incorrect.')
             
             # If current password is correct:
             else:
                 # Check if new password and cormform password is correct
                 # If not correct display error message
                 if new_password != confirm_new_password:
-                    messages.error(request, 'New password and confirm password do not match.')
+                    sweetify.error(request, 'New password and confirm password do not match.')
                     
                 # If correct change the password with new password 
                 else:
                     # Change the user's password
                     request.user.set_password(new_password)
                     request.user.save()
-                    messages.success(request, 'Password Changed')
+                    sweetify.success(request, 'Password Changed')
                     # Updating the user's session to prevent logout
                     update_session_auth_hash(request, request.user)
                     

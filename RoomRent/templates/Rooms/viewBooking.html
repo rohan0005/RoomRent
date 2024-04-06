@@ -11,7 +11,7 @@
       <!--HEADING-->
       <div class="flex justify-between pr-3 bg-[#0766AD] text-white">
         <div>
-          <h1 class="font-semibold text-[17px] md:text-3xl p-6">Bookings</h1>
+          <h1 class="font-semibold text-[17px] md:text-3xl p-6">{% if step == None or step == 'pendingBookings' %}Pending Bookings {% else %} Canceled Bookings {% endif %}</h1>
         </div>
       </div>
 
@@ -20,23 +20,14 @@
         {% csrf_token %}
         <div class="sub-heading flex p-3 gap-3 gap">
           <div>
-            <button type="submit" name="pendingBookings" class="hover:bg-[#00ffc321] p-2 px-4 border text-[#39c9a7] 
-          {% if step == None or step == 'pendingBookings' %}
-            bg-[#00ffc321]
-            {% else %}
-            bg-[#39c9a70d]
-          {% endif %}
+            <button type="submit" name="pendingBookings" class=" p-2 px-4 border text-white
+          bg-[#54b4d3]
              border-[#39c9a71a]">Pendings</button>
           </div>
 
           <div>
             <button type="submit" name="canceledBookings" class=" relative 
-          {% if step == 'canceledBookings' %}
-            bg-[#f58c5c24]
-            {% else %}
-            bg-[#f58c5c0d] 
-          {% endif %}
-          hover:bg-[#f58c5c24] p-2 px-4 text-[#f58c5c] border-[#f58c5c1a] border">Cancled 
+          bg-[#dc4c64] p-2 px-4 text-white border-[#f58c5c1a] border">Cancled 
           
           {% if cancledRoomDetails %}
           <span
@@ -63,7 +54,7 @@
 
         <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
           <tbody>
-            <tr class="border-b">
+            <tr class="border-b bg-gray-200">
               <th class="text-left p-3 px-5">Username</th>
               <th class="text-left p-3 px-5">Booked on</th>
               <th class="text-left p-3 px-5">Contact</th>

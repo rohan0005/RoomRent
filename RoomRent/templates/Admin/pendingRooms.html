@@ -119,6 +119,7 @@
                                                 <form action="" method="post" class="ml-auto">
                                                     {% csrf_token %}
                                                         <input type="hidden" name="room_id" value="{{ room.id }}">
+                                                        <input type="hidden" name="user" value="{{ room.user.id }}">
                                                        
                                                         <button data-modal-hide="popup-modal-{{ room.id }}" type="submit"  name="approve" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Approve</button>
                                                         <button data-modal-hide="popup-modal-{{ room.id }}" type="submit" name="reject" class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">Reject</button>
