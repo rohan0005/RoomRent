@@ -157,11 +157,16 @@
 
                         <a href="{% url 'myRoom' %}"
                             class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Dashboard</a>
+                    
+                    {% elif request.user.is_superuser %}
+
+                    <a href="{% url 'adminDashboard' %}"
+                        class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Dashboard</a>
                     {% else %}
                     <a href="{% url 'Dashboard' %}"
                         class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Dashboard</a>
                     {% endif %}
-
+                    
                 </li>
                 
             </ul>

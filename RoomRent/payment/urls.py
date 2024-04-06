@@ -8,6 +8,6 @@ urlpatterns = [
     path('error',views.error,name="error"),
     path('billing',views.billing,name="billing"),
     path('paymentHistory',views.paymentHistory,name="paymentHistory"),
-    path('usersPaymentHistory',views.paymentHistoryAdminView,name="paymentHistoryAdmin"),
+    path('user/admin/paymentHistory',views.paymentHistoryAdminView,name="paymentHistoryAdmin"),
     
 ]

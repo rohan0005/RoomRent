@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash # for authentication
 from django.contrib import messages
 from .models import *
+from room.models import Room
 from .forms import *
 from django.db import transaction
 from django.contrib.auth.models import Group, User
@@ -119,9 +120,12 @@ def SigninUser(request):
         
         # Checking if user exist or not
         if user is not None:
-            login(request, user)
-            sweetify.success(request, 'Successfully Signed In')
-            return redirect('index')
+            if user.useradditionaldetail.has_blocked == True: # if user is blocked then dont give access to signin
+                sweetify.error(request, 'Your account has been blocked. Please contact to admin.')
+            else:
+                login(request, user)
+                sweetify.success(request, 'Successfully Signed In')
+                return redirect('index')
         # If user password or username is incorrect
         else:
             sweetify.error(request, 'Username or Password is incorrect')
@@ -147,6 +151,7 @@ def adminDashboard(request):
     allVerifiedUsers = User.objects.filter(groups__name__in=['owner', 'tenant'])
     totalVerifiedUsers = User.objects.filter(groups__name__in=['owner', 'tenant']).count()       
     totalUsersWhoRequestForOwner = User.objects.filter(groups__isnull=True).exclude(is_superuser=True).count()
+    totalRooms = Room.objects.all().count()
     
     # Handle user delete
     if request.method == 'POST':
@@ -182,6 +187,7 @@ def adminDashboard(request):
         'allVerifiedUsers': allVerifiedUsers,
         'totalVerifiedUsers' : totalVerifiedUsers,
         'totalUsersWhoRequestForOwner' : totalUsersWhoRequestForOwner,  
+        'totalRooms' : totalRooms,
     }
     return render(request, 'Admin/adminDashboard.html', context)
 # PENDING USER REQUEST
@@ -212,8 +218,23 @@ def pendingRequests(request):
     except EmptyPage:
         # If page is out of range, delivering the last page of results
         allUsersWhoRequestForOwner = paginator.page(paginator.num_pages)
+    context = {
+        'allUsersWhoRequestForOwner' : allUsersWhoRequestForOwner
+    }
     
-    
+    return render(request, 'Admin/pendingRequests.html', context)
+
+# Tenant dashboard management
+@login_required(login_url='signin')
+@user_passes_test(is_owner)
+def dashboard(request):    
+    return render(request, 'Users profile/dashboard.html')
+
+@login_required(login_url='signin')
+@user_passes_test(is_superuser)
+def userMoreDetail(request, user_id):
+    userData = User.objects.filter(pk=user_id)
+
     # Handeling approvals
     if request.method == 'POST':
         if "approve" in request.POST:
@@ -240,8 +261,23 @@ def pendingRequests(request):
                 sweetify.success(request, 'User approved successfully')
                 
                 return redirect('pendingRequests')
-
-        # IF ADMIN CLICKS REJECT
+            
+        elif "block" in request.POST:
+            username = request.POST.get("user")
+            user = User.objects.get(username=username)
+            userDetail = UserAdditionalDetail.objects.get(user=user)
+            userDetail.has_blocked = True
+            userDetail.save()
+            sweetify.success(request, 'User Blocked successfully')
+        
+        elif "unblock" in request.POST:
+            username = request.POST.get("user")
+            user = User.objects.get(username=username)
+            userDetail = UserAdditionalDetail.objects.get(user=user)
+            userDetail.has_blocked = False
+            userDetail.save()
+            sweetify.success(request, 'User Unblocked successfully')
+        
         else:
             if "user" in request.POST:
                 username = request.POST.get("user")
@@ -258,18 +294,11 @@ def pendingRequests(request):
                 # REJECT MESSAGE
                 sweetify.error(request, 'User rejected')
                 return redirect('pendingRequests')
+ 
     context = {
-        'allUsersWhoRequestForOwner' : allUsersWhoRequestForOwner
+        "userData" : userData
     }
-    
-    return render(request, 'Admin/pendingRequests.html', context)
-
-# Tenant dashboard management
-@login_required(login_url='signin')
-@user_passes_test(is_owner)
-def dashboard(request):    
-    return render(request, 'Users profile/dashboard.html')
-
+    return render(request, 'Admin/userDetail.html', context)
 
 # Tenant dashboard management
 @login_required(login_url='signin')

@@ -6,31 +6,21 @@
 
 <!--START: Table -->
 <!-- component -->
-<div class="text-gray-900 bg-[#F3F3F3]">
-    <div class="p-4 flex gap-[530px]">
-        <h1 class="text-3xl ">
-            Users - Requests
-        </h1>
+<div class="flex-1 bg-[#F3F3F3] ">
+    <div class="bg-white p-5 h-screen">
+      <div>
 
-        <!-- <div id="toast-success">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="w-[400px] ml-6">
-                        <div
-                            class="p-3 mb-3 text-sm rounded-lg {% if message.tags == 'alert-danger' %}bg-red-500 text-white{% else %}bg-[#59CE8F] text-white{% endif %}"
-                            role="alert">
-                            <span class="font-medium">{{ message }}</span>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div> -->
-    </div>
+        <div class="bg-[#0766AD] p-5 w-full mb-3">
+            <p class="md:text-3xl text-xl capitalize  text-white ">
+                User Pending Approvals
+            </p>
+        </div> 
+
     <div class="px-3 py-4 flex justify-center">
         
         {% if allUsersWhoRequestForOwner %}
 
-        <table class="w-full text-md bg-white shadow-md rounded mb-4">
+        <table class="w-full text-md bg-white shadow-md rounded mb-4 ">
             <tbody>
                 <tr class="border-b">
                     <th class="text-left p-3 px-5">S.N</th>
@@ -43,70 +33,21 @@
 
                 {% for requestedUser in allUsersWhoRequestForOwner %}
                 <tr class="border-b hover:bg-gray-100">
-                    <td class="p-3 px-5">
+                    <td class="p-3 px-5 text-nowrap">
                         <p>{{ forloop.counter }}</p>
-                    <td class="p-3 px-5">
+                    <td class="p-3 px-5 text-nowrap">
                         <p>{{requestedUser.username}}</p>
                     </td>
-                    <td class="p-3 px-5">
+                    <td class="p-3 px-5 text-nowrap">
                         <p>{{requestedUser.date_joined|timesince }} ago</p>
                     </td>
-                    <td class="p-3 px-5">
+                    <td class="p-3 px-5 text-nowrap">
                         <p>{{requestedUser.useradditionaldetail.contact_number}}</p>
                     </td>
-                    <td class="p-3 px-5 pl-3"><button type="button"
-                            class="mr-3 text-sm bg-gray-700 hover:bg-gray-600 text-white py-2 px-3 rounded focus:outline-none focus:shadow-outline"
-                            data-modal-target="medium-modal-{{ requestedUser.id }}" data-modal-toggle="medium-modal-{{ requestedUser.id }}"
-                            >View</button> 
+                    <td class="p-3 px-5 text-nowrap">
+                        <p><a class="underline text-blue-500" href="{% url 'userMoreDetail' requestedUser.id %}">View Details</p></a>
                     </td>
                 </tr>
-
-                <!-- view Modal -->
-                <div id="medium-modal-{{ requestedUser.id }}" tabindex="-1"
-                    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                    <div class="relative w-full max-w-2xl max-h-full">
-                        <!-- Modal content -->
-                        <div class="relative bg-white rounded-lg shadow ">
-                            <!-- Modal header -->
-                            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t ">
-                                <h3 class="text-xl font-medium text-gray-900 ">
-                                    User Citizenship
-                                </h3>
-                                <button type="button"
-                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center "
-                                    data-modal-hide="medium-modal-{{ requestedUser.id }}">
-                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                        fill="none" viewBox="0 0 14 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                    </svg>
-                                    <span class="sr-only">Close modal</span>
-                                </button>
-                            </div>
-                            <!-- Modal body -->
-                            <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-2">
-                                {% for img in requestedUser.usercitizenship_set.all %}
-                                <div>
-                                    <a href="{{img.image.url}}" target="_blank">
-                                        <img class="h-auto max-w-full rounded-lg" src="{{ img.image.url }}" alt="img">
-                                    </a>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            <!-- Modal footer -->
-                            <form action="" method="post" class="ml-auto">
-                            {% csrf_token %}
-                            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
-                                <input type="hidden" name="user" value="{{ requestedUser.username }}">
-                                <button data-modal-hide="medium-modal-{{ requestedUser.id }}" type="submit" name="approve"
-                                    class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Approve</button>
-                                <button data-modal-hide="medium-modal-{{ requestedUser.id }}" type="submit" name="reject"
-                                    class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">Reject</button>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
                 {% endfor %}
             </tbody>
         </table>               
@@ -142,14 +83,25 @@
 
 {% else %}
 
-<p class="text-2xl font-regular">
-    You have no pending users
-</p>
+    <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+
+      <div class="text-4xl text-gray-700 md:w-2/3 tracking-wide leading-relaxed">
+        <h1 class="p-20 mt-10">You have no pending users</h1>
+      </div>
+
+      <div class="mb-10 pb-10 md:w-2/3 ">
+        <img class="h-full" src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg?t=st=1711560880~exp=1711564480~hmac=47c7a05594417c56d738d20ad90f46cba7268ff534874bbe6db1ec00d9ce4edb&w=996" alt="" srcset="">
+      </div>
+
+    </div>    
 
 {% endif %}
 
 </div>
 </div>
+</div>
+</div>
+
 <!-- END: TABLE -->
 
 {% endblock %}

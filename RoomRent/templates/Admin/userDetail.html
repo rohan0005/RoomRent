@@ -1,0 +1,131 @@
+{% extends 'Admin/NavigationBarBase/base.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block title %}RoomRent | Dashboard{% endblock %}
+{% block content %}
+
+{% for user in userData %}
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-semibold mb-6">User Details</h1>
+
+    <!-- User Info Card -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6 ">
+        <div class="flex">
+            <p class="text-gray-500 pt-0.5">Username:</p>
+            <p class="text-lg pl-2">{{user.username}}</p>
+        </div>
+        <div class="md:flex md:items-center gap-28">
+        <!-- Profile Picture -->
+        <div class="mb-6 md:mr-6 pt-10">
+            <a href="{{user.userprofilepicture.image.url}}"><img class="w-36 h-36 rounded-full" src="{{user.userprofilepicture.image.url}}" alt="User Profile Picture"></a>
+        </div>
+
+        <!-- User Info -->         
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
+            <div>
+                <p class="text-gray-500 mb-2">Name:</p>
+                <p class="text-lg">
+                {% if user.first_name %}
+                        {{user.first_name}}
+                {% endif %}
+                {% if user.last_name %}
+                        {{user.last_name}}
+                {% endif %}
+                
+                {% if not user.first_name and not user.last_name %}
+                    <span class="text-gray-500">Not updated</span>
+                {% endif %}
+                    
+                    </p>
+            </div>
+
+            <div>
+                <p class="text-gray-500 mb-2">Email:</p>
+                <p class="text-lg">{{user.email}}</p>
+            </div>
+            <div>
+                <p class="text-gray-500 mb-2">Phone:</p>
+                <p class="text-lg">{{user.useradditionaldetail.contact_number}}</p>
+            </div>
+            <div>
+                <p class="text-gray-500 mb-2">User Type:</p>
+                <p class="text-lg">{{user.groups.first.name|upper}}</p>
+            </div>
+            <div>
+                <p class="text-gray-500 mb-2">Last Login:</p>
+                <p class="text-lg">{{user.last_login}}</p>
+            </div>
+            <div>
+                <p class="text-gray-500 mb-2">Joined On:</p>
+                <p class="text-lg">{{user.date_joined}}</p>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    
+    {% if user.usercitizenship_set.all %}
+    <h1 class="text-2xl font-semibold mb-6">User Citizenship</h1>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6 grid grid-cols-1 md:grid-cols-3 gap-7">
+        {% for img in user.usercitizenship_set.all %}
+        <div class="flex">
+            <a href="{{img.image.url}}" target="_blank">
+                <div>
+                    <div>
+                         <img class="h-96 w-96 rounded-lg" src="{{ img.image.url }}" alt="img">
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>  
+        
+    {% endif %}
+
+</div>
+
+<div class="pl-10">
+    {% if not user|has_group:'owner' and not user|has_group:'tenant' %} 
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="user" value="{{user.username}}">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mr-7" name="approve">
+        Approve
+        </button>
+      <button class="bg-[#FF3131] hover:bg-[#EF6262] text-white font-bold py-2 px-4 border border-[#FF3131] rounded mr-7" name="reject">
+        Reject
+      </button>
+    </form>
+
+    {% endif %}
+</div>
+
+<div class="pl-10">
+    {% if user|has_group:'owner' or user|has_group:'tenant' %} 
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="user" value="{{user.username}}">
+      
+      {% if user.useradditionaldetail.has_blocked %}
+        
+      <button class="bg-[#2FDD92] hover:bg-[#0AD674] text-white font-bold py-2 px-4 border border-[#2FDD92] rounded mr-7" name="unblock">
+        Unblock this user
+      </button>
+      
+      {% else %}
+              
+      <button class="bg-[#FF3131] hover:bg-[#EF6262] text-white font-bold py-2 px-4 border border-[#FF3131] rounded mr-7" name="block">
+        Block this user
+      </button>
+        
+      {% endif %}
+    </form>
+
+    {% endif %}
+</div>
+
+
+{% endfor %}
+
+{% endblock %}

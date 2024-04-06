@@ -1,8 +1,19 @@
 {% extends 'Admin/NavigationBarBase/base.html' %}
 {% load static %}
-{% block title %}RoomRent | Dashboard{% endblock %}
+{% block title %}RoomRent | Pending Rooms{% endblock %}
 {% block content %}
-  
+
+<div class="flex-1 bg-[#F3F3F3] ">
+    <div class="bg-white p-5 h-screen">
+      <div>
+
+        <div class="bg-[#0766AD] p-5 w-full mb-3">
+            <p class="md:text-3xl text-xl capitalize  text-white ">
+                Room Listing Requests
+            </p>
+        </div> 
+
+        
 {% if allPendingRooms %}
 
 
@@ -10,11 +21,9 @@
 
     <!-- START: ROOMS, order and pending request information section -->
     <div class="bg-[#F3F3F3] ">
-        <div class="container pb-36 bg-white px-6 py-1 mx-auto">
+        <div class="container pb-36 bg-white px-6 py-1 mx-auto h-fit">
             <div class="flex justify-between">
-                <div>
-                    <h3 class="text-3xl font-semibold text-gray-700 p-5">Pending Rooms</h3>
-                </div>
+                
             </div>
 
             <div>
@@ -22,10 +31,11 @@
                 <div class="px-3 py-4 flex justify-center">
                     <table class="w-full text-md bg-white shadow-md rounded mb-4">
                         <tbody>
-                            <tr class="border-b">
-                                <th class="text-left p-3 px-5">S.N</th>
-                                <th class="text-left p-3 px-5">Username</th>
+                            <tr class="border-b bg-gray-200">
+                                <th class="text-left p-3 px-5"></th>
                                 <th class="text-left p-3 px-5">Room Title</th>
+                                <th class="text-left p-3 px-5">Username</th>
+                                <th class="text-left p-3 px-5">User Contact</th>
                                 <th class="text-left p-3 px-5">Requested on</th>
                                 <th class="text-left p-3 px-5"></th>
                                 <th></th>
@@ -37,13 +47,16 @@
 
                                <tr class="border-b hover:bg-gray-100">
                                    <td class="p-3 px-5">
-                                       <p><p>{{ forloop.counter }}</p></p>
+                                       <p>#</p>
                                    </td>
                                    <td class="p-3 px-5">
-                                       <p>{{room.user}}</p>
+                                    <a class="text-sky-500" href="{% url 'roomMoreDetails' room.id  %}"><p>{{room.roomTitle}}</p></a>
                                    </td>
                                    <td class="p-3 px-5">
-                                       <p>{{room.roomTitle}}</p>
+                                    <p>{{room.user}}</p>
+                                   </td>
+                                   <td class="p-3 px-5">
+                                    <p>{{room.user.useradditionaldetail.contact_number}}</p>
                                    </td>
                                    <td class="p-3 px-5">
                                        <p>{{room.listed_date}}</p>
@@ -86,7 +99,7 @@
                                                 </p>
 
                                                 <p class="text-base leading-relaxed text-gray-500 ">
-                                                    <span class="text-gray-900 font-bold"> Document picture </span>
+                                                    <span class="text-gray-900 font-bold">Room Documents picture </span>
                                                 </p>
 
                                                 <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -159,18 +172,29 @@
 
     {% else %}
 
-    <h1 class="text-3xl ">
-        Room - Requests
-    </h1>
-
     <p class="text-2xl font-regular flex justify-center mt-10">
-        You have no pending rooms
-    </p>
+        <div>
+            <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+    
+              <div class="text-4xl text-gray-700 md:w-2/3 tracking-wide leading-relaxed">
+                <h1 class="p-20 mt-10">No requests currently.</h1>
+              </div>
+    
+              <div class="mb-10 pb-10 md:w-2/3 ">
+                <img class="h-full" src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg?t=st=1711560880~exp=1711564480~hmac=47c7a05594417c56d738d20ad90f46cba7268ff534874bbe6db1ec00d9ce4edb&w=996" alt="" srcset="">
+              </div>
+    
+            </div>    </p>
 
     {% endif %}
 
 
         </div>
     </div>
+
+
+    </div>
+</div>
+  
 {% endblock %}
         

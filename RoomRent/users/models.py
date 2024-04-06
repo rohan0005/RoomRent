@@ -1,10 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser 
+
 
 # This model stores user additional info like: address and contact number
 class UserAdditionalDetail(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     contact_number = models.CharField(max_length=15,blank=False)
+    has_blocked = models.BooleanField(default=False)
         
     def __str__(self):
         return f"{self.user.username}'s Details"
