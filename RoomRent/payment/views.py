@@ -30,7 +30,7 @@ def initkhalti(request):
 
     payload = json.dumps({
         "return_url": return_url,
-        "website_url": "http://127.0.0.1:9000",
+        "website_url": "http://127.0.0.1:9900",
         "amount": amount,
         "purchase_order_id": purchase_order_id,
         "purchase_order_name": "test",
@@ -102,7 +102,10 @@ def verifyKhalti(request):
                              billedDate)
                 if "days" in late.split(',')[0].strip() or "day" in late.split(',')[0].strip():
                     lateDay = late.split(',')[0].strip()  # extracting the first part days
-                    late_Days = int(lateDay[0].strip())
+                    if "-" in lateDay:
+                        late_Days = int(0)
+                    else:
+                        late_Days = int(lateDay[0].strip())
                 else:
                     late_Days = int(0)
                 
