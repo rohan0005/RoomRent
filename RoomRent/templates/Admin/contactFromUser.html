@@ -13,10 +13,14 @@
       </div>
     </div>
 
+    
+    {% if contactUsData %}
+
+      
     <div class="lg:grid lg:grid-cols-3 gap-10 lg:px-3 lg:py-4">
       {% for contactData in contactUsData %}
 
-      <div class="max-w-sm rounded overflow-hidden shadow-lg border h-[290px]">
+      <div class="max-w-sm rounded overflow-hidden shadow-lg border h-[320px]">
         <div class="px-6 lg:py-4">
           <div class="font-bold text-md mb-2 flex justify-between">
             <p>By <span>{{contactData.fullName}}</span></p>
@@ -128,6 +132,23 @@
       </div>
       {% endfor %}
     </div>
+
+    {% else %}
+
+    <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+
+      <div class="lg:text-4xl text-2xl text-gray-700 md:w-2/3 tracking-wide leading-relaxed">
+        <h1 class="p-20 mt-10">No Messages Yet.</h1>
+      </div>
+
+      <div class="mb-10 pb-10 md:w-2/3 ">
+        <img class="h-full" src="{% static 'images\static images\staticPageImages\nodata.jpg' %}" alt="" srcset="">
+      </div>
+
+    </div>    
+
+          
+    {% endif %}
   </div>
 </div>
 {% endblock %}

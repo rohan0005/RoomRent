@@ -307,6 +307,44 @@
                                                 <textarea name="feedback" value="" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Give review and feedback for this room"></textarea>                    
                                             </div>
 
+                                            <input type="hidden" name="rating" id="ratingInput" value="">
+
+                                            <!-- Rating -->
+                                            <div class="flex flex-row-reverse justify-end items-center  pb-7">
+                                                <input id="hs-ratings-readonly-1" type="radio" class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0" name="hs-ratings-readonly" value="5">
+                                                <label for="hs-ratings-readonly-1" class="peer-checked:text-yellow-400 text-gray-300 pointer-events-none dark:peer-checked:text-yellow-600 dark:text-gray-600">
+                                                <svg class="flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                </svg>
+                                                </label>
+                                                <input id="hs-ratings-readonly-2" type="radio" class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0" name="hs-ratings-readonly" value="4">
+                                                <label for="hs-ratings-readonly-2" class="peer-checked:text-yellow-400 text-gray-300 pointer-events-none dark:peer-checked:text-yellow-600 dark:text-gray-600">
+                                                <svg class="flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                </svg>
+                                                </label>
+                                                <input id="hs-ratings-readonly-3" type="radio" class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0" name="hs-ratings-readonly" value="3">
+                                                <label for="hs-ratings-readonly-3" class="peer-checked:text-yellow-400 text-gray-300 pointer-events-none dark:peer-checked:text-yellow-600 dark:text-gray-600">
+                                                <svg class="flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                </svg>
+                                                </label>
+                                                <input id="hs-ratings-readonly-4" type="radio" class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0" name="hs-ratings-readonly" value="2">
+                                                <label for="hs-ratings-readonly-4" class="peer-checked:text-yellow-400 text-gray-300 pointer-events-none dark:peer-checked:text-yellow-600 dark:text-gray-600">
+                                                <svg class="flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                </svg>
+                                                </label>
+                                                <input id="hs-ratings-readonly-5" type="radio" class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0" name="hs-ratings-readonly" value="1">
+                                                <label for="hs-ratings-readonly-5" class="peer-checked:text-yellow-400 text-gray-300 pointer-events-none dark:peer-checked:text-yellow-600 dark:text-gray-600">
+                                                <svg class="flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                                </svg>
+                                                </label>
+                                                <p class="font-bold pr-3">Give Ratings: </p>
+                                            </div>
+                                            <!-- End Rating -->
+
                                         {% elif request.user|has_group:"owner" and hasNotMoveOutDate == False and bookedRoomInfo %}
                                         <div>
                                             <h3 class="mb-3 text-lg font-normal text-gray-700">Before removing the tenant return the deposit.</h3>
@@ -709,7 +747,44 @@
             {% endfor %}
 
             {% else %}
-            <!--SHOWING FEEDBACKS FOR THIS ROOM-->
+            {% comment %} {% if feedbacks %}
+            
+            <div class="flex flex-wrap justify-center mt-10">
+            {% for feedback in feedbacks %}
+                <!-- card 1 -->
+                <div class="p-4 max-w-sm">
+                    <div class="flex rounded-lg h-full dark:bg-gray-800 bg-teal-400 p-8 flex-col">
+                        <div class="flex items-center mb-3">
+                            <div
+                                class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full dark:bg-indigo-500 bg-indigo-500 text-white flex-shrink-0">
+                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                </svg>
+                            </div>
+                            <h2 class="text-white dark:text-white text-lg font-medium">Feature 1</h2>
+                        </div>
+                        <div class="flex flex-col justify-between flex-grow">
+                            <p class="leading-relaxed text-base text-white dark:text-gray-300">
+                                Blue bottle crucifix vinyl post-ironic four dollar toast vegan taxidermy. Gastropub indxgo juice poutine.
+                            </p>
+                            <a href="#" class="mt-3 text-black dark:text-white hover:text-blue-600 inline-flex items-center">Learn More
+                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
+                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                       {% endfor %}
+            </div>
+
+ 
+            {% endif %} {% endcomment %}
+
+
+             <!--SHOWING FEEDBACKS FOR THIS ROOM-->
             <div class="p-2  border border-3 shadow  mt-16 ml-4 pb-7">
                 <!-- Heading -->
                 <div class="ml-4 p-3">
@@ -724,46 +799,70 @@
                 
                 {% if feedbacks %}
                 
-                {% for feedback in feedbacks %}
-                    
+              
                     <div class="md:grid md:grid-cols-3 px-5 gap-4">
+                        {% for feedback in feedbacks %}
+                    
                         <div class="max-w-lg mx-auto border px-6 py-4 rounded-lg ">
                             <div class="flex items-center mb-6">
-                                <img src="{{feedback.user.userprofilepicture.image.url}}" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
-                               <div>
-                                    <div class="text-lg font-medium text-gray-800">{{feedback.user}}</div>
+                                <img class="h-20 w-20" src="{{feedback.user.userprofilepicture.image.url}}" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
+                               <div class="pl-4">
+                                    <div class="text-lg font-medium text-gray-800 py-1">{{feedback.user}}</div>
+                                    <p class="text-sm font-bold">{{feedback.feedbackDate|date}}</p>
                                      <!--<div class="text-gray-500">2 hours ago</div>-->
                                 </div>
                             </div>
+
+                            
+                            {% if feedback.rating %}
+                                <div class="pb-2"><!-- Rating -->
+                                    <div class="flex items-center">
+                                      <svg class="flex-shrink-0 size-5 
+                                      {% if feedback.rating == 1 or feedback.rating == 2 or feedback.rating == 3 or feedback.rating == 4 or feedback.rating == 5 %}
+                                        text-yellow-400
+                                        {% else %}    
+                                        text-gray-300  
+                                        {% endif %} " xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                      </svg>
+                                      <svg class="flex-shrink-0 size-5 
+                                      {% if feedback.rating == 2 or feedback.rating == 3 or feedback.rating == 4 or feedback.rating == 5 %}
+                                         text-yellow-400 {% else %}  text-gray-300      
+                                         {% endif %}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                      </svg>
+                                      <svg class="flex-shrink-0 size-5 {% if feedback.rating == 3 or feedback.rating == 4 or feedback.rating == 5 %}
+                                      text-yellow-400 {% else %}  text-gray-300      
+                                      {% endif %}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                      </svg>
+                                      <svg class="flex-shrink-0 size-5 {% if feedback.rating == 4 or feedback.rating == 5 %}
+                                      text-yellow-400 {% else %}  text-gray-300      
+                                      {% endif %} " xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                      </svg>
+                                      <svg class="flex-shrink-0 size-5{% if feedback.rating == 5 %}
+                                      text-yellow-400 {% else %}  text-gray-300      
+                                      {% endif %} " xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
+                                      </svg>
+                                    </div>
+                                    <!-- End Rating --></div>
+                            {% endif %}
+
                             <p class="text-lg leading-relaxed mb-6">{{feedback.feedback}}</p>
                             
-                        </div>
+                        </div> 
+                        {% endfor %}
                     </div>
-                {% endfor %}
+               
 
                 {% else %}
 
                 <h1 class="pl-6">No Feedbacks for in this room.</h1>
                     
                 {% endif %}
-
-                    
-                
-
-                
-
-
-
-
-
-
-
-
-
-            </div>
-
-
-
+            </div> 
             {% endif %}
 
         </div> <!-- CONTENTS END-->

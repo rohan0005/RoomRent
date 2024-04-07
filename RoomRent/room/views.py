@@ -327,6 +327,7 @@ def room(request):
     }
     return render(request, 'Rooms/exploreRoom.html', context)
 
+@login_required
 def roomMoreDetails(request, room_id):
     
     currentUser = request.user # get the current user
@@ -363,7 +364,15 @@ def roomMoreDetails(request, room_id):
                 userFeedback = request.POST.get("feedback")
                 
                 feedback = request.POST.get("feedback")
-                roomDetail.roomfeedbacks_set.create(user=currentUser,feedback=feedback) # save feedback after tenant submit moveout
+                rating = request.POST.get("hs-ratings-readonly")
+                if feedback == "" and rating == None:
+                    pass
+                elif feedback != "" and rating == None:
+                    roomDetail.roomfeedbacks_set.create(user=currentUser,feedback=feedback) # save feedback after tenant submit moveout
+                elif feedback == "" and rating != None:
+                    roomDetail.roomfeedbacks_set.create(user=currentUser,rating=rating) # save rating after tenant submit moveout
+                elif feedback != "" and rating != None:
+                    roomDetail.roomfeedbacks_set.create(user=currentUser,rating=rating, feedback= feedback) # save rating and feedback after tenant submit moveout
                 BookedRoomDetails.save()
                 sweetify.success(request, "Moveout informed")
                 return redirect("roomMoreDetails", room_id = room_id)

@@ -120,8 +120,14 @@ def SigninUser(request):
         
         # Checking if user exist or not
         if user is not None:
-            if user.useradditionaldetail.has_blocked == True: # if user is blocked then dont give access to signin
+            if user.is_superuser:
+                login(request, user)
+                sweetify.success(request, 'Successfully Signed In')
+                return redirect('adminDashboard')
+                
+            elif user.useradditionaldetail.has_blocked == True: # if user is blocked then dont give access to signin
                 sweetify.error(request, 'Your account has been blocked. Please contact to admin.')
+                return redirect('index')
             else:
                 login(request, user)
                 sweetify.success(request, 'Successfully Signed In')

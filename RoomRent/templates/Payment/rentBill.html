@@ -12,7 +12,7 @@
     <div class="bg-white h-screen pb-[100px] lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
       <!--HEADING-->
       <div class="">
-        <div class="flex justify-between pr-3 {% if request.user|has_group:"owner"%} bg-[#EF6262] {% else %} bg-[#0AD674] {% endif %}text-white">
+        <div class="flex justify-between pr-3 {% if request.user|has_group:"owner"%} bg-[#EF6262] {% else %} bg-[#0ea5e9] {% endif %}text-white">
         <div>
           <h1 class="font-semibold text-[17px] md:text-3xl p-6">
             {% if request.user|has_group:"owner" %} Rent that needs to be collect
@@ -619,7 +619,7 @@
           </div>
 
           <div class="mb-10 pb-10">
-            <img class="h-full" src="https://img.freepik.com/free-vector/businessman-holding-pencil-big-complete-checklist-with-tick-marks_1150-35019.jpg?t=st=1711554381~exp=1711557981~hmac=ba25f2f0b574ba967e168929d0ef6802184c99d7639daca24701da34ce39efd6&w=996" alt="" srcset="">
+            <img class="h-full" src="{% static 'images\static images\staticPageImages\Checklist.jpg' %}" alt="" srcset="">
           </div>
 
         </div>

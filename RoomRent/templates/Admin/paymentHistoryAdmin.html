@@ -147,7 +147,18 @@
                             
                             </table>
                             {% else %}
-                            <h1>NO PENDING REFUNDS Found !!</h1>
+                            <div>
+                                <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+
+                                    <div class="lg:text-4xl text-2xl text-gray-700 md:w-2/3 tracking-wide 	">
+                                    <h1 class="p-20 mt-10 leading-loose">No Pendind Refunds Found.</h1>
+                                    </div>
+
+                                    <div class="mb-10 pb-10 md:w-2/3 ">
+                                    <img class="h-full" src="{% static 'images\static images\staticPageImages\payment.svg' %}" alt="" srcset="">
+                                    </div>
+
+                                </div>   
                             {% endif %}
                             <!--IF UPDATED-->
 
@@ -235,7 +246,18 @@
                             
                             </table>
                             {% else %}
-                            <h1>NO COMPLETED REFUNDS Found !!</h1>
+                            <div>
+                                <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
+
+                                    <div class="lg:text-4xl text-2xl text-gray-700 md:w-2/3 tracking-wide 	">
+                                    <h1 class="p-20 mt-10 leading-loose">No Completed Refunds Found.</h1>
+                                    </div>
+
+                                    <div class="mb-10 pb-10 md:w-2/3 ">
+                                    <img class="h-full" src="{% static 'images\static images\staticPageImages\payment.svg' %}" alt="" srcset="">
+                                    </div>
+
+                                </div>   
                             {% endif %}
 
 

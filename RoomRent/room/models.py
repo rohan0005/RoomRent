@@ -32,7 +32,8 @@ class RoomFeedbacks(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     feedback = models.TextField(blank=True)
-    
+    feedbackDate = models.DateTimeField(default=timezone.now)
+    rating = models.IntegerField(blank=True, null=True)  # New field for rating
 
 
 # Model to store Room Images

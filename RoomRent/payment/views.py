@@ -95,7 +95,6 @@ def verifyKhalti(request):
                 room_bill = get_object_or_404(RoomBilling, bookedRoom=booked_room)
                 
                 billedDate = booked_room.rentBilledDate.date()
-                print("billedDate:", billedDate)
                 
                 # CALCULATE THE LATE PAYMENt
                 late =  str(ini_time_for_now - \
@@ -161,8 +160,8 @@ def verifyKhalti(request):
                         room_bill.electricityAmount = 0
                         room_bill.totalRoomRentAmount= 0
                         room_bill.save()
-                        
-                        return render(request, "Payment/verify.html")
+                        sweetify.success(request, "Payment completed successfully",  timer= 8000)
+                        return redirect('billing')
 
                 except Exception as e:
                     print("An error occurred:", e)
