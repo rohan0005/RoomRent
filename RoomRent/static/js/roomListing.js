@@ -3,7 +3,10 @@
         var ruleValue = ruleInput.value.trim();
 
         if (ruleValue === "") {
-            alert("Rule cannot be empty");
+            Swal.fire({
+                title: "Rules cannot be empty!",
+                icon: "warning"
+              });
             return;
         }
 
@@ -40,7 +43,10 @@
         var ruleValue = ruleInput.value.trim();
 
         if (ruleValue === "") {
-            alert("Rule cannot be empty");
+            Swal.fire({
+                title: "Rules cannot be empty!",
+                icon: "warning"
+              });
             return;
         }
 
@@ -58,6 +64,35 @@
         ruleCounter++; // Increment the rule counter
     }
 
-    // Remaining code remains the same
+
+    function validateForm() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        var isChecked = false;
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                isChecked = true;
+            }
+        });
+        if (!isChecked) {
+            Swal.fire({
+                title: "Plsease Select at least one amenities!",
+                icon: "warning"
+              });
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
 
 
+document.getElementById('roomImage').addEventListener('change', function() {
+    var files = this.files;
+    if (files.length < 3) {
+        Swal.fire({
+            title: "Please upload at least 3 images.",
+            icon: "warning"
+            });
+        document.getElementById('submitButton').setAttribute('disabled', 'disabled');
+    } else {
+        document.getElementById('submitButton').removeAttribute('disabled');
+    }
+});

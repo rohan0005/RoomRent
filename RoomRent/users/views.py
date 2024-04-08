@@ -349,11 +349,14 @@ def editProfile(request):
             sweetify.success(request, 'Profile Updated')           
         
         if "saveImage" in request.POST:
-            # Saving user New profile
-            user_profile = UserProfilePicture.objects.get(user=user)
-            user_profile.image = request.FILES['img']
-            user_profile.save()
-            sweetify.success(request, 'Profile Picture Updated')
+            if request.FILES:
+                # Saving user New profile
+                user_profile = UserProfilePicture.objects.get(user=user)
+                user_profile.image = request.FILES['img']
+                user_profile.save()
+                sweetify.success(request, 'Profile Picture Updated')
+            else:
+                sweetify.info(request, 'No image selected')
         
         if "deleteImage" in request.POST:
             user_profile = UserProfilePicture.objects.get(user=user)
