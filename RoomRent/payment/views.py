@@ -30,7 +30,7 @@ def initkhalti(request):
 
     payload = json.dumps({
         "return_url": return_url,
-        "website_url": "http://127.0.0.1:9900",
+        "website_url": "http://127.0.0.1:9990",
         "amount": amount,
         "purchase_order_id": purchase_order_id,
         "purchase_order_name": "test",
@@ -296,6 +296,8 @@ def billing(request):
     
     return render(request, "Payment/rentBill.html", context)
 
+@login_required(login_url='signin')
+@user_passes_test(is_tenant_or_owner)
 def paymentHistory(request):
     allOwnerPaymentHistory = []
     roomUploadedByOwner = Room.objects.filter(user=request.user)
@@ -318,6 +320,7 @@ def paymentHistory(request):
     
     return render(request, "Payment/paymentHistory.html", context)
 
+@user_passes_test(is_superuser)
 def paymentHistoryAdminView(request):
     step = None
     if request.method == "POST":

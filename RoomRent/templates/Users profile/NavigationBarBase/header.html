@@ -21,6 +21,9 @@
   <!-- Navigation section -->
   <nav class="bg-white  fixed w-full z-40 top-0 start-0 border-b border-gray-200 shadow">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-6 px-14">
+        {% if request.path == "/room" or '/room/details/' in request.path or request.path == '/home' or request.path == '/home/' or request.path == '/contactus' %}
+        
+        {% else %}
         <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
             type="button"
             class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
@@ -32,7 +35,7 @@
                 </path>
             </svg>
         </button>
-
+        {% endif %}
         <a href="{% url 'index' %}" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="/images/static images/logo/roomrentlogo.svg" class="h-8" alt="" />
         </a>
@@ -135,36 +138,66 @@
                 class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white ">
                 <li>
                     <a href="{% url 'index' %}"
-                        class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 "
+                        class="block py-2 px-3 md:bg-transparent  md:p-0 md:pb-1 md:border-[#1c3988] mx-1.5 sm:mx-6 
+                        {% if request.path == '/home' or request.path == '/home/' %}
+                        text-white bg-[#1c3988] 
+                        md:text-[#1c3988] md:border-b-2
+                        {% else %}md:hover:text-[#1c3988] hover:border-b-2 md:hover:bg-transparent hover:bg-gray-200  md:text-gray-900 {% endif %}
+                        "
                         aria-current="page">Home</a>
                 </li>
                 <li class="lg:pl-20">
                     <a href="{% url 'room' %}"
-                        class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 ">Rooms</a>
+                        class="block py-2 px-3 md:hover:bg-transparent  md:border-[#1c3988] md:bg-transparent  md:p-0 md:pb-1
+                        {% if request.path == '/room' %}
+                        text-white bg-[#1c3988] 
+                        md:text-[#1c3988] md:border-b-2
+                        {% else %} hover:bg-gray-200 md:hover:bg-transparent md:text-gray-900  hover:border-b-2{% endif %}
+                        ">Rooms</a>
                 </li>
                 
                 <li class="lg:pl-20">
                     <a href="{% url 'contact' %}"
-                        class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Contact</a>
+                        class="block py-2 px-3 md:hover:bg-transparent md:border-[#1c3988] md:bg-transparent  md:p-0 md:pb-1
+                        {% if request.path == '/contactus' %}
+                        text-white bg-[#1c3988] 
+                        md:text-[#1c3988] md:border-b-2
+                        {% else %} hover:bg-gray-200 md:hover:bg-transparent md:text-gray-900  hover:border-b-2{% endif %}">Contact</a>
                 </li>
 
                 <li class="lg:pl-20">
                     {% if request.user|has_group:'owner' %}
                         <a href="{% url 'dashboard' %}"
-                        class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Dashboard</a>
+                        class="block py-2 px-3 md:hover:bg-transparent md:border-[#1c3988] md:bg-transparent  md:p-0 md:pb-1
+                        {% if request.path != '/home' and request.path != '/home/' and request.path != '/room' and request.path != '/contactus' %}
+                        text-white bg-[#1c3988] 
+                        md:text-[#1c3988] md:border-b-2
+                        {% else %} hover:bg-gray-200 md:hover:bg-transparent md:text-gray-900  hover:border-b-2{% endif %}">Dashboard</a>
                 
                     {% elif request.user|has_group:'tenant' %}
 
                         <a href="{% url 'myRoom' %}"
-                            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Dashboard</a>
+                            class="block py-2 px-3 md:hover:bg-transparent md:border-[#1c3988] md:bg-transparent  md:p-0 md:pb-1
+                            {% if request.path != '/home' and request.path != '/home/' and request.path != '/room' and request.path != '/contactus' %}
+                            text-white bg-[#1c3988] 
+                            md:text-[#1c3988] md:border-b-2
+                            {% else %} hover:bg-gray-200 md:hover:bg-transparent md:text-gray-900  hover:border-b-2{% endif %}">Dashboard</a>
                     
                     {% elif request.user.is_superuser %}
 
                     <a href="{% url 'adminDashboard' %}"
-                        class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Dashboard</a>
+                        class="block py-2 px-3 md:hover:bg-transparent md:border-[#1c3988] md:bg-transparent  md:p-0 md:pb-1
+                        {% if request.path != '/home' and request.path != '/home/' and request.path != '/room' and request.path != '/contactus' %}
+                        text-white bg-[#1c3988] 
+                        md:text-[#1c3988] md:border-b-2
+                        {% else %} hover:bg-gray-200 md:hover:bg-transparent md:text-gray-900  hover:border-b-2{% endif %}">Dashboard</a>
                     {% else %}
                     <a href="{% url 'Dashboard' %}"
-                        class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Dashboard</a>
+                        class="block py-2 px-3 md:hover:bg-transparent md:border-[#1c3988] md:bg-transparent  md:p-0 md:pb-1
+                        {% if request.path != '/home' and request.path != '/home/' and request.path != '/room' and request.path != '/contactus' %}
+                        text-white bg-[#1c3988] 
+                        md:text-[#1c3988] md:border-b-2
+                        {% else %} hover:bg-gray-200 md:hover:bg-transparent md:text-gray-900  hover:border-b-2{% endif %}">Dashboard</a>
                     {% endif %}
                     
                 </li>
@@ -187,7 +220,12 @@
 <aside id="logo-sidebar"
 class="fixed mt-24 left-0 z-40 w-56 h-screen pt-2 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0"
 aria-label="Sidebar">
-<h1 class="text-2xl text-center font-semibold pt-4 pb-4">Dashboard</h1>
+
+{% if request.user|has_group:"owner" %}
+<h1 class="text-2xl text-center font-semibold pt-4 pb-4 text-[#4f46e5] underline"><a href="{% url 'dashboard' %}">Dashboard</a></h1>
+{% else %}
+<h1 class="text-2xl text-center font-semibold pt-4 pb-4 text-[#4f46e5]">Dashboard</h1>    
+{% endif %}
 <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
     <form action="" method="post">
     {% csrf_token %}
@@ -197,7 +235,7 @@ aria-label="Sidebar">
         {% if request.user|has_group:"tenant" %}
 
         <li>
-            <a href="{% url 'myRoom' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            <a href="{% url 'myRoom' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group {% if request.path == '/myRoom' %} bg-gray-200 {% else %} hover:bg-gray-100   {% endif %}">
                 <svg class="size-[25px]" width="64px" height="64px" viewBox="0 0 24 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <g id="SVGRepo_bgCarrier" stroke-width="0">
@@ -228,7 +266,7 @@ aria-label="Sidebar">
         <!-- IF USER is Owner-->
         {% else %}
         <li>
-            <a href="{% url 'myRoom' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            <a href="{% url 'myRoom' %}" class="flex items-center p-2 text-gray-900 rounded-lg  group {% if request.path == '/myRoom' %} bg-gray-200 {% else %} hover:bg-gray-100   {% endif %}">
                 <svg class="size-[25px]" width="64px" height="64px" viewBox="0 0 24 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <g id="SVGRepo_bgCarrier" stroke-width="0">
@@ -257,7 +295,7 @@ aria-label="Sidebar">
         </li>
 
         <li>
-            <a href="{% url 'listing' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            <a href="{% url 'listing' %}" class="flex items-center p-2 text-gray-900 rounded-lg {% if request.path == '/listing' %} bg-gray-200 {% else %} hover:bg-gray-100   {% endif %}">
                 <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> 
                     <path d="M12.75 9C12.75 8.58579 12.4142 8.25 12 8.25C11.5858 8.25 11.25 8.58579 11.25 9L11.25 11.25H9C8.58579 11.25 8.25 11.5858 8.25 12C8.25 12.4142 8.58579 12.75 9 12.75H11.25V15C11.25 15.4142 11.5858 15.75 12 15.75C12.4142 15.75 12.75 15.4142 12.75 15L12.75 
                     12.75H15C15.4142 12.75 15.75 12.4142 15.75 12C15.75 11.5858 15.4142 11.25 15 11.25H12.75V9Z" fill="#000000"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.25C6.06294 1.25 1.25 6.06294 1.25 12C1.25 17.9371 6.06294 22.75 12 22.75C17.9371 22.75 22.75 
@@ -267,7 +305,7 @@ aria-label="Sidebar">
         </li>
 
         <li>
-            <a href="{% url 'viewBooking' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            <a href="{% url 'viewBooking' %}" class="flex items-center p-2 text-gray-900 rounded-lg {% if request.path == '/dashboard/viewBooking' %} bg-gray-200 {% else %} hover:bg-gray-100   {% endif %} group">
                 <svg class="size-[25px]" width="64px" height="64px" viewBox="0 0 24 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <g id="SVGRepo_bgCarrier" stroke-width="0">
@@ -299,7 +337,7 @@ aria-label="Sidebar">
 
 
         <li>
-            <a href="{% url 'billing' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            <a href="{% url 'billing' %}" class="flex items-center p-2 text-gray-900 rounded-lg {% if request.path == '/billing' %} bg-gray-200 {% else %} hover:bg-gray-100   {% endif %} group">
                 <svg class="size-[25px]" fill="#77787e" version="1.1" id="earth"
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64px"
                     height="64px" viewBox="0 0 256 216" enable-background="new 0 0 256 216" xml:space="preserve"
@@ -317,7 +355,7 @@ aria-label="Sidebar">
         </li>
 
         <li>
-            <a href="{% url 'paymentHistory' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            <a href="{% url 'paymentHistory' %}" class="flex items-center p-2 text-gray-900 rounded-lg {% if request.path == '/paymentHistory' %} bg-gray-200 {% else %} hover:bg-gray-100   {% endif %}">
                 <svg class="size-[25px]" width="64px" height="64px" viewBox="0 0 48.00 48.00"
                     xmlns="http://www.w3.org/2000/svg" fill="#77787e" stroke="#77787e"
                     stroke-width="0.00048000000000000007">
@@ -350,7 +388,7 @@ aria-label="Sidebar">
 
         <!-- Edit Profile -->
         <li>
-            <a href="{% url 'editProfile' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            <a href="{% url 'editProfile' %}" class="flex items-center p-2 text-gray-900 rounded-lg {% if request.path == '/dashboard/editProfile' %} bg-gray-200 {% else %} hover:bg-gray-100   {% endif %} group">
                 <svg class="size-[25px]" width="64px" height="64px" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg" fill="#000000">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -378,7 +416,7 @@ aria-label="Sidebar">
         
         <!-- Change Password -->
         <li>
-            <a href="{% url 'changePassword' %}"  href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+            <a href="{% url 'changePassword' %}"  href="#" class="flex items-center p-2 text-gray-900 rounded-lg {% if request.path == '/dashboard/changePassword' %} bg-gray-200 {% else %} hover:bg-gray-100   {% endif %} group">
                 <svg class="size-[25px]" fill="#77787e" height="64px" width="64px" version="1.1" id="Icon"
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                     viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">

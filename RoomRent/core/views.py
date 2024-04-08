@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import *
 import sweetify
+from django.contrib.auth.decorators import login_required, user_passes_test
+from userManagement.checkUserGroup import *
 
 # Create your views here.
 def index(request):
@@ -20,6 +22,7 @@ def contact(request):
         sweetify.success(request, 'Thank you for you feedback. We will reach out to you soon', timer= 6000)
     return render(request, 'Landing page/contactUs.html')
 
+@user_passes_test(is_superuser)
 def contactFromUser(request):
     if request.method == 'POST' and "markAsRead" in request.POST:
         id = request.POST.get('ContactID')

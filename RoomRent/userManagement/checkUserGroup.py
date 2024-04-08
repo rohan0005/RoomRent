@@ -6,6 +6,11 @@ def is_tenant(user):
 def is_owner(user):
     return user.groups.filter(name='owner').exists()
 
+# return superuser
+def is_superuser(user):
+    return user.is_superuser
+
+
 # Check if user is tenant or owner
 def is_tenant_or_owner(user):
     return user.is_authenticated and user.groups.filter(name='tenant').exists() or user.groups.filter(name='owner').exists()

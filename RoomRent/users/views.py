@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash # for authentication
 from django.contrib import messages
 from .models import *
-from room.models import Room
+from room.models import Room, BookRoom
 from .forms import *
 from django.db import transaction
 from django.contrib.auth.models import Group, User
@@ -222,8 +222,20 @@ def pendingRequests(request):
 # Tenant dashboard management
 @login_required(login_url='signin')
 @user_passes_test(is_owner)
-def dashboard(request):    
-    return render(request, 'Users profile/dashboard.html')
+def dashboard(request): 
+    totalRooms = Room.objects.filter(user=request.user, approved=True).count()
+    pendingRooms = Room.objects.filter(user=request.user, approved=False).count()
+    pendingBookings = BookRoom.objects.filter(room__user=request.user, room__approved=True, joined=False).count()
+    print("PENDINGBOOKING", pendingBookings )
+    print("pendingRooms", pendingRooms)
+    
+    context = {
+        "totalRooms" : totalRooms,
+        "pendingRooms" : pendingRooms,
+        "pendingBookings" : pendingBookings,
+    }
+    
+    return render(request, 'Users profile/dashboard.html', context)
 
 @login_required(login_url='signin')
 @user_passes_test(is_superuser)

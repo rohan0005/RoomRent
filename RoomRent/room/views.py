@@ -232,6 +232,7 @@ def pendingRooms(request):
 
 # owner can views their rooms here 
 @login_required(login_url='signin')
+@user_passes_test(is_tenant_or_owner)
 def myRoom(request):
     step = None
     currentUser = request.user

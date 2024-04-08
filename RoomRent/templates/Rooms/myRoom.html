@@ -36,7 +36,7 @@
                     {% csrf_token %}
                     <div class="sub-heading flex p-3 gap-3 gap">
                     <div>
-                        <button type="submit" name="myroom" class=" p-2 px-4 border text-[#39c9a7] 
+                        <button type="submit" name="myroom" class=" p-2 px-4 border
                         bg-[#54b4d3]
                         text-white
                         ">My Room</button>
@@ -46,7 +46,7 @@
                         <button type="submit" name="bookinglog" class=" relative 
                         bg-[#e4a11b]
                         text-white
-                        p-2 px-4 text-[#e4a11b]">Booking Logs 
+                        p-2 px-4 ">Booking Logs 
                     
                   
                     </button>
@@ -257,8 +257,10 @@
 
 
                 {% if bookingLog %}
+
+                <h1 class="p-2 text-3xl font-bold">Booking Logs</h1>
                 <!--BOOKING LOGS DETAILS-->
-                <table class="w-full md:text-md text-sm bg-white shadow-md rounded mb-4 mx-10">
+                <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4 ">
                     <tbody>
                       <tr class="border-b bg-gray-200">
                         <th class="text-left p-3 px-5">Room Title</th>
