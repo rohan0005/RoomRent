@@ -331,6 +331,60 @@ def room(request):
 @login_required
 def roomMoreDetails(request, room_id):
     
+    if request.method == 'POST':
+        if "updateUtility" in request.POST:
+            roomInstance = Room.objects.get(pk=room_id)
+            newElectricity = request.POST.get("editElectricity")
+            editWater = request.POST.get("editWater")
+            editTrash = request.POST.get("editTrash")
+            
+            roomInstance.electricity = newElectricity
+            roomInstance.water = editWater
+            roomInstance.trash = editTrash
+            roomInstance.save()
+            
+            sweetify.success(request, "Utility update!")
+            return redirect("roomMoreDetails", room_id = room_id)
+    
+        elif "newAmenities" in request.POST:
+                    new_amenity = request.POST.get("newAmenitiesName").capitalize()
+                    roomInstance = Room.objects.get(pk=room_id)
+                    amenities_list = eval(roomInstance.amenities) if roomInstance.amenities else [] # Convert the amenities string to a list
+                    amenities_list.append(new_amenity)  # Append the new amenity to the existing list of amenities
+                    roomInstance.amenities = str(amenities_list) # save as astring in the database
+                    roomInstance.save()
+                    sweetify.success(request, "New Amenity Added!")
+                    return redirect("roomMoreDetails", room_id=room_id)
+                
+        elif "deleteAmenities" in request.POST:
+            room_instance = get_object_or_404(Room, pk=room_id)
+            amenityDelete = request.POST.get('amenity_to_delete')
+            
+            # Convert the amenities string to a list
+            room_instance.amenities = eval(room_instance.amenities)
+
+            if amenityDelete in room_instance.amenities:
+                room_instance.amenities.remove(amenityDelete)
+                # Convert the amenities list back to a string
+                room_instance.amenities = str(room_instance.amenities)
+                room_instance.save()
+                sweetify.success(request, "Amenity Deleted!")
+                return redirect("roomMoreDetails", room_id=room_id)
+            
+        elif "addNewRules" in request.POST:
+            room_instance = get_object_or_404(Room, pk=room_id)
+            room_instance.rules = []  # Remove all existing rules by assigning an empty list
+            room_instance.save()
+            
+            rules_string = request.POST.get('rules')
+            print("rules_stringrules_stringrules_string", rules_string)
+            # Split the rules string into individual rules and append them to the list
+            newRules = rules_string.split(", ")
+            room_instance.rules = newRules
+            room_instance.save()
+            sweetify.success(request, "New Rules added!")
+            return redirect("roomMoreDetails", room_id=room_id)
+    
     currentUser = request.user # get the current user
     hasJoinedRoom = BookRoom.objects.filter(user=currentUser, joined=True).exists() # Check if user has already joined room
     hasBookedThisRoom = BookRoom.objects.filter(user=currentUser, room=room_id).exists() # check if user has booked this room 
@@ -352,7 +406,7 @@ def roomMoreDetails(request, room_id):
     amenities = roomDetail.amenities
     
     amenities = [amenities.strip("' ") for amenities in amenities.strip("[]").split("', '")]
-
+    print("amenities", amenities)
     # booking logic
     if request.method == "POST":
         if 'moveout' in request.POST:
