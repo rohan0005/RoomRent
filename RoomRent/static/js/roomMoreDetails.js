@@ -22,3 +22,5 @@ checkbox.addEventListener("change", function() {
         fineReasonInput.removeAttribute("required");
     }
 });
+
+

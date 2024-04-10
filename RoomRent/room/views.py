@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.db.models import Q
 from payment.models import *
 from django.core.mail import send_mail # For sending email notifications
-
+from django.http import Http404
 import sweetify
 
 # Check if user is owner or not
@@ -240,7 +240,7 @@ def myRoom(request):
     allApprovedRooms = Room.objects.filter(user=currentUser, approved=True)
     allRooms = Room.objects.filter(user=currentUser)
     
-    bookingLog = BookingLog.objects.filter(user=currentUser)
+    bookingLog = TenantBookingLog.objects.filter(user=currentUser)
     
     bookedRoomDetails = BookRoom.objects.filter(user=currentUser)
 
@@ -316,6 +316,16 @@ def room(request):
     if rent and not rent == "":
         allApprovedRooms = allApprovedRooms.filter(rent__lte=rent) # Filter rooms where rent is less than or equal to the specified value. lte - comparison filter that stands for -less than or equal to
         print(rent)
+    
+    # Pagination
+    paginator = Paginator(allApprovedRooms, 3)  # Show 3 rooms per page
+    page_number = request.GET.get('page')
+    try:
+        allApprovedRooms = paginator.page(page_number)
+    except PageNotAnInteger:
+        allApprovedRooms = paginator.page(1)
+    except EmptyPage:
+        allApprovedRooms = paginator.page(paginator.num_pages)
 
         
     context = {
@@ -330,6 +340,30 @@ def room(request):
 
 @login_required
 def roomMoreDetails(request, room_id):
+    room_instance = get_object_or_404(Room, pk=room_id)
+
+    # Check if the room is approved by the admin
+    if not room_instance.approved:
+        # If the room is not approved and the user is not the owner or admin then show 404 page
+        if not (request.user.is_superuser or request.user == room_instance.user):
+            raise Http404("Room not found")
+        
+    room_instance = get_object_or_404(Room, pk=room_id)
+
+    # Check if the room is saved by the current user
+    # if request.user.is_authenticated:
+    #     if SavedRoom.objects.filter(user=request.user, room=room_instance).exists():
+
+    # if request.method == 'POST':
+    #     if 'saveRoom' in request.POST:
+    #         if not is_saved:
+    #             SavedRoom.objects.create(user=request.user, room=room_instance)
+    #             sweetify.success(request, "Room saved successfully!")
+    #         else:
+    #             SavedRoom.objects.filter(user=request.user, room=room_instance).delete()
+    #             sweetify.success(request, "Room removed from saved!")
+
+    #         return redirect('roomMoreDetails', room_id=room_id)
     
     if request.method == 'POST':
         if "updateUtility" in request.POST:
@@ -536,7 +570,7 @@ def roomMoreDetails(request, room_id):
 @user_passes_test(is_owner)
 def viewBooking(request):
     currentUser = request.user # Get the current user
-    bookingLog = BookingLog.objects.filter(user=currentUser)
+    bookingLog = TenantBookingLog.objects.filter(user=currentUser)
     step = None
     # Get rooms uploaded by the current user
     roomsUploadedByUser = Room.objects.filter(user=currentUser)
@@ -544,7 +578,7 @@ def viewBooking(request):
     canceledBookingDetails = []
     
     for cancelRoom in roomsUploadedByUser:
-        canceledBooking = CanceledBooking.objects.filter(room=cancelRoom)
+        canceledBooking = OwnerBookingLog.objects.filter(room=cancelRoom)
         canceledBookingDetails.extend(canceledBooking)
     
     # Handle Pending or cancel page
@@ -597,10 +631,10 @@ def viewBooking(request):
                 for allBooking in allBookingMadeByUser:
                     room = allBooking.room
                     date = allBooking.bookingDate
-                    bookinglog = BookingLog.objects.create(user=user, room=room, bookingDate= date)
+                    bookinglog = TenantBookingLog.objects.create(user=user, room=room, bookingDate= date, status = "Cancelled After joining")
                     bookinglog.save() # Save the BookingLog 
                     
-                    canceledBookingDetails = CanceledBooking.objects.create(user=user, room=room, bookingDate= date, canceledDate= timezone.now())
+                    canceledBookingDetails = OwnerBookingLog.objects.create(user=user, room=room, bookingDate= date, canceledDate= timezone.now(),status = "Cancelled After joining")
                     canceledBookingDetails.save() # Save the canceled Bookings
             
             #Remove remaining bookings for the same user and room
@@ -659,8 +693,8 @@ def viewBooking(request):
             bookDate = booking.bookingDate
             bookUser = booking.user
             roomID = booking.room
-            canceledBookingDetails = CanceledBooking.objects.create(user=bookUser, room=roomID, bookingDate= bookDate, canceledDate= timezone.now())
-            bookinglog = BookingLog.objects.create(user=bookUser, room=roomID, bookingDate= bookDate, status='Rejected')
+            canceledBookingDetails = OwnerBookingLog.objects.create(user=bookUser, room=roomID, bookingDate= bookDate, canceledDate= timezone.now(), status='Rejected by Me')
+            bookinglog = TenantBookingLog.objects.create(user=bookUser, room=roomID, bookingDate= bookDate, status='Rejected by owner')
             bookinglog.save()
             canceledBookingDetails.save()
             room.save()

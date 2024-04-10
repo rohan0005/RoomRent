@@ -23,9 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+9mgwhngd#8w_2(t#hq*vb(gp5ssc()cy-e2%gfuf*=%po=o-u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+DEBUG = True  # Set False during deployment
+
+ALLOWED_HOSTS = [] #['yourdomain.com'] / ['*']
 
 LOGIN_URL = 'signin'
 # Application definition

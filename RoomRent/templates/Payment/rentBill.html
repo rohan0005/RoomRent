@@ -12,17 +12,16 @@
     <div class="bg-white h-screen pb-[100px] lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
       <!--HEADING-->
       <div class="">
-        <div class="flex justify-between pr-3 {% if request.user|has_group:"owner"%} bg-[#EF6262] {% else %} bg-[#0ea5e9] {% endif %}text-white">
+        <div class="flex justify-between pr-3 {% if request.user|has_group:'owner'%} bg-[#EF6262] {% else %} bg-[#0ea5e9] {% endif %}text-white">
         <div>
           <h1 class="font-semibold text-[17px] md:text-3xl p-6">
-            {% if request.user|has_group:"owner" %} Rent that needs to be collect
-            with in few days 
+            {% if request.user|has_group:"owner" %} 
                 {% if step == 'updated' %} 
-                (UPDATED)
+                Updated Rent to collect
                 {% elif step == 'paid'%}
                   (PAID)
                 {% else %}
-                (PENDING)
+                Pending Rent to collect
                 {% endif %}
             
             {% else %} Rent that needs to be paid with in few
@@ -46,7 +45,7 @@
             <div>
               <button type="submit" name="updated" class=" relative 
               bg-[#e4a11b]
-              text-white p-2 px-4 text-[#ddb21a] border-[#f58c5c1a] border">Updated 
+              text-white p-2 px-4 text-white border-[#f58c5c1a] border">Updated 
            </button>
 
             </div>
@@ -835,7 +834,7 @@
             </div>
   
             <div class="mb-10 pb-10 md:w-2/3">
-              <img class="h-full" src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg?t=st=1711560880~exp=1711564480~hmac=47c7a05594417c56d738d20ad90f46cba7268ff534874bbe6db1ec00d9ce4edb&w=996" alt="" srcset="">
+              <img class="h-full" src="{% static 'images\static images\staticPageImages\nodata.jpg' %}" alt="" srcset="">
             </div>
   
           </div>

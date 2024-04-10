@@ -219,23 +219,7 @@ def pendingRequests(request):
     
     return render(request, 'Admin/pendingRequests.html', context)
 
-# Tenant dashboard management
-@login_required(login_url='signin')
-@user_passes_test(is_owner)
-def dashboard(request): 
-    totalRooms = Room.objects.filter(user=request.user, approved=True).count()
-    pendingRooms = Room.objects.filter(user=request.user, approved=False).count()
-    pendingBookings = BookRoom.objects.filter(room__user=request.user, room__approved=True, joined=False).count()
-    print("PENDINGBOOKING", pendingBookings )
-    print("pendingRooms", pendingRooms)
-    
-    context = {
-        "totalRooms" : totalRooms,
-        "pendingRooms" : pendingRooms,
-        "pendingBookings" : pendingBookings,
-    }
-    
-    return render(request, 'Users profile/dashboard.html', context)
+
 
 @login_required(login_url='signin')
 @user_passes_test(is_superuser)

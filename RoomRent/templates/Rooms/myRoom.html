@@ -13,14 +13,23 @@
 
             <!-- CONTENTS -->
             <div class="bg-white h-screen  pb-[100px]  lg:mr-3 mt-[92px] md:ml-30 lg:ml-60 bg-white">
-        <div class="bg-[#793FDF] p-5 text-white">
+        <div class="p-5 text-[#0F0F4B]">
           <h1 class="font-semibold text-[17px] md:text-3xl "> 
             {% if request.user.is_authenticated and not request.user.is_superuser and notJoinedAndPending %} 
-             <span class="text-white">Pending approval to join room</span><span> ( {% if step == None or step == 'myroom' %} My Room {% else %} Booking Logs {% endif %} )</span>
+                {% if step == None or step == 'myroom' %} 
+                      <span class="text-black">Pending approval to join room</span>
+                  {% else %}
+                      <span class="text-black">All Booking Logs</span>
+                  {% endif %} 
+          
 
              {% elif bookedRoomDetails or request.user|has_group:"tenant" %}
 
-            My Joined Room
+              {% if step == None or step == 'myroom' %} 
+                My Joined Room
+              {% else %}
+              All Booking Logs
+              {% endif %}
 
              {% elif request.user|has_group:"owner" %}
 
@@ -35,23 +44,23 @@
                 <form action="" method="post">
                     {% csrf_token %}
                     <div class="sub-heading flex p-3 gap-3 gap">
-                    <div>
-                        <button type="submit" name="myroom" class=" p-2 px-4 border
-                        bg-[#54b4d3]
-                        text-white
-                        ">My Room</button>
-                    </div>
+                      <div>
+                          <button type="submit" name="myroom" class=" p-2 px-4 border
+                          bg-[#54b4d3]
+                          text-white
+                          ">My Room</button>
+                      </div>
 
-                    <div>
-                        <button type="submit" name="bookinglog" class=" relative 
-                        bg-[#e4a11b]
-                        text-white
-                        p-2 px-4 ">Booking Logs 
+                      <div>
+                          <button type="submit" name="bookinglog" class=" relative 
+                          bg-[#e4a11b]
+                          text-white
+                          p-2 px-4 ">Booking Logs 
+                      
                     
-                  
-                    </button>
+                      </button>
 
-                    </div>
+                      </div>
 
                     </div>
                 </form>
@@ -74,7 +83,7 @@
                    
 
                     <!--START: BOOKED ROOMS details -->
-                    <div class="p-3 shadow-xl md:w-[350px]">
+                    <div class="p-3 shadow-xl md:w-[350px]  border-[0.5px] shadow-sm">
                         <div id="gallery" class="relative w-full" data-carousel="slide">
                             <!-- Carousel wrapper -->
                             
@@ -143,11 +152,11 @@
                         
                     {% for room in allRooms %}
                     <!--START: LISTING ROOMS-->
-                    <div class="p-3 shadow-xl md:w-[350px]">
+                    <div class="p-3 shadow-xl md:w-[350px]  border-[0.5px] shadow-sm">
                         <div id="gallery" class="relative w-full" data-carousel="slide">
                             <!-- Carousel wrapper -->
                             
-                            <div class="relative h-56 overflow-hidden rounded-lg">
+                            <div class="relative h-56 overflow-hidden rounded-lg ">
                                 <!-- Item 1 -->
                                 {% for img in room.images.all %}
                                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
@@ -258,43 +267,38 @@
 
                 {% if bookingLog %}
 
-                <h1 class="p-2 text-3xl font-bold">Booking Logs</h1>
-                <!--BOOKING LOGS DETAILS-->
-                <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4 ">
-                    <tbody>
-                      <tr class="border-b bg-gray-200">
-                        <th class="text-left p-3 px-5">Room Title</th>
-                        <th class="text-left p-3 px-5">Booked on</th>
-                        <th class="text-left p-3 px-5">Owner</th>
-                        <th class="text-left p-3 px-5">Status</th>
-                      </tr>
-          
-          
-                      {% for room in bookingLog %}
-          
-          
-                      <tr class="border-b hover:bg-gray-100">
-          
-                        <td class="p-3 px-5">
-                          <a class="text-[#0766AD]" href="{% url 'roomMoreDetails' room.room.id  %}">{{room.room.roomTitle }}</p></a>
-                        </td>
-                        <td class="p-3 px-5">
-                          <p>{{room.bookingDate }}</p>
-                        </td>
-                        <td class="p-3 px-5">
-                          <p>{{room.room.user}}</p>
-                        </td>
-                        <td class="p-3 px-5">
-                            <p>{{room.status}}</p>
-                        </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+                <div class="flex flex-col overflow-x-auto pt-10 px-5">
+                  <div class="sm:-mx-6 lg:-mx-8">
+                      <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                          <div class="overflow-x-auto">
+                              <table class="min-w-full text-left text-sm font-light border-2">
+                                  <thead class="border-b font-medium bg-gray-200">
+                                  <tr>
+                                      <th scope="col" class="p-4 w-1/4">Room Title</th>
+                                      <th scope="col" class="p-4 w-1/4">Booked on</th>
+                                      <th scope="col" class="p-4 w-1/4">Owner</th>
+                                      <th scope="col" class="p-4 w-1/4">Status</th>
+                                  </tr>
+                                  </thead>
+                                  {% for room in bookingLog %}
+                                  <tbody>
+                                      <tr class="border-2 ">
+                                        <td class="whitespace-nowrap px-6 py-4"><a class="text-[#0766AD]" href="{% url 'roomMoreDetails' room.room.id  %}">{{room.room.roomTitle }}</p></a></td>
+                                          <td class="whitespace-nowrap px-6 py-4">{{room.bookingDate }}</td>
+                                          <td class="whitespace-nowrap px-6 py-4">{{room.room.user}}</td>
+                                          <td class="whitespace-nowrap px-6 py-4">{{room.status}}</td>
+                                      </tr>
+                                  </tbody>
+                                  {% endfor %} 
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+              </div>  
                   {% endif %}
-                
-            </div>
-                {% endif %}
+                 {% endif %}
+              </div>
+               
             </div>
 
 

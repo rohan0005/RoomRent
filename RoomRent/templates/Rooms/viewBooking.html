@@ -228,6 +228,7 @@
               <th class="text-left p-3 px-5">Booked On</th>
               <th class="text-left p-3 px-5">Canceled On</th>
               <th class="text-left p-3 px-5">Booked By</th>
+              <th class="text-left p-3 px-5">Status</th>
             </tr>
 
 
@@ -247,6 +248,9 @@
               </td>
               <td class="p-3 px-5">
                 <p>{{room.user}}</p>
+              </td>
+              <td class="p-3 px-5">
+                <p>{{room.status}}</p>
               </td>
             </tr>
             {% endfor %}

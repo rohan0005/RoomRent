@@ -208,7 +208,8 @@ def billing(request):
     rentBillForCurrentUser = RoomBilling.objects.filter(bookedRoom=bookedRoomByCurrentUser, status="updated")
     
     # FOR owner
-    today = date.today() #gat the today date
+    today = date.today() #get the today date
+    print("today", today)
     rooms = Room.objects.filter(user=request.user) #Get all the room for current user
     
     for room in rooms: # Getting all the bookedRoom of the current user
@@ -217,9 +218,10 @@ def billing(request):
         if UpdatedRentBillings:
             if UpdatedRentBillings.status == "updated":
                 allUpdatedRentBillings.append(UpdatedRentBillings)
-                                                            
-        booked_rooms = BookRoom.objects.filter(moveInDate__lt=today, room=room, joined=True).first()  # Filter rooms where move-in date is before today OR LESS THAN TODAY
-        
+                                                   
+        booked_rooms = BookRoom.objects.filter(moveInDate__lt = today, room=room, joined=True).first()
+        # Filter rooms where move-in date is before today OR LESS THAN TODAY
+        print("booked_roomsLT", booked_rooms)
         if booked_rooms:
             currentTime = datetime.now().date()
             future_date_after_3days = booked_rooms.rentBilledDate + timedelta(days=3)
@@ -233,6 +235,7 @@ def billing(request):
             roombilling = RoomBilling.objects.filter(bookedRoom=booked_rooms, status="pending").exclude(id=None).first() #get the instance of RoomBilling
             if roombilling and booked_rooms.moveInDate == booked_rooms.rentBilledDate:
                 move_in_date = booked_rooms.rentBilledDate
+                print("move_in_date", move_in_date)
                 try:
                     next_month_date = move_in_date.replace(month=move_in_date.month + 1)
                     booked_rooms.rentBilledDate = next_month_date
@@ -241,6 +244,7 @@ def billing(request):
                     next_month_date = move_in_date.replace(year=move_in_date.year + 1, month = 1)  #change the year if month is january
                     booked_rooms.rentBilledDate = next_month_date
                     booked_rooms.save()
+                return redirect('billing')
                     
     if request.method == 'POST' and 'updatePendingRoom' in request.POST:
         roombillingID = request.POST.get('roomBillingID')  

@@ -28,6 +28,10 @@ class Room(models.Model):
     def __str__(self):
         return f"{self.roomTitle} by {self.user.username}"
 
+class SavedRoom(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
 class RoomFeedbacks(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -58,16 +62,17 @@ class BookRoom(models.Model):
     def __str__(self):
         return f"{self.user}'s booking"
     
-class BookingLog(models.Model):
+class TenantBookingLog(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     bookingDate = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=50, default='Cancelled')
     
 
-class CanceledBooking(models.Model):
+class OwnerBookingLog(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     bookingDate = models.DateTimeField(default=timezone.now)
     canceledDate = models.DateTimeField(default=timezone.now)
+    status = models.CharField(default="Cancelled", max_length=100)
     
