@@ -514,7 +514,7 @@
 
                                 <h1 class="py-3">Late payment fee: <span>Rs. <span>
 
-                                  {% if billedRooms.bookedRoom.rentBilledDate  %}    <!--The with tag is used to create variables in Django templates.-->
+                                  {% if billedRooms.bookedRoom.rentBilledDate  %} 
                                   {{billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since|multiply:50 }}
 
                                   {% endif %}
@@ -546,15 +546,32 @@
                                     <span
                                       >Rs. <span>
                                         
+                                        <!--IF no late which is 0 days -- -->
                                         {% if billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since == "0" %}
                                             {{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}
                                             <input type="hidden" name="amount" value="{{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}" id="amt">
                                         {% else %}
-                                            <input type="hidden" name="lateFee" id="lateFee" value="{{billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since|multiply:50}}">
-                                            <input type="hidden" id="totalRoomRentAmountHidden" name="totalRoomRentAmountHidden" value="{{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}">
-                                            <span id="totalRoomRentAmountShown"></span>
+
+
+                                        <!--IF LATE AND should charge Deposit-->
+                                          {% if billedRooms.hasChargeLatePaymentFee == True %}
+                                          <!-- Hidden input field to store the late value -->
+                                            <input type="hidden" id="lateValue" name="lateValue" value="{{ billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since|multiply:50 }}">
+
+                                            <!-- Display the total room rent amount -->
+                                            <span id="amountWithLateValue">{{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}</span>
+
+                                            <!-- Hidden input field to store the total room rent amount -->
                                             <input type="hidden" name="amount" value="{{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}" id="amt">
-                                        {% endif %}
+
+                                           <!--IF No LATE AND should charge Deposit-->
+                                          {% else %}
+
+                                          {{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}
+                                            <input type="hidden" name="amount" value="{{billedRooms.totalRoomRentAmount|add:billedRooms.bookedRoom.room.rent}}" id="amt">
+
+                                          {% endif %}
+                                          {% endif %}
                                       
                                       </span></span></span>
                                 </h1>
@@ -567,12 +584,27 @@
                                   <span
                                     >Total Amount:
                                     <span
-                                      >Rs. <span>{{billedRooms.totalRoomRentAmount}}</span></span></span>
+                                      >Rs. <span>
+                                        
+                                        {% if billedRooms.hasChargeLatePaymentFee == True %}
+                                         <!-- Hidden input field to store the late value -->
+                                          <input type="hidden" id="lateValue" name="lateValue" value="{{ billedRooms.bookedRoom.rentBilledDate|timesince|extract_days_since|multiply:50 }}">
+
+                                          <!-- Display the total room rent amount -->
+                                          <span id="amountWithLateValue">{{ billedRooms.totalRoomRentAmount }}</span>
+
+                                          <!-- Hidden input field to store the total room rent amount -->
+                                          <input type="hidden" name="amount" value="{{ billedRooms.totalRoomRentAmount }}" id="amt">
+
+                                        {% else %}
+                                            {{billedRooms.totalRoomRentAmount}}
+                                            <input type="hidden" name="amount" value="{{billedRooms.totalRoomRentAmount}}" id="amt">
+                                        {% endif %}
+                                        
+                                      
+                                      </span></span></span>
                                 </h1>
                               </div>
-
-                              <input type="hidden" name="amount" value="{{billedRooms.totalRoomRentAmount}}" id="amt">
-        
         
                               {% endif %}
                               
@@ -585,7 +617,7 @@
                                 />
                                 <input type="hidden" name="purchase_order_id" id="pid" value="{{ request.user }}">
                                 
-                                <input type="hidden" name="return_url" value="http://127.0.0.1:9990/verify">
+                                <input type="hidden" name="return_url" value="http://127.0.0.1:9898/verify">
 
                                 <button
                                   data-modal-hide="medium-modal-{{ billedRooms.id }}"
@@ -851,7 +883,6 @@
     var lateFee = parseFloat(document.getElementById("lateFee").value);
     var totalRoomRentAmountHidden = parseFloat(document.getElementById("totalRoomRentAmountHidden").value);
 
-    // Calculateing the total room rent amount
     var totalRoomRentAmount = lateFee + totalRoomRentAmountHidden;
   
     // Displaying the total room rent amount
@@ -861,5 +892,16 @@
     document.getElementById("amt").value = totalRoomRentAmount;
   });</script>
   <script src="{% static 'js/rentBillCalculation.js' %}" type="text/javascript"></script>
+  <script>
+    var lateValue = parseInt(document.getElementById('lateValue').value);
+    console.log(lateValue);
+    var totalRoomRentAmount = parseInt(document.getElementById('amountWithLateValue').textContent);
+
+    var totalAmountWithLateValue = totalRoomRentAmount + lateValue;
+    // Update the value of the hidden input field for amount
+    document.getElementById('amt').value = totalAmountWithLateValue;
+    document.getElementById('amountWithLateValue').textContent = totalAmountWithLateValue;
+
+</script>
 
   {% endblock %}

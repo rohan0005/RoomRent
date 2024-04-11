@@ -49,23 +49,64 @@
                                     <th scope="col" class="p-4 w-1/4">Total amount</th>
                                     <th scope="col" class="p-4 w-1/4">System Commission</th>
                                     <th scope="col" class="p-4 w-1/4">Transaction id</th>
+                                    <th scope="col" class="p-4 w-1/4"></th>
+
                                 </tr>
                                 </thead>
                                 {% for payment in allOwnerPaymentHistory %}
                                 <tbody>
                                     <tr class="border-2 ">
-                                        <td class="whitespace-nowrap px-6 py-4">{{payment.room.roomTitle}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4"><a href="{% url 'roomMoreDetails' payment.room.id %}" class="text-[#4097d7]">{{payment.room.roomTitle}}</a></td>
                                         <td class="whitespace-nowrap px-6 py-4">{{payment.tenantUser}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">{{payment.billedDate|date}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">{{payment.paidDate|date}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">{{payment.lateDays}} Day[s]</td>
-                                        <td class="whitespace-nowrap px-6 py-4 ">NRS. {{payment.lateFee}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.lateFee}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.depositedAmount}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.totalPaidAmount}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.systemCommissionAmount}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">{{payment.transactionID}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4"><button class="text-blue-700 underline" data-modal-target="default-modal-{{payment.id}}" data-modal-toggle="default-modal-{{payment.id}}" type="button">View Details
+                                        </button></td>
                                     </tr>
                                 </tbody>
+                                      <div id="default-modal-{{payment.id}}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                      <div class="relative p-4 w-full max-w-2xl max-h-full">
+                                          <!-- Modal content -->
+                                          <div class="relative bg-white rounded-lg shadow ">
+                                              <!-- Modal header -->
+                                              <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                                                  <h3 class="text-xl font-semibold text-gray-900">
+                                                    Utility Details
+                                                  </h3>
+                                                  <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-hide="default-modal-{{payment.id}}">
+                                                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                      </svg>
+                                                      <span class="sr-only">Close modal</span>
+                                                  </button>
+                                              </div>
+                                              <!-- Modal body -->
+                                              <div class="p-4 md:p-5 space-y-4">
+                                                <div>
+                                                  <h1 class="pb-2">Water charge: Rs. {{payment.waterCharge}}</h1>
+                                                  <h1 class="pb-2">Trash charge: Rs. {{payment.TrashCharge}}</h1>
+                                                  <h1 class="pb-2">Electricity Previous Unit: {{payment.electricityPreviousUnit}}</h1>
+                                                  <h1 class="pb-2">Electricity Current Unit: {{payment.electricityCurrentUnit}}</h1>
+                                                  <h1 class="pb-2">Used Electricity Unit : {{payment.electricityUnit}}</h1>
+                                                  <h1 class="pb-2">Electricity Amount For Used Unit : Rs. {{payment.electricityAmount}}</h1>
+                                                  <h1 class="pb-2">Was Charged Late Fee : {{payment.wasChargedLateFee}}</h1>
+
+                                                </div>
+                                                  
+                                              </div>
+                                              <!-- Modal footer -->
+                                              <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                                  <button data-modal-hide="default-modal-{{payment.id}}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Close</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
                                 {% endfor %} 
                             </table>
                         </div>
@@ -75,6 +116,8 @@
         </div>
         
         {% elif roomPaymentFromTenant and request.user|has_group:"tenant" %}
+
+                  
 
         <div class="main-container-for-tenant">
 
@@ -97,6 +140,7 @@
                                         <th scope="col" class="p-4 w-1/4">Deposited amount</th>
                                         <th scope="col" class="p-4 w-1/4">Total amount</th>
                                         <th scope="col" class="p-4 w-1/4">Transaction id</th>
+                                        <th scope="col" class="p-4 w-1/4"></th>
                                     </tr>
                                     </thead>
                                     {% for payment in roomPaymentFromTenant %}
@@ -111,8 +155,47 @@
                                             <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.depositedAmount}}</td>
                                             <td class="whitespace-nowrap px-6 py-4">NRS. {{payment.totalPaidAmount}}</td>
                                             <td class="whitespace-nowrap px-6 py-4">{{payment.transactionID}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4"><button class="text-blue-700 underline" data-modal-target="default-modal-{{payment.id}}" data-modal-toggle="default-modal-{{payment.id}}" type="button">View Details
+                                            </button></td>
                                         </tr>
                                     </tbody>
+                                    <div id="default-modal-{{payment.id}}" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                      <div class="relative p-4 w-full max-w-xl max-h-full">
+                                          <!-- Modal content -->
+                                          <div class="relative bg-white rounded-lg shadow ">
+                                              <!-- Modal header -->
+                                              <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                                                  <h3 class="text-xl font-semibold text-gray-900">
+                                                      Utility Details
+                                                  </h3>
+                                                  <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " data-modal-hide="default-modal-{{payment.id}}">
+                                                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                      </svg>
+                                                      <span class="sr-only">Close modal</span>
+                                                  </button>
+                                              </div>
+                                              <!-- Modal body -->
+                                              <div class="p-4 md:p-5 space-y-4">
+                                                <div>
+                                                  <h1 class="pb-2">Water charge: Rs. {{payment.waterCharge}}</h1>
+                                                  <h1 class="pb-2">Trash charge: Rs. {{payment.TrashCharge}}</h1>
+                                                  <h1 class="pb-2">Electricity Previous Unit: {{payment.electricityPreviousUnit}}</h1>
+                                                  <h1 class="pb-2">Electricity Current Unit: {{payment.electricityCurrentUnit}}</h1>
+                                                  <h1 class="pb-2">Used Electricity Unit : {{payment.electricityUnit}}</h1>
+                                                  <h1 class="pb-2">Electricity Amount For Used Unit : Rs. {{payment.electricityAmount}}</h1>
+                                                  <h1 class="pb-2">Was Charged Late Fee : {{payment.wasChargedLateFee}}</h1>
+
+                                                </div>
+                                                  
+                                              </div>
+                                              <!-- Modal footer -->
+                                              <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                                  <button data-modal-hide="default-modal-{{payment.id}}" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Close</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
                                     {% endfor %} 
                                 </table>
                             </div>

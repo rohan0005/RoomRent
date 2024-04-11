@@ -74,8 +74,26 @@
                 <div class="py-5 pl-5">
                     <div class="flex gap gap-10">
                         <h1 class="md:text-4xl text-[19px] ">{{roomDetail.roomTitle}}</h1>
-                        <input type="hidden" name="" value="">
-                        {% comment %} <button type="submit" name="saveRoom" class="bg-[#3d405b] text-white px-10 py-3 rounded-lg">Save</button> {% endcomment %}
+                        
+                        
+                        {% if request.user|has_group:"tenant" %}
+                   
+                        <form action="" method="post">
+                        {% csrf_token %}
+                         <button type="submit" name="saveRoom" class="bg-[#f52a2a] text-white px-4 py-3 rounded-lg"><span class="flex"><span><svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M6.75 6L7.5 5.25H16.5L17.25 6V19.3162L12 16.2051L6.75 19.3162V6ZM8.25 6.75V16.6838L12 14.4615L15.75 16.6838V6.75H8.25Z" fill="#ffffff"></path> </g></svg></span>
+                            
+                            {% if checkRoom %}
+                            <span>Unsave</span>
+                            
+                             {% else %}   
+                            <span>Save</span>
+                            {% endif %}
+                        
+                        </span></button>
+                        </form>
+                                 
+                        {% endif %}
+                            
                     </div>
                 </div>
             </div>
@@ -588,6 +606,8 @@
                                         {% else %}
                                         <h3 class="mb-5 text-lg font-normal text-gray-700">Are you sure you want to book
                                             this room?</h3>
+
+                                            <textarea name="additionalDetail" class="mb-2 py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none border-2" rows="3" placeholder="Give Additional details (Optional).."></textarea>
                                         {% endif %}
                                         
                                         {% if hasJoinedRoom and request.user|has_group:"tenant" %}

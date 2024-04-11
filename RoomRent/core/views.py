@@ -9,7 +9,7 @@ def index(request):
     return render(request, 'Landing page/index.html')
 
 def checkValidity(request):
-    sweetify.error(request, 'You are not authorized to view this page.', timer= 8000)
+    sweetify.error(request, 'You are not authorized to view this page.', button='Ok', timer=0)
     return render(request, 'Landing page/index.html')
 
 def contact(request):
@@ -19,7 +19,7 @@ def contact(request):
         message = request.POST.get('message')
         contactUs = ContactUsDetail.objects.create(fullName=fullname, email=email, message=message)
         contactUs.save()
-        sweetify.success(request, 'Thank you for you feedback. We will reach out to you soon', timer= 6000)
+        sweetify.success(request, 'Thank you for you feedback. We will reach out to you soon',  button='Ok', timer=0)
     return render(request, 'Landing page/contactUs.html')
 
 @user_passes_test(is_superuser)
@@ -29,7 +29,7 @@ def contactFromUser(request):
         contactUsUpdate = ContactUsDetail.objects.get(pk=id)
         contactUsUpdate.status = "checked"
         contactUsUpdate.save()
-        sweetify.success(request, 'User message marked as read !!',  timer= 6000)
+        sweetify.success(request, 'User message marked as read !!',   button='Ok', timer=0)
     
     contactUsData = ContactUsDetail.objects.all()
     context = {

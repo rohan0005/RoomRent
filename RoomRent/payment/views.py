@@ -30,7 +30,7 @@ def initkhalti(request):
 
     payload = json.dumps({
         "return_url": return_url,
-        "website_url": "http://127.0.0.1:9990",
+        "website_url": "http://127.0.0.1:9898",
         "amount": amount,
         "purchase_order_id": purchase_order_id,
         "purchase_order_name": "test",
@@ -55,7 +55,7 @@ def initkhalti(request):
             return redirect("verify")
         
         else:
-            sweetify.error(request, "Something went wrong.")
+            sweetify.error(request, "Something went wrong.",  button='Ok', timer=0)
             return redirect("billing")
     except KeyError:
         return redirect("error") 
@@ -136,7 +136,14 @@ def verifyKhalti(request):
                             lateFee= late_fee,
                             depositedAmount = deposited_amount,
                             totalPaidAmount = total_amount,
-                            transactionID = transaction_id
+                            transactionID = transaction_id,
+                            electricityPreviousUnit = room_bill.electricityPreviousUnit,
+                            electricityCurrentUnit = room_bill.electricityCurrentUnit,
+                            wasChargedLateFee = room_bill.hasChargeLatePaymentFee,
+                            electricityUnit = room_bill.electricityUnit,
+                            electricityAmount = room_bill.electricityAmount,
+                            waterCharge = booked_room.room.water,
+                            TrashCharge = booked_room.room.trash,
                         )
                         
                         payment_history.save()
@@ -160,29 +167,22 @@ def verifyKhalti(request):
                         room_bill.electricityAmount = 0
                         room_bill.totalRoomRentAmount= 0
                         room_bill.save()
-                        sweetify.success(request, "Payment completed successfully",  timer= 8000)
+                        sweetify.success(request, "Payment completed successfully", button='Ok', timer=0)
                         return redirect('billing')
 
                 except Exception as e:
                     print("An error occurred:", e)
-                    return redirect('error')
+                    sweetify.error(request, "Something went wrong during your payment.", button='Ok', timer=0)
+                    return redirect('billing')
                 
             else:
-                return redirect('error')
+                sweetify.error(request, "Something went wrong during your payment.", button='Ok', timer=0)
+                return redirect('billing')
             
         except KeyError:
-            return redirect("error") 
+            sweetify.error(request, "Something went wrong during your payment.", button='Ok', timer=0)
+            return redirect('billing')
             
-
-
-    
-    
-def error(request):
-    return render(request, "Payment/error.html")
-    
-
-
-
 
     
 # CALCULATE BILLS / late payment fess
@@ -220,33 +220,41 @@ def billing(request):
                 allUpdatedRentBillings.append(UpdatedRentBillings)
                                                    
         booked_rooms = BookRoom.objects.filter(moveInDate__lt = today, room=room, joined=True).first()
+        print("yoo", booked_rooms)
         # Filter rooms where move-in date is before today OR LESS THAN TODAY
         print("booked_roomsLT", booked_rooms)
         if booked_rooms:
             currentTime = datetime.now().date()
-            future_date_after_3days = booked_rooms.rentBilledDate + timedelta(days=3)
-            future_date_after_2days = booked_rooms.rentBilledDate + timedelta(days=2)
-            future_date_after_1days = booked_rooms.rentBilledDate + timedelta(days=1)
-            if future_date_after_3days.date() == booked_rooms.rentBilledDate.date() or future_date_after_2days.date() == booked_rooms.rentBilledDate.date() or future_date_after_1days.date() == booked_rooms.rentBilledDate.date() or currentTime > booked_rooms.rentBilledDate.date() :
+            print("currentTime", currentTime)
+            date_before_3days = (booked_rooms.rentBilledDate - timedelta(days=3)).date()
+            date_before_2days = (booked_rooms.rentBilledDate - timedelta(days=2)).date()
+            date_before_1days = (booked_rooms.rentBilledDate - timedelta(days=1)).date()
+            date_with_changed_time_before_1days = date_before_1days + timedelta(days=1)
+            print("date_before_3days", date_before_3days)
+            print("date_before_2days", date_before_2days)
+            print("date_before_1days", date_before_1days)
+            
+            print("date_and_before_1days", date_with_changed_time_before_1days)
+            print("booked_rooms.rentBilledDate ", booked_rooms.rentBilledDate.date())
+            if date_before_3days == booked_rooms.rentBilledDate.date() or date_before_2days == booked_rooms.rentBilledDate.date() or date_before_1days == booked_rooms.rentBilledDate.date() or currentTime >= booked_rooms.rentBilledDate.date() or date_with_changed_time_before_1days == booked_rooms.rentBilledDate.date():
+                print("date_before_3days", date_before_3days)
+                print("date_before_2days", date_before_2days)
+                print("date_before_1days", date_before_1days)
                 roombilling = RoomBilling.objects.filter(bookedRoom=booked_rooms, status="pending").exclude(id=None).first() #get the instance of RoomBilling
+                print("roombilling", roombilling)
                 if roombilling is not None:
                     allPendingRoombillings.append(roombilling)
-            
-            roombilling = RoomBilling.objects.filter(bookedRoom=booked_rooms, status="pending").exclude(id=None).first() #get the instance of RoomBilling
-            if roombilling and booked_rooms.moveInDate == booked_rooms.rentBilledDate:
-                move_in_date = booked_rooms.rentBilledDate
-                print("move_in_date", move_in_date)
-                try:
-                    next_month_date = move_in_date.replace(month=move_in_date.month + 1)
-                    booked_rooms.rentBilledDate = next_month_date
-                    booked_rooms.save()
-                except ValueError:
-                    next_month_date = move_in_date.replace(year=move_in_date.year + 1, month = 1)  #change the year if month is january
-                    booked_rooms.rentBilledDate = next_month_date
-                    booked_rooms.save()
-                return redirect('billing')
+
                     
     if request.method == 'POST' and 'updatePendingRoom' in request.POST:
+        ElecPreviousUnit = request.POST.get('ElecPreviousUnit')
+        ElecCurrentUnit = request.POST.get('ElecCurrentUnit')
+        if ElecPreviousUnit >= ElecCurrentUnit:
+            sweetify.error(request, 'Current Unit cannot be less than or equal to Previous Unit.', button='Ok', timer=0)
+            return redirect('billing')
+            
+        
+        
         roombillingID = request.POST.get('roomBillingID')  
         if "hasLatePaymentCharge" in request.POST:
             # If checked set latePaymentCharge to True
@@ -286,7 +294,7 @@ def billing(request):
             updateBilling.status = "updated"
             updateBilling.hasChargeLatePaymentFee = latePaymentCharge
             updateBilling.save()
-            sweetify.success(request, "Bill Updated !!")
+            sweetify.success(request, "Bill Updated !!", button='Ok', timer=0)
         return redirect('billing')
   
           
@@ -359,7 +367,7 @@ def paymentHistoryAdminView(request):
             
             
             
-            sweetify.success(request, "Amount Refunded to owner.")
+            sweetify.success(request, "Amount Refunded to owner.",  button='Ok', timer=0)
 
     print("stepppppp:", step)
     allPaymentHistory = PaymentHistory.objects.filter(hasReleasedFund=False)

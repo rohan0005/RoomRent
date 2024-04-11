@@ -30,7 +30,7 @@ def SignupUser(request):
         form = CreateUserForm(request.POST, request.FILES) # Get the form data and if user uploads files get files too 
         if form.is_valid():
             if User.objects.filter(email=request.POST.get('email')).exists():
-                sweetify.error(request, "Email already registered!")
+                sweetify.error(request, "Email already registered!", button='Ok', timer=0)
                 return redirect('signup')
             # Get the username
             username = form.cleaned_data.get('username')
@@ -40,7 +40,7 @@ def SignupUser(request):
             if 'contact' in request.POST:
                 contact_number = request.POST.get('contact')
             if not re.match(r'^(98|97)\d{8}$', contact_number):
-                sweetify.error(request,"Invalid contact number")                  
+                sweetify.error(request,"Invalid contact number", button='Ok', timer=0)                  
                 return redirect('signup')
 
             with transaction.atomic():
@@ -71,7 +71,7 @@ def SignupUser(request):
                 
                 # If user choose to become tenant then adding them to tenant group
                 else:
-                    group, created = Group.objects.get_or_create(name='tenant')
+                    group, created = Group.objects.get_or_create(name='tenant', button='Ok', timer=0)
                     user.groups.add(group)
                     # sweetify.success(request,"Account Created for " + username)
                 
@@ -106,7 +106,7 @@ def SignupUser(request):
         # If form is not valid
         elif not form.is_valid():
             errorMessage = next(iter(form.errors.values()))[0]     # Retrieving the first error message from the form errors
-            sweetify.error(request, errorMessage)
+            sweetify.error(request, errorMessage, button='Ok', timer=0)
             
     return render(request,'Authentication/signin and signup/signup.html')
 
@@ -122,26 +122,26 @@ def SigninUser(request):
         if user is not None:
             if user.is_superuser:
                 login(request, user)
-                sweetify.success(request, 'Successfully Signed In')
+                sweetify.success(request, 'Successfully Signed In', button='Ok', timer=0)
                 return redirect('adminDashboard')
                 
             elif user.useradditionaldetail.has_blocked == True: # if user is blocked then dont give access to signin
-                sweetify.error(request, 'Your account has been blocked. Please contact to admin.')
+                sweetify.error(request, 'Your account has been blocked. Please contact to admin.', button='Ok', timer=0)
                 return redirect('index')
             else:
                 login(request, user)
-                sweetify.success(request, 'Successfully Signed In')
+                sweetify.success(request, 'Successfully Signed In', button='Ok', timer=0)
                 return redirect('index')
         # If user password or username is incorrect
         else:
-            sweetify.error(request, 'Username or Password is incorrect')
+            sweetify.error(request, 'Username or Password is incorrect', button='Ok', timer=0)
 
     return render(request, 'Authentication/signin and signup/signin.html')
 
 # SIGNOUT USER
 def signoutUser(request):
     logout(request)
-    sweetify.success(request, 'Successfully Signed Out')
+    sweetify.success(request, 'Successfully Signed Out', button='Ok', timer=0)
     return redirect('signin')
 
 # return superuser
@@ -249,7 +249,7 @@ def userMoreDetail(request, user_id):
                 )
                 
                 # SUCCESS MESSAGE
-                sweetify.success(request, 'User approved successfully')
+                sweetify.success(request, 'User approved successfully', button='Ok', timer=0)
                 
                 return redirect('pendingRequests')
             
@@ -268,7 +268,7 @@ def userMoreDetail(request, user_id):
             userDetail = UserAdditionalDetail.objects.get(user=user)
             userDetail.has_blocked = True
             userDetail.save()
-            sweetify.success(request, 'User Blocked successfully')
+            sweetify.success(request, 'User Blocked successfully', button='Ok', timer=0)
         
         elif "unblock" in request.POST:
             username = request.POST.get("user")
@@ -285,7 +285,7 @@ def userMoreDetail(request, user_id):
             userDetail = UserAdditionalDetail.objects.get(user=user)
             userDetail.has_blocked = False
             userDetail.save()
-            sweetify.success(request, 'User Unblocked successfully')
+            sweetify.success(request, 'User Unblocked successfully', button='Ok', timer=0)
         
         else:
             if "user" in request.POST:
@@ -301,7 +301,7 @@ def userMoreDetail(request, user_id):
                     fail_silently=False,)
                 user.delete()
                 # REJECT MESSAGE
-                sweetify.error(request, 'User rejected')
+                sweetify.error(request, 'User rejected', button='Ok', timer=0)
                 return redirect('pendingRequests')
  
     context = {
@@ -323,14 +323,21 @@ def editProfile(request):
             # UPDATING USER MODEL
             user.first_name = request.POST.get('first_name')
             user.last_name = request.POST.get('last_name')
-            user.email = request.POST.get('email')
             user.save()
             
             # UPDATING UserAdditionalDetail MODEL
             additionalDetail = user.useradditionaldetail
-            additionalDetail.contact_number = request.POST.get('contact')
-            additionalDetail.save()
-            sweetify.success(request, 'Profile Updated')           
+
+            if 'contact' in request.POST:
+                contact_number = request.POST.get('contact')
+                if not re.match(r'^(98|97)\d{8}$', contact_number):
+                    sweetify.error(request,"Invalid contact number", button='Ok', timer=0)                  
+                    return redirect('editProfile')                
+
+                else:
+                    additionalDetail.contact_number = request.POST.get('contact')
+                    additionalDetail.save()
+                    sweetify.success(request, 'Profile Updated', button='Ok', timer=0)           
         
         if "saveImage" in request.POST:
             if request.FILES:
@@ -340,7 +347,7 @@ def editProfile(request):
                 user_profile.save()
                 sweetify.success(request, 'Profile Picture Updated')
             else:
-                sweetify.info(request, 'No image selected')
+                sweetify.info(request, 'No image selected', button='Ok', timer=0)
         
         if "deleteImage" in request.POST:
             user_profile = UserProfilePicture.objects.get(user=user)
@@ -348,7 +355,7 @@ def editProfile(request):
             # Saving user default profile
             user_default_profile_picture = UserProfilePicture(user=user)
             user_default_profile_picture.save()
-            sweetify.success(request, 'Profile Picture updated.')
+            sweetify.success(request, 'Profile Picture updated.', button='Ok', timer=0)
             
         return redirect('editProfile')                
                 
@@ -372,21 +379,21 @@ def changePassword(request):
             
             # If current password is incorrect display error message
             if not request.user.check_password(current_password):
-                sweetify.error(request, 'Current password is incorrect.')
+                sweetify.error(request, 'Current password is incorrect.', button='Ok', timer=0)
             
             # If current password is correct:
             else:
                 # Check if new password and cormform password is correct
                 # If not correct display error message
                 if new_password != confirm_new_password:
-                    sweetify.error(request, 'New password and confirm password do not match.')
+                    sweetify.error(request, 'New password and confirm password do not match.', button='Ok', timer=0)
                     
                 # If correct change the password with new password 
                 else:
                     # Change the user's password
                     request.user.set_password(new_password)
                     request.user.save()
-                    sweetify.success(request, 'Password Changed')
+                    sweetify.success(request, 'Password Changed', button='Ok', timer=0)
                     # Updating the user's session to prevent logout
                     update_session_auth_hash(request, request.user)
                     
@@ -405,10 +412,10 @@ def activate(request, uidb64, token):
         login(request, user)
         target_groups = ['tenant']
         if user.groups.filter(name__in=target_groups).exists():
-            sweetify.success(request, "Your account has been activated!")
+            sweetify.success(request, "Your account has been activated!", button='Ok', timer=0)
         else:
-            sweetify.success(request, "Your account has been activated. Please wait for the admin approval.")
+            sweetify.success(request, "Your account has been activated. Please wait for the admin approval.", button='Ok', timer=0)
         return redirect('signin')
     else:
-        sweetify.error(request, "Something went erong while activating your account")
+        sweetify.error(request, "Something went erong while activating your account", button='Ok', timer=0)
         return redirect('signin')

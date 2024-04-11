@@ -59,6 +59,7 @@ class BookRoom(models.Model):
     joined = models.BooleanField(default=False)
     moveOutDate = models.DateTimeField(null=True, blank=True)
     rentBilledDate = models.DateTimeField(null=True, blank=True, default= None)
+    additionalDetails = models.TextField(blank=True, null=True)
     def __str__(self):
         return f"{self.user}'s booking"
     

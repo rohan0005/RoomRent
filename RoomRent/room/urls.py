@@ -9,6 +9,8 @@ urlpatterns = [
     path('room/details/<int:room_id>', views.roomMoreDetails, name='roomMoreDetails'),
     
     path('dashboard/viewBooking', views.viewBooking, name='viewBooking'),  
+    path('dashboard/saved/rooms', views.savedRooms, name='savedRooms'),  
+    
     
     
 ]

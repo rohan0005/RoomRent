@@ -121,7 +121,7 @@ def listing(request):
             for document in room_documents:
                 new_room_document = RoomDocument.objects.create(room=room, document=document)
                 
-            sweetify.success(request, "Your room has been submitted for verification. Thank you!")
+            sweetify.success(request, "Your room has been submitted for verification. Thank you!",  button='Ok', timer=0)
             
 
 
@@ -162,7 +162,7 @@ def pendingRooms(request):
             [user_email],
             fail_silently=False,
             )
-            sweetify.success(request, "Room approved")
+            sweetify.success(request, "Room approved",  button='Ok', timer=0)
             return redirect('pendingRooms')
 
         
@@ -176,7 +176,7 @@ def pendingRooms(request):
             fail_silently=False,
             )
             room.delete()
-            sweetify.error(request, "Room rejected")
+            sweetify.error(request, "Room rejected",  button='Ok', timer=0)
             return redirect('pendingRooms')
         
         
@@ -349,21 +349,18 @@ def roomMoreDetails(request, room_id):
             raise Http404("Room not found")
         
     room_instance = get_object_or_404(Room, pk=room_id)
-
+    checkRoom = SavedRoom.objects.filter(user=request.user, room=room_instance).exists()
     # Check if the room is saved by the current user
-    # if request.user.is_authenticated:
-    #     if SavedRoom.objects.filter(user=request.user, room=room_instance).exists():
-
-    # if request.method == 'POST':
-    #     if 'saveRoom' in request.POST:
-    #         if not is_saved:
-    #             SavedRoom.objects.create(user=request.user, room=room_instance)
-    #             sweetify.success(request, "Room saved successfully!")
-    #         else:
-    #             SavedRoom.objects.filter(user=request.user, room=room_instance).delete()
-    #             sweetify.success(request, "Room removed from saved!")
-
-    #         return redirect('roomMoreDetails', room_id=room_id)
+    if request.method == 'POST' and 'saveRoom' in request.POST:
+        
+        if not checkRoom:
+                SavedRoom.objects.create(user=request.user, room=room_instance)
+                sweetify.success(request, "Room saved successfully!", button='Ok', timer=0)
+                return redirect('roomMoreDetails', room_id=room_id)
+        else:
+            SavedRoom.objects.filter(user=request.user, room=room_instance).delete()
+            sweetify.success(request, "Room removed from saved!", button='Ok', timer=0)
+            return redirect('roomMoreDetails', room_id=room_id)
     
     if request.method == 'POST':
         if "updateUtility" in request.POST:
@@ -377,7 +374,7 @@ def roomMoreDetails(request, room_id):
             roomInstance.trash = editTrash
             roomInstance.save()
             
-            sweetify.success(request, "Utility update!")
+            sweetify.success(request, "Utility update!", button='Ok', timer=0)
             return redirect("roomMoreDetails", room_id = room_id)
     
         elif "newAmenities" in request.POST:
@@ -387,7 +384,7 @@ def roomMoreDetails(request, room_id):
                     amenities_list.append(new_amenity)  # Append the new amenity to the existing list of amenities
                     roomInstance.amenities = str(amenities_list) # save as astring in the database
                     roomInstance.save()
-                    sweetify.success(request, "New Amenity Added!")
+                    sweetify.success(request, "New Amenity Added!", button='Ok', timer=0)
                     return redirect("roomMoreDetails", room_id=room_id)
                 
         elif "deleteAmenities" in request.POST:
@@ -402,7 +399,7 @@ def roomMoreDetails(request, room_id):
                 # Convert the amenities list back to a string
                 room_instance.amenities = str(room_instance.amenities)
                 room_instance.save()
-                sweetify.success(request, "Amenity Deleted!")
+                sweetify.success(request, "Amenity Deleted!", button='Ok', timer=0)
                 return redirect("roomMoreDetails", room_id=room_id)
             
         elif "addNewRules" in request.POST:
@@ -416,7 +413,7 @@ def roomMoreDetails(request, room_id):
             newRules = rules_string.split(", ")
             room_instance.rules = newRules
             room_instance.save()
-            sweetify.success(request, "New Rules added!")
+            sweetify.success(request, "New Rules added!", button='Ok', timer=0)
             return redirect("roomMoreDetails", room_id=room_id)
     
     currentUser = request.user # get the current user
@@ -463,7 +460,7 @@ def roomMoreDetails(request, room_id):
                 elif feedback != "" and rating != None:
                     roomDetail.roomfeedbacks_set.create(user=currentUser,rating=rating, feedback= feedback) # save rating and feedback after tenant submit moveout
                 BookedRoomDetails.save()
-                sweetify.success(request, "Moveout informed")
+                sweetify.success(request, "Moveout informed", button='Ok', timer=0)
                 return redirect("roomMoreDetails", room_id = room_id)
             
         elif 'removeTenant' in request.POST: # Remove the tenant from this room after moveout is completed
@@ -519,7 +516,7 @@ def roomMoreDetails(request, room_id):
                 # EMAIL
                 
                 isJoinedThisRoom.delete()
-                sweetify.success(request, "Tenant Movedout")
+                sweetify.success(request, "Tenant Movedout", button='Ok', timer=0)
             return redirect("roomMoreDetails", room_id = room_id)
                 
             
@@ -529,7 +526,8 @@ def roomMoreDetails(request, room_id):
                 requestedMoveInDate = request.POST.get("moveInOrMoveoutDate") 
                 parsed_date = datetime.strptime(requestedMoveInDate, '%Y-%m-%d')
                 moveInDate = parsed_date.strftime('%Y-%m-%d')
-
+                additionalDetail = request.POST.get("additionalDetail") 
+                
                 # Get the room id
                 roomID = request.POST.get("room_id")
                 room = get_object_or_404(Room, pk=roomID)
@@ -541,12 +539,16 @@ def roomMoreDetails(request, room_id):
                 room.isBooked = True # set the booking to True
                 room.save() # Update the room details
 
-                # Save the booking
-                booking = BookRoom.objects.create(room=room, moveInDate=moveInDate , user=user, rentBilledDate=moveInDate)
-                booking.save()
-              
+                if additionalDetail and additionalDetail != "":
+                    # Save the booking
+                    booking = BookRoom.objects.create(room=room, moveInDate=moveInDate , user=user, rentBilledDate=moveInDate, additionalDetails = additionalDetail)
+                    booking.save()
+                else:
+                    # Save the booking
+                    booking = BookRoom.objects.create(room=room, moveInDate=moveInDate , user=user, rentBilledDate=moveInDate)
+                    booking.save()
                 
-                sweetify.success(request, "Room Booked!")
+                sweetify.success(request, "Room Booked!", button='Ok', timer=0)
                 
                 return redirect("roomMoreDetails", room_id = room_id)
                 
@@ -561,7 +563,8 @@ def roomMoreDetails(request, room_id):
         'hasJoinedMyRoom' : hasJoinedMyRoom,
         'hasNotMoveOutDate' : hasNotMoveOutDate,
         'feedbacks' : feedbacks,
-        'bookedRoomInfo' : bookedRoomInfo
+        'bookedRoomInfo' : bookedRoomInfo,
+        'checkRoom' : checkRoom,
     }
     
     return render(request, 'Rooms/roomMoreDetails.html', context)
@@ -624,6 +627,23 @@ def viewBooking(request):
                 booking.save()  # Save the changes
                 billing = RoomBilling.objects.create(bookedRoom=booking) # create the billing model for the joined user
                 billing.save()
+                
+            #  UPDATE THE RENT BILLING TO NEXT MONTH AFTER ACCEPTING THE BOOKING
+            billing = RoomBilling.objects.filter(bookedRoom=booking, status="pending").exclude(id=None).first() #get the instance of RoomBilling
+            if billing and booking.moveInDate == booking.rentBilledDate:
+                move_in_date = booking.rentBilledDate
+                print("move_in_date", move_in_date)
+                try:
+                    next_month_date = move_in_date.replace(month=move_in_date.month + 1)
+                    booking.rentBilledDate = next_month_date
+                    booking.save()
+                except ValueError:
+                    next_month_date = move_in_date.replace(year=move_in_date.year + 1, month = 1)  #change the year if month is january
+                    booking.rentBilledDate = next_month_date
+                    booking.save()
+                
+                
+                
             print("USERNAME IS  : ", user)
             allBookingMadeByUser = BookRoom.objects.filter(user=user, joined = False)
             user = User.objects.get(pk=user)
@@ -660,7 +680,7 @@ def viewBooking(request):
             remainingBookingsForUser.delete() #Remaining bookings for user to be deleted:
             remainingBookingsForRoom.delete() #Remaining bookings for room to be deleted:
 
-            sweetify.success(request, "Booking approved")
+            sweetify.success(request, "Booking approved", button='Ok', timer=0)
             return redirect("viewBooking")
   
     elif request.method == 'POST' and "reject" in request.POST:
@@ -699,7 +719,7 @@ def viewBooking(request):
             canceledBookingDetails.save()
             room.save()
             booking.delete() # Reject booking
-            sweetify.error(request, "Booking rejected")
+            sweetify.error(request, "Booking rejected", button='Ok', timer=0)
             step = "canceledBookings"
             return redirect("viewBooking")
 
@@ -721,3 +741,16 @@ def viewBooking(request):
     
         
     return render(request, 'Rooms/viewBooking.html', context)
+
+@user_passes_test(is_tenant)
+def savedRooms(request):
+    mySavedRooms = SavedRoom.objects.filter(user=request.user)
+    # Retrieve the data from the request.POST dictionary
+    if 'page' in request.POST:
+        pageName = request.POST.get('page')
+        return redirect("roomMoreDetails", room_id = pageName)
+
+    context = {
+        "mySavedRooms" : mySavedRooms
+    }
+    return render(request, 'Rooms/savedRooms.html', context)
