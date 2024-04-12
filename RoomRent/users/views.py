@@ -27,86 +27,85 @@ import sweetify
 def SignupUser(request):
     form = CreateUserForm()
     if request.method == 'POST':
-        form = CreateUserForm(request.POST, request.FILES) # Get the form data and if user uploads files get files too 
-        if form.is_valid():
-            if User.objects.filter(email=request.POST.get('email')).exists():
-                sweetify.error(request, "Email already registered!", button='Ok', timer=0)
-                return redirect('signup')
-            # Get the username
-            username = form.cleaned_data.get('username')
-            # An atomic transaction guarantees that all operations within the block are treated as a single unit. 
-            # If any operation fails, the entire transaction is rolled back, 
-            # undoing all changes made within the block.
-            if 'contact' in request.POST:
-                contact_number = request.POST.get('contact')
-            if not re.match(r'^(98|97)\d{8}$', contact_number):
-                sweetify.error(request,"Invalid contact number", button='Ok', timer=0)                  
-                return redirect('signup')
+        try:
+            form = CreateUserForm(request.POST, request.FILES) # Get the form data and if user uploads files get files too 
+            if form.is_valid():
+                if User.objects.filter(email=request.POST.get('email')).exists():
+                    sweetify.error(request, "Email already registered!", button='Ok', timer=0)
+                    return redirect('signup')
+                # Get the username
+                username = form.cleaned_data.get('username')
+                if 'contact' in request.POST:
+                    contact_number = request.POST.get('contact')
+                if not re.match(r'^(98|97)\d{8}$', contact_number):
+                    sweetify.error(request,"Invalid contact number", button='Ok', timer=0)                  
+                    return redirect('signup')
 
-            with transaction.atomic():
-                user = form.save(commit=False)
-                user.is_active = False
-                user.save()
-                
-                
-                # saving user contact number and address
-                details = UserAdditionalDetail(user=user, contact_number=request.POST.get('contact'))
-                details.save()
-                
-                # Saving user default profile
-                # We can just call the model it will save the default picture
-                default_picture = UserProfilePicture(user=user)
-                default_picture.save()
-                
-
-                # if user choose to become owner then they should upload document
-                if request.FILES:
-                    images=request.FILES.getlist('document_image')
+                with transaction.atomic():
+                    user = form.save(commit=False)
+                    user.is_active = False
+                    user.save()
                     
-                    # Store the citizenship image
-                    for citizenship_image in images:
-                        citizenship = UserCitizenship(user=user, image=citizenship_image)
-                        citizenship.save()
-                    # sweetify.success(request,"Account Created for " + username)                  
-                
-                # If user choose to become tenant then adding them to tenant group
-                else:
-                    group, created = Group.objects.get_or_create(name='tenant', button='Ok', timer=0)
-                    user.groups.add(group)
-                    # sweetify.success(request,"Account Created for " + username)
-                
-                # SEND MAIL
-                # Send welcome email
-                subject = "Welcome to RoomRent Website"
-                message = f"Hello {user.username}!\n\nThank you for registering on our website. Please confirm your email address to activate your account.\n\nRegards,\nRoomRent"
-                from_email = settings.EMAIL_HOST_USER
-                to_list = [user.email]
-                send_mail(subject, message, from_email, to_list, fail_silently=True)
-                
-                # Send email confirmation link
-                current_site = get_current_site(request)
-                email_subject = "Confirm Your Email Address"
-                message2 = render_to_string('Users profile/email_confirmation.html', {
-                'name': user.username,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': generate_token.make_token(user)
-                })
-                email = EmailMessage(
-                email_subject,
-                message2,
-                settings.EMAIL_HOST_USER,
-                [user.email],
-                )
-                send_mail(email_subject, message2, from_email, to_list, fail_silently=True)
-                sweetify.success(request, "Your account has been created successfully! Please check your email to confirm your email address and activate your account.")
-                return redirect('signin')
-                
-            return redirect('signin') # After creating the user redirect to the signin page
-        # If form is not valid
-        elif not form.is_valid():
-            errorMessage = next(iter(form.errors.values()))[0]     # Retrieving the first error message from the form errors
-            sweetify.error(request, errorMessage, button='Ok', timer=0)
+                    
+                    # saving user contact number and address
+                    details = UserAdditionalDetail(user=user, contact_number=request.POST.get('contact'))
+                    details.save()
+                    
+                    # Saving user default profile
+                    # We can just call the model it will save the default picture
+                    default_picture = UserProfilePicture(user=user)
+                    default_picture.save()
+                    
+
+                    # if user choose to become owner then they should upload document
+                    if request.FILES:
+                        images=request.FILES.getlist('document_image')
+                        
+                        # Store the citizenship image
+                        for citizenship_image in images:
+                            citizenship = UserCitizenship(user=user, image=citizenship_image)
+                            citizenship.save()
+                    
+                    # If user choose to become tenant then adding them to tenant group
+                    else:
+                        group, created = Group.objects.get_or_create(name='tenant')
+                        user.groups.add(group)
+                    
+                    # SEND MAIL
+                    # Send welcome email
+                    subject = "Welcome to RoomRent Website"
+                    message = f"Hello {user.username}!\n\nThank you for registering on our website. Please confirm your email address to activate your account.\n\nRegards,\nRoomRent"
+                    from_email = settings.EMAIL_HOST_USER
+                    to_list = [user.email]
+                    send_mail(subject, message, from_email, to_list, fail_silently=True)
+                    
+                    # Send email confirmation link
+                    current_site = get_current_site(request)
+                    email_subject = "Confirm Your Email Address"
+                    message2 = render_to_string('Users profile/email_confirmation.html', {
+                    'name': user.username,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': generate_token.make_token(user)
+                    })
+                    email = EmailMessage(
+                    email_subject,
+                    message2,
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    )
+                    send_mail(email_subject, message2, from_email, to_list, fail_silently=True)
+                    sweetify.success(request, "Your account has been created successfully! Please check your email to confirm your email address and activate your account.", button='Ok', timer=0)
+                    return redirect('signin')
+                    
+                return redirect('signin') # After creating the user redirect to the signin page
+            # If form is not valid
+            elif not form.is_valid():
+                errorMessage = next(iter(form.errors.values()))[0]     # Retrieving the first error message from the form errors
+                sweetify.error(request, errorMessage, button='Ok', timer=0)
+        except:
+            sweetify.error(request, 'Something went wrong during Signing up.', button='Ok', timer=0)
+            
             
     return render(request,'Authentication/signin and signup/signup.html')
 
@@ -126,8 +125,9 @@ def SigninUser(request):
                 return redirect('adminDashboard')
                 
             elif user.useradditionaldetail.has_blocked == True: # if user is blocked then dont give access to signin
+                logout(request)
                 sweetify.error(request, 'Your account has been blocked. Please contact to admin.', button='Ok', timer=0)
-                return redirect('index')
+                return redirect('signin')
             else:
                 login(request, user)
                 sweetify.success(request, 'Successfully Signed In', button='Ok', timer=0)

@@ -19,7 +19,7 @@
 </head>
 <body class="font-['Roboto']">
   <!-- Navigation section -->
-  <nav class="bg-white  fixed w-full z-40 top-0 start-0 border-b border-gray-200 shadow" style="transition: 0.8s ease-in-out;
+  <nav class="bg-white  sticky w-full z-40 top-0 start-0 border-b border-gray-200 shadow" style="transition: 0.8s ease-in-out;
   backdrop-filter: blur(1px); background: rgba(255, 255, 255, 0.94);">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-6 px-14 ">
         {% if request.path == "/room" or '/room/details/' in request.path or request.path == '/home' or request.path == '/home/' or request.path == '/contactus' %}
@@ -38,7 +38,7 @@
         </button>
         {% endif %}
         <a href="{% url 'index' %}" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src="/images/static images/logo/roomrentlogo.svg" class="h-8" alt="" />
+            <img src="{% static '/images/static images/logo/roomrentlogo.svg' %}" class="h-8" alt="" />
         </a>
 
         <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -48,8 +48,16 @@
                 data-dropdown-placement="bottom">
                 <span class="sr-only">Open user menu</span>
                 {% if request.user.is_authenticated %}
-                <img class="w-8 h-8 rounded-full" src=" {{user.userprofilepicture.image.url}}" alt="user photo">
+                <img class="w-8 h-8 rounded-full" 
+                
+                {% if request.user.is_superuser %}
+                    src=" {% static 'images\Profile pictures\User default profile\DefaultUser.png' %} "
+                {% else %}
+                    src=" {{user.userprofilepicture.image.url}}"
+                {% endif %}
+                    
                 {% else %} 
+                alt="user profile"> 
                 <svg width="28px" height="28px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17 8C17 10.7614 14.7614 13 12 13C9.23858 13 7 10.7614 7 8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8Z" stroke="#323232" stroke-width="2"></path> <path d="M3 21C3.95728 17.9237 6.41998 17 12 17C17.58 17 20.0427 17.9237 21 21" stroke="#323232" stroke-width="2" stroke-linecap="round"></path> </g></svg>
                 {% endif %}
             </button>

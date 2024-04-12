@@ -5,11 +5,11 @@
 {% block content %}
 
 <main
-  class="flex overflow-hidden px-20 py-10 mt-28" 
+  class="flex overflow-hidden px-20  mt-10" 
 >
   <div class="flex-1 hidden lg:block">
     <img
-      src="https://img.freepik.com/free-vector/flat-design-illustration-customer-support_23-2148887720.jpg?w=740"
+      src="{% static 'images\static images\staticPageImages\contact.svg' %}"
       class="w-full h-[600px] object-cover"
     />
   </div>
@@ -25,7 +25,7 @@
           We’d love to hear from you !
         </p>
       </div>
-      <form action="" method="post" class="space-y-2 mt-5 lg:pb-12">
+      <form action="" method="post" class="space-y-2 mt-5r">
         {% csrf_token %}
         <div>
           <label class="font-medium"> Full name </label>

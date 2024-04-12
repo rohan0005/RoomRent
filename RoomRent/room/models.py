@@ -23,6 +23,7 @@ class Room(models.Model):
     isBooked = models.BooleanField(default=False)
     listed_date = models.DateTimeField(default=timezone.now, blank=True)
     approved = models.BooleanField(blank=False, default=False) 
+    isUnderMaintenance = models.BooleanField(default=False)
     
     
     def __str__(self):

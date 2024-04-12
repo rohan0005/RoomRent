@@ -11,18 +11,9 @@ from payment.models import *
 from django.core.mail import send_mail # For sending email notifications
 from django.http import Http404
 import sweetify
+from userManagement.checkUserGroup import *
 
-# Check if user is owner or not
-def is_owner(user):
-    return user.groups.filter(name='owner').exists()
 
-# Check if user is tenant or not
-def is_tenant(user):
-    return user.groups.filter(name='tenant').exists()
-
-# Check if user is tenant or owner
-def is_tenant_or_owner(user):
-    return user.is_authenticated and user.groups.filter(name='tenant').exists() or user.groups.filter(name='owner').exists()
 
 
 @user_passes_test(is_owner)
@@ -350,6 +341,7 @@ def roomMoreDetails(request, room_id):
         
     room_instance = get_object_or_404(Room, pk=room_id)
     checkRoom = SavedRoom.objects.filter(user=request.user, room=room_instance).exists()
+    checkMaintenance= room_instance.isUnderMaintenance
     # Check if the room is saved by the current user
     if request.method == 'POST' and 'saveRoom' in request.POST:
         
@@ -361,6 +353,20 @@ def roomMoreDetails(request, room_id):
             SavedRoom.objects.filter(user=request.user, room=room_instance).delete()
             sweetify.success(request, "Room removed from saved!", button='Ok', timer=0)
             return redirect('roomMoreDetails', room_id=room_id)
+    elif "Checkmaintenance" in request.POST:
+        if room_instance.isUnderMaintenance == False:
+            room_instance.isUnderMaintenance = True
+            room_instance.save()
+            sweetify.success(request, "Room status changed to under maintenance.", button='Ok', timer=0)
+            return redirect('roomMoreDetails', room_id=room_id)
+        else:
+            room_instance.isUnderMaintenance = False
+            room_instance.save()
+            sweetify.success(request, "Room status changed to available for booking.", button='Ok', timer=0)
+            return redirect('roomMoreDetails', room_id=room_id)
+        
+            
+            
     
     if request.method == 'POST':
         if "updateUtility" in request.POST:
@@ -565,6 +571,7 @@ def roomMoreDetails(request, room_id):
         'feedbacks' : feedbacks,
         'bookedRoomInfo' : bookedRoomInfo,
         'checkRoom' : checkRoom,
+        'checkMaintenance': checkMaintenance
     }
     
     return render(request, 'Rooms/roomMoreDetails.html', context)
