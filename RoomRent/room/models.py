@@ -78,3 +78,11 @@ class OwnerBookingLog(models.Model):
     canceledDate = models.DateTimeField(default=timezone.now)
     status = models.CharField(default="Cancelled", max_length=100)
     
+    
+class RoomIssuesOrMaintenance(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    issuedDate = models.DateTimeField(default=timezone.now)
+    type = models.CharField(max_length=100, blank=False)
+    message = models.TextField(blank=False)
+    status = models.CharField(max_length=100, blank=False)

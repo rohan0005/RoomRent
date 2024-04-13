@@ -365,8 +365,14 @@ def roomMoreDetails(request, room_id):
             sweetify.success(request, "Room status changed to available for booking.", button='Ok', timer=0)
             return redirect('roomMoreDetails', room_id=room_id)
         
-            
-            
+    if request.method == 'POST' and 'RoomIssue' in request.POST:
+        RoomIssueFeedback = request.POST.get('RoomIssueFeedback')
+        RoomIssueFeedbackMessage = request.POST.get('RoomIssueFeedbackMessage')
+        print('RoomIssueFeedback , RoomIssueFeedbackMessage', RoomIssueFeedback, RoomIssueFeedbackMessage)
+        RoomIssuesOrMaintenance.objects.create(user=request.user, room=room_instance, type=RoomIssueFeedback, message= RoomIssueFeedbackMessage, status="Pending" )
+        sweetify.success(request, "Message has been sent to your room owner.", button='Ok', timer=0)
+        return redirect('roomMoreDetails', room_id=room_id)
+        
     
     if request.method == 'POST':
         if "updateUtility" in request.POST:
@@ -761,3 +767,26 @@ def savedRooms(request):
         "mySavedRooms" : mySavedRooms
     }
     return render(request, 'Rooms/savedRooms.html', context)
+
+@login_required(login_url='signin')
+@user_passes_test(is_owner)
+def roomIssues(request):
+    allIssues = []
+    Allrooms = Room.objects.filter(user=request.user)
+    
+    for rooms in Allrooms:
+        filteredRooms = RoomIssuesOrMaintenance.objects.filter(room=rooms)
+        allIssues.extend(filteredRooms)
+    
+    if request.method == 'POST' and "markIssueAsRead" in request.POST:
+        issueID = request.POST.get("issueID")
+        RoomIssuesInstance = RoomIssuesOrMaintenance.objects.get(pk=issueID)
+        RoomIssuesInstance.status="Updated"
+        RoomIssuesInstance.save()
+        print("RoomIssuesInstance", RoomIssuesInstance)
+        sweetify.success(request, "Issue Marked as Read",button='Ok', timer=0)
+        return redirect("roomIssues")
+    context = {
+        "allIssues" : allIssues
+    }
+    return render(request, 'Rooms/roomIssues.html', context)
