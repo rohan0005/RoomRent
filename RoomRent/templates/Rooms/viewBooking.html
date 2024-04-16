@@ -9,7 +9,7 @@
     <!-- HEADING CONTENTS -->
     <div class="bg-white h-screen pb-[100px] lg:mr-3 mt-[15px] md:ml-30 lg:ml-60 bg-white">
       <!--HEADING-->
-      <div class="flex justify-between pr-3 bg-[#0766AD] text-white">
+      <div class="flex justify-between pr-3 border-b-2">
         <div>
           <h1 class="font-semibold text-[17px] md:text-3xl p-6">{% if step == None or step == 'pendingBookings' %}Pending Bookings {% else %} Canceled or Rejected Bookings {% endif %}</h1>
         </div>
@@ -18,7 +18,7 @@
       <!-- CHANGE PAGE -->
       <form action="" method="post">
         {% csrf_token %}
-        <div class="sub-heading flex p-3 gap-3 gap">
+        <div class="sub-heading flex p-3 gap-3 gap ml-3">
           <div>
             <button type="submit" name="pendingBookings" class=" p-2 px-4 border text-white
           bg-[#54b4d3]
@@ -151,8 +151,22 @@
                           </h1>
                           <h1><span class="pb-2">Email: </span> <span>{{room.user.email}}</span></h1>
                           <br>
-                          <h1><span class="font-bold py-2">User additional message: <br> </span> <span>{{room.additionalDetails}}</span></h1>
 
+                          
+                          {% if room.additionalDetails %}
+                            
+                          <h1><span class="font-bold py-2">User additional message: <br> </span> <span>
+                            
+                            {{room.additionalDetails}}</span>
+                          
+                          </h1>
+
+                          {% else %}
+
+                          <h1><span class="font-bold py-2">No additional message</span>
+
+                          {% endif %}
+                            
                         </div>
 
                         {% if room.user.userprofilepicture %}

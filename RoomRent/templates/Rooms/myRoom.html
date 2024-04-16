@@ -12,7 +12,7 @@
         <div class="container px-4 py-1 mx-auto">
 
             <!-- CONTENTS -->
-            <div class="bg-white h-screen  pb-[100px]  lg:mr-3 mt-[15px] md:ml-30 lg:ml-60 bg-white">
+            <div class="bg-white h-full  pb-[100px]  lg:mr-3 mt-[15px] md:ml-30 lg:ml-60 bg-white">
         <div class="p-5 text-[#0F0F4B]">
           <h1 class="font-semibold text-[17px] md:text-3xl "> 
             {% if request.user.is_authenticated and not request.user.is_superuser and notJoinedAndPending %} 
@@ -172,17 +172,17 @@
 
                         <!-- INFO -->
                         <div class="p-2 font-semibold">
-                            <h1>{{room.roomTitle}}</h1>
+                            <h1>{{room.roomTitle|truncatechars:35}}</h1>
 
                         </div>
 
                         <div class="p-2 ">
-                            <h1><span>{{room.rent}}</span><span> / Month</span></h1>
+                            <h1><span>Rs. {{room.rent}}</span><span> / Month</span></h1>
 
                         </div>
 
                         <div class="p-2 flex justify-between">
-                            <h1>{{room.roomAddress|truncatewords:3}}</h1>
+                            <h1>{{room.roomAddress|truncatechars:17}}</h1>
                             
                             {% if room.id in hasMoveOutDate %}
                             <h1 class="text-[#0766AD]">Moveout in process</h1>

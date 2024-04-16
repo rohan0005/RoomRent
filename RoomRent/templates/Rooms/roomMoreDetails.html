@@ -48,10 +48,10 @@
                                         </button>
                                     </div>
                                     {% else %}
-                                    <svg class="mt-1" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24.00 24.00" fill="#12d98d" stroke="#12d98d" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="1.008"></g><g id="SVGRepo_iconCarrier"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.53 11.06L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path></g></svg><p class="md:text-xl text-[#12d98d] mt-0.5 sm:text-sm">Available For Booking</p>
+                                    <svg class="mt-2.5" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24.00 24.00" fill="#2dbf3d" stroke="#2dbf3d" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="1.008"></g><g id="SVGRepo_iconCarrier"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16.53 11.06L15.47 10l-4.88 4.88-2.12-2.12-1.06 1.06L10.59 17l5.94-5.94zM19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path></g></svg><p class="md:text-xl text-[#2dbf3d] mt-2 sm:text-sm">Available For Booking</p>
                                 
                                     <div class="ml-2">
-                                        <button type="submit" name="Checkmaintenance" class="bg-[#12d98d] md:text-sm text-[10px] text-white px-4 py-3 rounded-lg">
+                                        <button type="submit" name="Checkmaintenance" class="bg-[#2dbf3d] md:text-sm text-[10px] text-white px-4 py-3 rounded-lg">
                                             <span class="text-white ">Change<span>
                                         </button>
                                     </div>
@@ -284,11 +284,38 @@
                             <!-- Modal body -->
                             <div class="p-4 md:p-5 space-y-4">
                                 <div class="">
+
+                                    <!-- Water  -->
+                                    <div class=" flex ml-9 gap-4 mt-5">
+        
+                                        <div class=" flex items-center">
+                                            <svg width="24px" height="24px" viewBox="0 0 24 24" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style>.cls-1{fill:none;stroke:#020202;stroke-miterlimit:10;stroke-width:1.056;}</style></defs><path class="cls-1" d="M1.46,13.44H2.9a1.44,1.44,0,0,1,1.44,1.44v0A1.44,1.44,0,0,1,2.9,16.31H1.46a0,0,0,0,1,0,0V13.44a0,0,0,0,1,0,0Z"></path><path class="cls-1" d="M1.46,20.15V16.31h1a1.91,1.91,0,0,1,1.91,1.92v1.92"></path><polyline class="cls-1" points="10.08 19.19 7.21 19.19 7.21 13.44 10.08 13.44"></polyline><line class="cls-1" x1="9.13" y1="16.31" x2="7.21" y2="16.31"></line><polyline class="cls-1" points="12 20.15 12 13.44 12.96 13.44 14.88 19.19 15.83 19.19 15.83 12.48"></polyline><line class="cls-1" x1="17.75" y1="13.44" x2="23.5" y2="13.44"></line><line class="cls-1" x1="20.63" y1="20.15" x2="20.63" y2="13.44"></line><line class="cls-1" x1="23.5" y1="22.06" x2="0.5" y2="22.06"></line><polyline class="cls-1" points="22.54 10.56 12 1.94 1.46 10.56"></polyline></g></svg>
+                                        </div>
+        
+                                        <div class="flex items-center gap-16">
+                                            <div>
+                                                <h1>Rent  </h1>
+                                            </div>
+        
+                                            <div class="pl-8 flex">
+                                                <div class="w flex items-center gap-3">
+                                                    <h2>Rs. </h2>
+                                                    <input placeholder="Enter rent..." required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" name="rent" value="{{roomDetail.rent}}" id="">
+                                                    <span class="flex items-center">/Month</span>
+                                                </div>
+                                            </div>
+        
+                                        </div>
+                                    </div>
+
+
+
+
                                     <!-- Electricity -->
                                     <div class=" flex items-center ml-9 gap-4 mt-5">
         
                                         <div class="">
-                                            <img src="/images/static images/Icons/Group.svg" alt="">
+                                            <img alt=''  src=" {% static 'images/static images/Icons/Group.svg' %}">
                                         </div>
         
                                         <div class="flex items-center gap-16">
@@ -299,7 +326,7 @@
                                             <div class=" flex">
                                                 <div class="w flex items-center gap-3">
                                                     <h2>Rs. </h2>
-                                                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" name="editElectricity" value="{{roomDetail.electricity}}" id="">
+                                                    <input placeholder="Enter electricity unit.." required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" name="editElectricity" value="{{roomDetail.electricity}}" id="">
                                                     <span class="flex items-center">/unit</span>
                                                 </div>
                                             </div>
@@ -313,7 +340,7 @@
                                     <div class=" flex ml-9 gap-4 mt-5">
         
                                         <div class=" flex items-center">
-                                            <img src="/images/static images/Icons/Vector.svg" alt="">
+                                            <img src="{% static 'images/static images/Icons/Vector.svg '%}" alt="">
                                         </div>
         
                                         <div class="flex items-center gap-16">
@@ -324,7 +351,7 @@
                                             <div class="pl-8 flex">
                                                 <div class="w flex items-center gap-3">
                                                     <h2>Rs. </h2>
-                                                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" name="editWater" value="{{roomDetail.water}}" id="">
+                                                    <input placeholder="Enter water charge.." required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" name="editWater" value="{{roomDetail.water}}" id="">
                                                     <span class="flex items-center">/Month</span>
                                                 </div>
                                             </div>
@@ -336,7 +363,7 @@
                                     <div class=" flex ml-9 gap-4 mt-5">
         
                                         <div class=" flex items-center">
-                                            <img src="/images/static images/Icons/Vector (1).svg" alt="">
+                                            <img src="{% static 'images/static images/Icons/Vector (1).svg'%}"  alt="">
                                         </div>
         
                                         <div class="flex items-center gap-16">
@@ -347,7 +374,7 @@
                                             <div class="pl-8 flex">
                                                 <div class="w flex items-center gap-3">
                                                     <h2>Rs. </h2>
-                                                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" name="editTrash" value="{{roomDetail.trash}}" id="">
+                                                    <input placeholder="Enter trash charge.." required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" name="editTrash" value="{{roomDetail.trash}}" id="">
                                                     <span class="flex items-center">/Month</span>
                                                 </div>
                                             </div>
@@ -413,7 +440,7 @@
                                         d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                                 </svg>
                             </div>
-                            <input required name="moveInOrMoveoutDate" value="" data-popover-target="popover-default" 
+                            <input required name="moveInOrMoveoutDate" id="inputdate" value="" data-popover-target="popover-default" 
                                 type="date"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  "
                                 placeholder="Select date">
@@ -533,7 +560,7 @@
                                             <input type="hidden" name="rating" id="ratingInput" value="">
 
                                             <!-- Rating -->
-                                            <div class="flex flex-row-reverse justify-end items-center  pb-7">
+                                            <div class="flex flex-row-reverse justify-end items-center  pb-7">  
                                                 <input id="hs-ratings-readonly-1" type="radio" class="peer -ms-5 size-5 bg-transparent border-0 text-transparent cursor-pointer appearance-none checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0" name="hs-ratings-readonly" value="5">
                                                 <label for="hs-ratings-readonly-1" class="peer-checked:text-yellow-400 text-gray-300 pointer-events-none dark:peer-checked:text-yellow-600 dark:text-gray-600">
                                                 <svg class="flex-shrink-0 size-5" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -616,7 +643,7 @@
                                                 Return Deposit
                                             </button>
                                         {% else %}
-                                                <button data-modal-hide="popup-modal" type="submit"
+                                                <button  type="submit"
                                                 class="text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 outline outline-1 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-6 py-3 mr-4 text-center">
                                                 Confirm
                                             </button>
@@ -711,7 +738,7 @@
                             {% endif %}
                          
                         </div>
-
+                    </form>
                 </div>
 
 
@@ -742,7 +769,7 @@
                                     
                                     <div class="flex">
                                         <h1 class="w-1/3 pt-2">Add New Amenities: </h1>
-                                        <input class="shadow appearance-none border rounded w-2/3 py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="New Amenities name..." type="text" name="newAmenitiesName" value="" id="">
+                                        <input required class="shadow appearance-none border rounded w-2/3 py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="New Amenities name..." type="text" name="newAmenitiesName" value="" id="">
                                     </div>
 
                                     
@@ -1110,7 +1137,7 @@
 
                             <div class="col-span-2 mb-5">
                                 <label for="RoomIssueFeedbackMessage" class="block mb-2 text-sm font-medium text-gray-900">Leave a message</label>
-                                <textarea name="RoomIssueFeedbackMessage" value="" id="RoomIssueFeedbackMessage" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Report an issue or request maintenance."></textarea>                    
+                                <textarea required name="RoomIssueFeedbackMessage" value="" id="RoomIssueFeedbackMessage" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Report an issue or request maintenance."></textarea>                    
                             </div>
 
 
@@ -1300,4 +1327,20 @@
         });
     });
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var dtToday = new Date();
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        if(month < 10)
+            month = '0' + month.toString();
+        if(day < 10)
+            day = '0' + day.toString();
+        var maxDate = year + '-' + month + '-' + day;
+        $('#inputdate').attr('min', maxDate);
+    });
+</script>
+
 {% endblock %}

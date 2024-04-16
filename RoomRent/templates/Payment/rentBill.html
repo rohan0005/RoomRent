@@ -9,19 +9,19 @@
   <!-- Main container Start -->
   <div class="container px-4 py-1 mx-auto">
     <!-- HEADING CONTENTS -->
-    <div class="bg-white h-screen pb-[100px] lg:mr-3 mt-[15px] md:ml-30 lg:ml-60 bg-white">
+    <div class="bg-white h-full pb-[100px] lg:mr-3 mt-[15px] md:ml-30 lg:ml-60 bg-white">
       <!--HEADING-->
       <div class="">
-        <div class="flex justify-between pr-3 {% if request.user|has_group:'owner'%} bg-[#EF6262] {% else %} bg-[#0ea5e9] {% endif %}text-white">
+        <div class="flex justify-between pr-3 border-b-2">
         <div>
-          <h1 class="font-semibold text-[17px] md:text-3xl p-6">
+          <h1 class="font-semibold text-[17px] md:text-3xl p-6 ">
             {% if request.user|has_group:"owner" %} 
                 {% if step == 'updated' %} 
-                Updated Rent to collect
+                Updated Rents to collect
                 {% elif step == 'paid'%}
                   (PAID)
                 {% else %}
-                Pending Rent to collect
+                Pending Rents to collect
                 {% endif %}
             
             {% else %} Rent that needs to be paid with in few
@@ -33,7 +33,7 @@
       <!-- CHANGE PAGE -->
       <form action="" method="post">
         {% csrf_token %}
-        <div class="sub-heading flex p-3 gap-3 gap">
+        <div class="sub-heading flex p-3 gap-3 gap ml-3">
           {% if request.user|has_group:"owner"%}
           <div>
             <button type="submit" name="pendingUpdate" class="p-2 px-4 border text-white
@@ -228,6 +228,7 @@
                             <input type="hidden" name="rentAmount" value="{{  room.bookedRoom.room.rent }}">
 
                             <input
+                            min="1"
                               type="hidden"
                               id="previousUnit-hidden-{{room.id}}"
                               name="ElecPreviousUnit"
@@ -254,6 +255,7 @@
                               ><span
                                 ><input
                                   required
+                                  min="1"
                                   class="ml-2 focus:bg-white focus:border-purple-500 shadow appearance-none border border-gray-200 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                   type="number"
                                   name="currentUnit"
@@ -324,7 +326,7 @@
                         value="{{ room.id }}"
                       />
                       <button
-                        data-modal-hide="medium-modal-{{ room.id }}"
+                        
                         type="submit"
                         name="updatePendingRoom"
                         class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
@@ -348,7 +350,7 @@
           </tbody>
         </table>
 
-        <!--IF OWNER THEN SHOW rentBillForCurrentUser-->
+        <!--IF tenant THEN SHOW rentBillForCurrentUser-->
         {% else %}
         <div class="md:px-2 ">
 
@@ -617,7 +619,7 @@
                                 />
                                 <input type="hidden" name="purchase_order_id" id="pid" value="{{ request.user }}">
                                 
-                                <input type="hidden" name="return_url" value="http://127.0.0.1:9898/verify">
+                                <input type="hidden" name="return_url" value="http://127.0.0.1:9090/verify">
 
                                 <button
                                   data-modal-hide="medium-modal-{{ billedRooms.id }}"
@@ -876,6 +878,7 @@
       {% endif %}
     </div>
   </div>
+</div></div>
 <script>
 
   document.addEventListener("DOMContentLoaded", function() {

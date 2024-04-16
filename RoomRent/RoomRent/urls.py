@@ -13,7 +13,7 @@ handler500 = 'core.views.error_500'
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('superadmin/', admin.site.urls),
     #include the URL patterns from another apps 
     path('', include("users.urls")),  
     path('', include("core.urls")),

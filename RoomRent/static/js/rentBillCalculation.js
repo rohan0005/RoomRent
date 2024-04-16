@@ -10,7 +10,7 @@ function calculate(id) {
   var waterRent = parseInt(document.getElementById(`waterRent-${id}`).value);
   var trashRent = parseInt(document.getElementById(`trashRent-${id}`).value);
 
-  if (currentUnit) {
+  if (currentUnit && previousUnit) {
     var newUnit = currentUnit - previousUnit;
 
     var electricityAmount = newUnit * electricityRate;
@@ -34,6 +34,11 @@ function calculate(id) {
 
     document.getElementById(`electricityDetails-${id}`).classList.add("hidden");
   } else {
-    alert("Please enter a valid current unit.");
+
+    Swal.fire({
+      title: "Please enter a valid unit !!",
+      icon: "error"
+    });
+
   }
 }
