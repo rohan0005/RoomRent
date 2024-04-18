@@ -10,9 +10,9 @@ urlpatterns = [
     path('signout', views.signoutUser, name='signout'),
      
      # Admin routes
-    path('user/admin/dashboard', views.adminDashboard, name='adminDashboard'),
-    path('user/admin/pendingRequests', views.pendingRequests, name='pendingRequests'),
-    path('user/admin/user-details/<int:user_id>', views.userMoreDetail, name='userMoreDetail'),
+    path('admin/dashboard', views.adminDashboard, name='adminDashboard'),
+    path('admin/pendingRequests', views.pendingRequests, name='pendingRequests'),
+    path('admin/user-details/<int:user_id>', views.userMoreDetail, name='userMoreDetail'),
     
     
      # Owner and Tenant routes

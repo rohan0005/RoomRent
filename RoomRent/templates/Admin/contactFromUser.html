@@ -6,9 +6,9 @@
 <div class="flex-1 bg-[#F3F3F3]">
   <div class="bg-white p-5 h-screen">
     <div>
-      <div class="bg-[#1D77FF] p-5 w-full mb-3">
-        <p class="md:text-3xl text-xl capitalize text-white">
-          All contact us messages submitted by users
+      <div class=" p-5 w-full mb-3 font-bold border-b-2">
+        <p class="md:text-3xl text-xl capitalize ">
+          All contact us messages
         </p>
       </div>
     </div>
@@ -40,7 +40,7 @@
             Submitted date: <span>{{contactData.contactedOn.date}}</span>
           </p>
         </div>
-        <div class="px-2 py-4">
+        <div class="px-2 py-4 grid content-end">
           <button
             data-modal-target="default-modal-{{contactData.id}}"
             data-modal-toggle="default-modal-{{contactData.id}}"

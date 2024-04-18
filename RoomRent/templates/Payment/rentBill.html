@@ -14,7 +14,7 @@
       <div class="">
         <div class="flex justify-between pr-3 border-b-2">
         <div>
-          <h1 class="font-semibold text-[17px] md:text-3xl p-6 ">
+          <h1 class="font-semibold text-xl md:text-3xl p-6 ">
             {% if request.user|has_group:"owner" %} 
                 {% if step == 'updated' %} 
                 Updated Rents to collect
@@ -24,8 +24,7 @@
                 Pending Rents to collect
                 {% endif %}
             
-            {% else %} Rent that needs to be paid with in few
-            days {% endif %}
+            {% else %} Rent due {% endif %}
           </h1>
         </div>
       </div>
@@ -57,12 +56,12 @@
       {% if step == None or step == "pendingUpdate" %}
 
       <!-- BOOKING LISTS -->
-      <div class="md:px-10 mt-5">
+      
 
 
         {% if allPendingRoombillings %}
-
-        <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
+        <div class="md:px-10 mt-5 h-screen">
+        <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4 ">
           <tbody>
             <tr class="border-b bg-gray-200">
               <th class="text-left p-3 px-5">Room title</th>
@@ -647,7 +646,7 @@
       <div>
         <div class="IMAGE md:w-full h-[500px] md:flex justify-between">
 
-          <div class="text-5xl text-gray-700">
+          <div class="md:text-5xl text-2xl text-gray-700">
             <h1 class="p-20 mt-10">All upto date!!</h1>
           </div>
 
@@ -667,10 +666,10 @@
 
       <!-- updated options -->
       {% elif step == "updated" %}
-      <div class="md:px-10 mt-5">
+     
 
         {% if allUpdatedRentBillings %}
-      
+       <div class="md:px-10 mt-5 h-screen">
         
         <table class="md:w-full w-full md:text-md text-sm bg-white shadow-md rounded mb-4">
         <tbody>

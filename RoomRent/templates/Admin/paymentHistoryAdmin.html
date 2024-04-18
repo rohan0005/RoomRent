@@ -11,16 +11,16 @@
         <div class="bg-white p-5 h-screen">
           <div>
 
-            <div class="bg-[#793FDF] p-5 w-full mb-3">
-                <p class="md:text-3xl text-xl capitalize  text-white ">
-                    Payment transactions 
+            <div class=" p-5 w-full mb-5 border-b-2">
+                <p class="md:text-3xl text-xl capitalize font-bold">
+                    
                     <span>
                         {% if step == None or step == "pendingRefunds" %}
-                        (Pending Refunds)
+                        Pending Refunds
 
                         {% else %}
 
-                        (Completed Refunds)
+                        Completed Refunds
                         {% endif %}
                     </span>
                 </p>
@@ -82,7 +82,7 @@
                                 {% for payment in allPaymentHistory %}
                                 <tbody>
                                     <tr class="border-2 ">
-                                        <td class="whitespace-nowrap px-6 py-4">{{payment.room.roomTitle}}</td>
+                                        <td class="whitespace-nowrap px-6 py-4"><a class="text-[#0766AD]" href="{% url 'roomMoreDetails'  payment.room.id %}">{{payment.room.roomTitle}}</a></td>
                                         <td class="whitespace-nowrap px-6 py-4">{{payment.tenantUser}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">{{payment.room.user.username}}</td>
                                         <td class="whitespace-nowrap px-6 py-4">{{payment.billedDate|date}}</td>

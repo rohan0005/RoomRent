@@ -36,7 +36,6 @@ def listing(request):
                 parking = request.POST.get('parking')
             
                 flat = flatNum +" "+ flatType
-                print(floor, numberOfBathroom, flat, flatType, parking)
             
 
                 # STEP 3: Choose Amenities
@@ -163,13 +162,13 @@ def pendingRooms(request):
             else:
                 send_mail(
                 "Room Listing Rejected",
-                f"We regret to inform you that your request to list your room has been rejected. Thank you for considering our platform. Thank you for considering our platform.",
+                f"We regret to inform you that your request to list your room has been rejected. Thank you for considering our platform.",
                 "room.rent.webapp@gmail.com",
                 [user_email],
                 fail_silently=False,
                 )
                 room.delete()
-                sweetify.error(request, "Room rejected",  button='Ok', timer=0)
+                sweetify.success(request, "Room rejected",  button='Ok', timer=0)
                 return redirect('pendingRooms')
             
             
@@ -316,7 +315,6 @@ def room(request):
             
         if rent and not rent == "":
             allApprovedRooms = allApprovedRooms.filter(rent__lte=rent) # Filter rooms where rent is less than or equal to the specified value. lte - comparison filter that stands for -less than or equal to
-            print(rent)
         
         # Pagination
         paginator = Paginator(allApprovedRooms, 3)  # Show 3 rooms per page
@@ -347,7 +345,6 @@ def roomMoreDetails(request, room_id):
     try:
         room_instance = get_object_or_404(Room, pk=room_id)
         bookedRoom = BookRoom.objects.filter(room=room_instance, joined = True, user = request.user).first()
-        print("bookedRoom", bookedRoom)
         # Check if the room is approved by the admin
         if not room_instance.approved:
             # If the room is not approved and the user is not the owner or admin then show 404 page
@@ -392,7 +389,6 @@ def roomMoreDetails(request, room_id):
         if request.method == 'POST' and 'RoomIssue' in request.POST:
             RoomIssueFeedback = request.POST.get('RoomIssueFeedback')
             RoomIssueFeedbackMessage = request.POST.get('RoomIssueFeedbackMessage')
-            print('RoomIssueFeedback , RoomIssueFeedbackMessage', RoomIssueFeedback, RoomIssueFeedbackMessage)
             RoomIssuesOrMaintenance.objects.create(user=request.user, room=room_instance, type=RoomIssueFeedback, message= RoomIssueFeedbackMessage, status="Pending" )
             sweetify.success(request, "Message has been sent to your room owner.", button='Ok', timer=0)
             return redirect('roomMoreDetails', room_id=room_id)
@@ -446,7 +442,6 @@ def roomMoreDetails(request, room_id):
                 room_instance.save()
                 
                 rules_string = request.POST.get('rules')
-                print("rules_stringrules_stringrules_string", rules_string)
                 # Split the rules string into individual rules and append them to the list
                 newRules = rules_string.split(", ")
                 room_instance.rules = newRules
@@ -475,7 +470,6 @@ def roomMoreDetails(request, room_id):
         amenities = roomDetail.amenities
         
         amenities = [amenities.strip("' ") for amenities in amenities.strip("[]").split("', '")]
-        print("amenities", amenities)
         # booking logic
         if request.method == "POST":
             if 'moveout' in request.POST:
@@ -504,7 +498,6 @@ def roomMoreDetails(request, room_id):
             elif 'removeTenant' in request.POST: # Remove the tenant from this room after moveout is completed
                 with transaction.atomic():
                     user = request.POST.get("tenantUser")
-                    print("tenantUser:", user)
                     roomId = room_id
                     
                     userForEmail = User.objects.get(pk=user)
@@ -534,7 +527,6 @@ def roomMoreDetails(request, room_id):
                         Regards,\n\
                         [RoomRent]"
                         
-                    print(message)
                         
 
                     send_mail(
@@ -576,7 +568,31 @@ def roomMoreDetails(request, room_id):
                     
                     room.isBooked = True # set the booking to True
                     room.save() # Update the room details
-
+                    
+                  
+                    owner = room.user.id
+                    ownerID = get_object_or_404(User, pk=owner)
+                    
+                    userForEmail = User.objects.get(pk=ownerID.id)
+                    user_email = userForEmail.email
+                    
+                    
+                      
+                    message = f"Dear {userForEmail.username},\n\
+                        You have a new booking request from '{request.user}'. \n\
+                        Please visit RoomRent for more info.\n\
+                        Regards,\n\
+                        [RoomRent]"
+                        
+                    send_mail(
+                    "New booking request",
+                    message,
+                    "room.rent.webapp@gmail.com",
+                    [user_email],
+                    fail_silently=False,
+                    )
+                    
+                    
                     if additionalDetail and additionalDetail != "":
                         # Save the booking
                         booking = BookRoom.objects.create(room=room, moveInDate=moveInDate , user=user, rentBilledDate=moveInDate, additionalDetails = additionalDetail)
@@ -634,17 +650,14 @@ def viewBooking(request):
         if request.method == 'POST':
             if 'pendingBookings' in request.POST:
                 step = "pendingBookings"
-                print("pendingBookings")
             if 'canceledBookings' in request.POST:
                 step = "canceledBookings"
-                print("canceledBookings")
         
         # if user accept the booking
         if request.method == 'POST' and "accept" in request.POST:
             with transaction.atomic():
                 user = request.POST.get("user")
                 roomId = request.POST.get('roomId')
-                print("roomID", roomId)
                 booking = BookRoom.objects.get(user=user, id=roomId)
                 room_id = booking.room.id
                 roomInstance = Room.objects.get(id=room_id)
@@ -678,7 +691,6 @@ def viewBooking(request):
                 billing = RoomBilling.objects.filter(bookedRoom=booking, status="pending").exclude(id=None).first() #get the instance of RoomBilling
                 if billing and booking.moveInDate == booking.rentBilledDate:
                     move_in_date = booking.rentBilledDate
-                    print("move_in_date", move_in_date)
                     try:
                         next_month_date = move_in_date.replace(month=move_in_date.month + 1)
                         booking.rentBilledDate = next_month_date
@@ -690,7 +702,6 @@ def viewBooking(request):
                     
                     
                     
-                print("USERNAME IS  : ", user)
                 allBookingMadeByUser = BookRoom.objects.filter(user=user, joined = False)
                 user = User.objects.get(pk=user)
                 if allBookingMadeByUser:
@@ -765,7 +776,7 @@ def viewBooking(request):
                 canceledBookingDetails.save()
                 room.save()
                 booking.delete() # Reject booking
-                sweetify.error(request, "Booking rejected", button='Ok', timer=0)
+                sweetify.success(request, "Booking rejected", button='Ok', timer=0)
                 step = "canceledBookings"
                 return redirect("viewBooking")
 
@@ -823,7 +834,6 @@ def roomIssues(request):
             RoomIssuesInstance = RoomIssuesOrMaintenance.objects.get(pk=issueID)
             RoomIssuesInstance.status="Updated"
             RoomIssuesInstance.save()
-            print("RoomIssuesInstance", RoomIssuesInstance)
             sweetify.success(request, "Issue Marked as Read",button='Ok', timer=0)
             return redirect("roomIssues")
         context = {

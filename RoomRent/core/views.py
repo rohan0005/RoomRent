@@ -16,7 +16,14 @@ def index(request):
     return render(request, 'Landing page/index.html')
 
 def checkValidity(request):
-    sweetify.error(request, 'You are not authorized to view this page.', button='Ok', timer=0)
+    if request.user is not None and not request.user.is_superuser and request.user.is_authenticated and not request.user.groups.filter(name='owner') and not request.user.groups.filter(name='tenant'):
+        sweetify.warning(request, 'Please wait before admin approves your account.', button='Ok', timer=0)
+    
+    elif request.user.is_authenticated and (request.user.is_superuser or request.user.groups.filter(name='owner') or  request.user.groups.filter(name='tenant')):
+        return render(request, '505_404.html')
+        
+    else:
+        sweetify.error(request, 'You are not authorized to view this page.', button='Ok', timer=0)    
     return render(request, 'Landing page/index.html')
 
 def contact(request):

@@ -5,5 +5,5 @@ urlpatterns = [
     path('home', views.index, name='index'), 
     path('home/', views.checkValidity, name='Dashboard'),   
     path('contactus', views.contact, name='contact'),   
-    path('user/admin/contacts/', views.contactFromUser, name='contactFromUser'),   
+    path('admin/contacts', views.contactFromUser, name='contactFromUser'),   
 ]

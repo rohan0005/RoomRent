@@ -7,6 +7,6 @@ urlpatterns = [
     path('verify',views.verifyKhalti,name="verify"),
     path('billing',views.billing,name="billing"),
     path('paymentHistory',views.paymentHistory,name="paymentHistory"),
-    path('user/admin/paymentHistory',views.paymentHistoryAdminView,name="paymentHistoryAdmin"),
+    path('admin/paymentHistory',views.paymentHistoryAdminView,name="paymentHistoryAdmin"),
     
 ]
