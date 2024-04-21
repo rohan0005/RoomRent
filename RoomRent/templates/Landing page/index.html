@@ -3,55 +3,7 @@
 {% load static %} 
 {% block title %} RoomRent | Home {%endblock%} 
 {% block content %}
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body,
-html {
-  
-  background-color: #ffffff;
-  color: rgb(47, 47, 47);
-}
-
-h1 {
-  margin: 50px 0;
-  text-align: center;
-}
-
-@keyframes fadeInUp {
-  0% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0%);
-    opacity: 1;
-  }
-}
-
-.fadeInUp-animation {
-  animation: 2.5s fadeInUp;
-}
-
-
-body {
-    animation: fadeInAnimation ease 3s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-}
-
-@keyframes fadeInAnimation {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-</style>
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 
 
 <div class="">
@@ -75,12 +27,7 @@ body {
         <div class="IMAGE_CONTAINER w-full w-4/5 pt-5 hidden sm:block">
             <img src="{% static 'images/Landing-Page/main.png' %}" class="fadeInUp-animation w-full" id="main-image" alt="" />
         </div>
-
-        
     </div>
-
-
-
     <!-- Flat type -->
     <div class="flat-type-main-container mt-10 p-20">
         <div class="flex justify-center text-4xl font-bold">

@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  
+  background-color: #ffffff;
+  color: rgb(47, 47, 47);
+}
+
+h1 {
+  margin: 50px 0;
+  text-align: center;
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+.fadeInUp-animation {
+  animation: 2.5s fadeInUp;
+}
+
+
+body {
+    animation: fadeInAnimation ease 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
