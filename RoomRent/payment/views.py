@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 import requests
 import json
 
+@login_required
 def initkhalti(request):
     try:
         user = request.user.username
@@ -63,7 +64,7 @@ def initkhalti(request):
         sweetify.error(request, 'Something went wrong.',   button='Ok', timer=0)
         return redirect('index')
 
-    
+@login_required    
 def verifyKhalti(request):
     try:
         url = "https://a.khalti.com/api/v2/epayment/lookup/"
@@ -242,7 +243,7 @@ def billing(request):
                 
                 print("date_and_before_1days", date_with_changed_time_before_1days)
                 print("booked_rooms.rentBilledDate ", booked_rooms.rentBilledDate.date())
-                if date_before_3days == booked_rooms.rentBilledDate.date() or date_before_2days == booked_rooms.rentBilledDate.date() or date_before_1days == booked_rooms.rentBilledDate.date() or currentTime >= booked_rooms.rentBilledDate.date() or date_with_changed_time_before_1days == booked_rooms.rentBilledDate.date():
+                if date_before_3days == currentTime or date_before_2days == currentTime or date_before_1days == currentTime  or date_with_changed_time_before_1days == currentTime or currentTime >= booked_rooms.rentBilledDate.date():
                     print("date_before_3days", date_before_3days)
                     print("date_before_2days", date_before_2days)
                     print("date_before_1days", date_before_1days)
@@ -313,7 +314,9 @@ def billing(request):
         }
         
         return render(request, "Payment/rentBill.html", context)
-    except:
+    except Exception as e:
+        print("An error occurred:", e)
+        
         sweetify.error(request, 'Something went wrong.',   button='Ok', timer=0)
         return redirect('index')
     

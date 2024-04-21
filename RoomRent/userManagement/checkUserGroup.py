@@ -4,7 +4,7 @@ def is_superuser(user):
 
 # Check if user is tenant or not
 def is_tenant(user):
-    if not user.is_superuser:
+    if not user.is_superuser and user is not None:
         if user.useradditionaldetail.has_blocked == True:
             return user.is_authenticated and user.useradditionaldetail.has_blocked == False and user.groups.filter(name='tenant').exists() 
         elif user.is_authenticated and user.useradditionaldetail.has_blocked == False and user.groups.filter(name='tenant').exists():
@@ -12,7 +12,7 @@ def is_tenant(user):
 
 # Check if user is owner or not
 def is_owner(user):
-    if not user.is_superuser:
+    if not user.is_superuser and user is not None:
         if user.useradditionaldetail.has_blocked == True:
             return user.is_authenticated and user.useradditionaldetail.has_blocked == False and user.groups.filter(name='owner').exists() 
         elif user.is_authenticated and user.useradditionaldetail.has_blocked == False and user.groups.filter(name='owner').exists():
@@ -20,7 +20,7 @@ def is_owner(user):
 
 # Check if user is tenant or owner
 def is_tenant_or_owner(user):
-    if not user.is_superuser:
+    if not user.is_superuser and user is not None:
         if user.useradditionaldetail.has_blocked == True:
             return user.is_authenticated and user.useradditionaldetail.has_blocked == False and (user.groups.filter(name='tenant').exists() or user.groups.filter(name='owner').exists()) 
         elif user.is_authenticated and user.useradditionaldetail.has_blocked == False and (user.groups.filter(name='tenant').exists() or user.groups.filter(name='owner').exists()):

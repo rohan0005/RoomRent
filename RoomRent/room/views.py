@@ -631,6 +631,7 @@ def roomMoreDetails(request, room_id):
         return redirect('index')
 
 # View Bookings as Owner
+@login_required
 @user_passes_test(is_owner)
 def viewBooking(request):
     try:
@@ -800,7 +801,7 @@ def viewBooking(request):
         sweetify.error(request, 'Something went wrong!',   button='Ok', timer=0)
         return redirect('index')
         
-
+@login_required
 @user_passes_test(is_tenant)
 def savedRooms(request):
     try:
