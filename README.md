@@ -22,31 +22,37 @@ Install python-3.7.2 and python-pip. Follow the steps from the below reference d
 
 2.  Setup virtual environment
 
-  Install Virtual environment
-   py -m venv .venv
+    Install Virtual environment
+    py -m venv .venv
 
-   Activate the venv
-   .\venv\Scripts\activate
+    Activate the venv
+   
+        Windows: .\venv\Scripts\activate
+        Mac/Linux: source .venv/bin/activate
 
 3.  Clone git repository
 
-git clone "https://github.com/rohan0005/RoomRent.git"
+        git clone "https://github.com/rohan0005/RoomRent.git"
 
 4.  Install requirements
 
-    cd roomrent/
-    pip install -r requirements.txt
+        cd roomrent/
+        pip install -r requirements.txt
 
 
-6.  Run the server
+6.  Run the migration command
 
-  #### Make migrations
-  -python manage.py makemigrations
-  -python manage.py migrate
-  
+      #### Make migrations
+        -python manage.py makemigrations
+        -python manage.py migrate
 
-  # Run the server
-  python manage.py runserver 8000
-  
-  # your server is up on port 8000
+8.  Run the server
+
+    Run the server
+    
+        python manage.py runserver 8000
+      
+   # your server is up on port 8000
+   # Run this url
+       http://127.0.0.1:8000/home
 
