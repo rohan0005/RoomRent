@@ -35,7 +35,7 @@
 
                         <form action="" method="post">
                         {% csrf_token %}
-                        {% if request.user|has_group:"owner"%}
+                        {% if request.user|has_group:"owner" and roomDetail.user == request.user %}
                         <div class="flex">
                                 {% if checkMaintenance %}
                                 <div class="p-2 flex">
