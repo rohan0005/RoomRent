@@ -18,7 +18,7 @@
 To run the RoomRent platform locally, follow these steps:
 
 1. Install Python
-Install python-3.7.2 and python-pip. Follow the steps from the below reference document based on your Operating System. Reference: https://docs.python-guide.org/starting/installation/
+Install python-10 or 11 and python-pip. Follow the steps from the below reference document based on your Operating System. Reference: https://www.tomshardware.com/how-to/install-python-on-windows-10-and-11
 
 2.  Setup virtual environment
 
